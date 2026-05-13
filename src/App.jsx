@@ -1,8 +1,14 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Card, CardContent } from "./components/ui/card";
-import { Button } from "./components/ui/button";
+import { Card, CardContent } from "./components/ui/card.jsx";
+import { Button } from "./components/ui/button.jsx";
+import {
+  collection,
+  addDoc,
+  getDocs,
+} from "firebase/firestore";
 
+import { db } from "./firebase.js";
 
 const TARGET_KM = 7000;
 const STEPS_TO_KM = 0.0008;
@@ -136,11 +142,38 @@ function MobileNav({ view, setView }) {
 }
 
 export default function App() {
-  const [entries, setEntries] = useState(initialEntries);
-  const [view, setView] = useState("student");
-  const [form, setForm] = useState({ name: "", group: "Year 7", house: "Pankhurst", type: "km", steps: "", km: "" });
 
-  const totalKm = useMemo(() => entries.reduce((sum, entry) => sum + Number(entry.km || 0), 0), [entries]);
+  const [entries, setEntries] = useState([]);
+  const [view, setView] = useState("student");
+  const [form, setForm] = useState({
+    name: "",
+    group: "Year 7",
+    house: "Pankhurst",
+    type: "km",
+    steps: "",
+    km: ""
+  });
+
+  useEffect(() => {
+    async function loadEntries() {
+      const snapshot = await getDocs(collection(db, "entries"));
+
+      const loaded = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      setEntries(loaded);
+    }
+
+    loadEntries();
+  }, []);
+
+  const totalKm = useMemo(
+    () => entries.reduce((sum, entry) => sum + Number(entry.km || 0), 0),
+    [entries]
+  );
+
   const progress = Math.min((totalKm / TARGET_KM) * 100, 100);
   const remaining = Math.max(TARGET_KM - totalKm, 0);
 
@@ -154,14 +187,45 @@ export default function App() {
   const houseLeaders = useMemo(() => totalsBy("house"), [entries]);
   const unusualEntries = entries.filter((entry) => entry.km > 50);
   const nextMilestone = Math.ceil(totalKm / 500) * 500 || 500;
-
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    const km = form.type === "steps" ? Number(form.steps || 0) * STEPS_TO_KM : Number(form.km || 0);
-    if (!form.name.trim() || km <= 0) return;
-    setEntries([{ id: Date.now(), name: form.name.trim(), group: form.group, house: form.house, type: form.type, steps: form.type === "steps" ? Number(form.steps || 0) : 0, km: Number(km.toFixed(2)), date: new Date().toISOString().slice(0, 10) }, ...entries]);
-    setForm({ ...form, steps: "", km: "" });
+    console.log("Submit clicked", form);
+
+    const km =
+      form.type === "steps"
+        ? Number(form.steps || 0) * STEPS_TO_KM
+        : Number(form.km || 0);
+
+    if (!form.name.trim() || km <= 0) {
+      alert("Please enter a name and a distance greater than 0.");
+      return;
+    }
+
+    const newEntry = {
+      name: form.name.trim(),
+      group: form.group,
+      house: form.house,
+      type: form.type,
+      steps: form.type === "steps" ? Number(form.steps || 0) : 0,
+      km: Number(km.toFixed(2)),
+      date: new Date().toISOString().slice(0, 10),
+      createdAt: new Date(),
+    };
+
+    try {
+      const docRef = await addDoc(collection(db, "entries"), newEntry);
+      setEntries([{ id: docRef.id, ...newEntry }, ...entries]);
+      setForm({ ...form, name: "", steps: "", km: "" });
+      alert("Activity logged successfully.");
+    } catch (error) {
+      console.error("Error saving activity:", error);
+      alert("Could not save activity. Check Firebase config and Firestore rules.");
+    }
   }
+
+
+
+   
 
   return (
     <div className="min-h-screen bg-[#F7FAFF] pb-24 text-[#00236C] lg:pb-0">
@@ -203,6 +267,7 @@ export default function App() {
             <div className="mx-auto mt-5 grid max-w-sm grid-cols-2 gap-3 lg:hidden">
               <a href="#log" className="rounded-2xl bg-[#00236C] px-4 py-3 text-sm font-bold text-white shadow-sm">Log activity</a>
               <button onClick={() => setView("student")} className="rounded-2xl border border-[#00236C] bg-white px-4 py-3 text-sm font-bold text-[#00236C] shadow-sm">My progress</button>
+              
             </div>
             <div className="mt-5 hidden items-center justify-between text-xs font-bold uppercase text-[#00236C] md:flex">
               <div className="text-left">📍 Leicester<br />England</div>
@@ -258,7 +323,7 @@ export default function App() {
                       </div>
                       {form.type === "steps" ? <input type="number" min="0" className="w-full rounded-xl border border-slate-200 px-4 py-3 text-base outline-none focus:border-[#00236C]" value={form.steps} onChange={(e) => setForm({ ...form, steps: e.target.value })} placeholder="Steps, e.g. 10000" /> : <input type="number" min="0" step="0.1" className="w-full rounded-xl border border-slate-200 px-4 py-3 text-base outline-none focus:border-[#00236C]" value={form.km} onChange={(e) => setForm({ ...form, km: e.target.value })} placeholder="Kilometres, e.g. 5.0" />}
                       <div className="rounded-2xl bg-[#EFFFFD] p-4 text-center text-sm text-[#00236C]"><p className="font-bold">Steps to km conversion</p><p className="mt-1">10,000 steps ≈ 8 km</p></div>
-                      <Button className="w-full bg-[#00236C] py-6 text-base font-bold text-white hover:bg-[#001A50]">Log Activity</Button>
+                      <Button type="submit" className="w-full bg-[#00236C] py-6 text-base font-bold text-white hover:bg-[#001A50]"> Log Activity</Button>
                     </form>
                   </CardContent>
                 </Card>
