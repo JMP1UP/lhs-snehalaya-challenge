@@ -6,6 +6,8 @@ import {
   collection,
   addDoc,
   getDocs,
+  deleteDoc,
+  doc,
 } from "firebase/firestore";
 
 import { db } from "./firebase.js";
@@ -222,10 +224,17 @@ export default function App() {
       alert("Could not save activity. Check Firebase config and Firestore rules.");
     }
   }
+  async function handleDeleteEntry(entryId) {
+    if (!confirm("Delete this entry?")) return;
 
-
-
-   
+    try {
+      await deleteDoc(doc(db, "entries", entryId));
+      setEntries(entries.filter((entry) => entry.id !== entryId));
+    } catch (error) {
+      console.error("Error deleting entry:", error);
+      alert("Could not delete entry. Check the console.");
+    }
+  }  
 
   return (
     <div className="min-h-screen bg-[#F7FAFF] pb-24 text-[#00236C] lg:pb-0">
@@ -358,7 +367,7 @@ export default function App() {
         ) : (
           <section className="mx-auto mt-4 max-w-7xl space-y-4 px-4 sm:px-6 lg:px-10">
             <div className="grid gap-4 lg:grid-cols-3"><Leaderboard rows={individualLeaders} /><Leaderboard rows={groupLeaders} /><Leaderboard rows={houseLeaders} /></div>
-            <Card className="rounded-3xl border-slate-200 bg-white shadow-sm"><CardContent className="p-5 sm:p-6"><div className="mb-5 flex items-center justify-between gap-4"><h3 className="text-xl font-bold">Teacher dashboard</h3><Button variant="outline" className="border-[#00236C] text-[#00236C]">Export CSV</Button></div><div className="overflow-x-auto rounded-2xl border border-slate-200"><table className="w-full min-w-[640px] text-left text-sm"><thead className="bg-slate-50 text-slate-600"><tr><th className="px-4 py-3">Name</th><th className="px-4 py-3">Group</th><th className="px-4 py-3">House</th><th className="px-4 py-3">Entry</th><th className="px-4 py-3">Date</th></tr></thead><tbody className="divide-y divide-slate-100">{entries.map((entry) => <tr key={entry.id}><td className="px-4 py-3 font-medium">{entry.name}</td><td className="px-4 py-3">{entry.group}</td><td className="px-4 py-3">{entry.house}</td><td className="px-4 py-3">{formatKm(entry.km)} km</td><td className="px-4 py-3">{entry.date}</td></tr>)}</tbody></table></div><div className="mt-5 rounded-2xl bg-amber-50 p-4 text-sm text-amber-900"><p className="font-semibold">Moderation check</p><p>{unusualEntries.length === 0 ? "No unusual entries currently flagged." : `${unusualEntries.length} entries are over 50 km and should be checked.`}</p></div></CardContent></Card>
+            <Card className="rounded-3xl border-slate-200 bg-white shadow-sm"><CardContent className="p-5 sm:p-6"><div className="mb-5 flex items-center justify-between gap-4"><h3 className="text-xl font-bold">Teacher dashboard</h3><Button variant="outline" className="border-[#00236C] text-[#00236C]">Export CSV</Button></div><div className="overflow-x-auto rounded-2xl border border-slate-200"><table className="w-full min-w-[640px] text-left text-sm"><thead className="bg-slate-50 text-slate-600"><tr><th className="px-4 py-3">Name</th><th className="px-4 py-3">Group</th><th className="px-4 py-3">House</th><th className="px-4 py-3">Entry</th><th className="px-4 py-3">Date</th><th className="px-4 py-3">Action</th></tr></thead><tbody className="divide-y divide-slate-100">{entries.map((entry) => <tr key={entry.id}><td className="px-4 py-3 font-medium">{entry.name}</td><td className="px-4 py-3">{entry.group}</td><td className="px-4 py-3">{entry.house}</td><td className="px-4 py-3">{formatKm(entry.km)} km</td><td className="px-4 py-3">{entry.date}</td><td className="px-4 py-3"><button onClick={() => handleDeleteEntry(entry.id)} className="rounded-lg bg-red-50 px-3 py-1 text-sm font-semibold text-red-700 hover:bg-red-100">Delete</button></td></tr>)}</tbody></table></div><div className="mt-5 rounded-2xl bg-amber-50 p-4 text-sm text-amber-900"><p className="font-semibold">Moderation check</p><p>{unusualEntries.length === 0 ? "No unusual entries currently flagged." : `${unusualEntries.length} entries are over 50 km and should be checked.`}</p></div></CardContent></Card>
           </section>
         )}
       </main>
