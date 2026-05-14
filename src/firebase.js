@@ -7,7 +7,7 @@ const firebaseConfig = {
   projectId: "lhs-snehalaya-challenge",
   storageBucket: "lhs-snehalaya-challenge.firebasestorage.app",
   messagingSenderId: "837049723983",
-  appId: "1:837049723983:web:c27f95fcfce1cb99528e3a"
+  appId: "1:837049723983:web:c27f95fcfce1cb99528e3a",
 };
 
 const app = initializeApp(firebaseConfig);

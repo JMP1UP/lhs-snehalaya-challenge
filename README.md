@@ -1,16 +1,36 @@
-# React + Vite
+# LHS Snehalaya Challenge App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This bundle includes the main files for the React/Firebase/Microsoft sign-in version of the app.
 
-Currently, two official plugins are available:
+## Replace these files in your project
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- `src/App.jsx`
+- `src/main.jsx`
+- `src/authConfig.js`
+- `src/firebase.js`
+- `src/components/ui/card.jsx`
+- `src/components/ui/button.jsx`
+- `src/index.css`
+- `vite.config.js`
 
-## React Compiler
+## Test locally
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+npm install
+npm run dev
+```
 
-## Expanding the ESLint configuration
+## Build and deploy
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+npm run build
+firebase deploy
+```
+
+## Security note
+
+The app now includes a logged-out public splash screen. This hides personal data in the UI.
+
+Before launch, Firestore rules should be tightened. The included `firestore.rules` is a suggested starting point, but because this app currently uses MSAL directly rather than Firebase Auth, the Firestore `request.auth` rules will need a proper Firebase Auth bridge or a revised backend security model before being used as-is.
+
+For now, do not treat UI hiding alone as full security.
