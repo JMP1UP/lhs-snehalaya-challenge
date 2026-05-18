@@ -1,16 +1,29 @@
-export const msalConfig = {
-  auth: {
-    clientId: "c846091f-47bc-4454-9eb4-235cfaa83d7a",
-    authority:
-      "https://login.microsoftonline.com/89b66541-893d-4f1a-926d-17941da298a1",
-    redirectUri: "http://localhost:5173",
-  },
-  cache: {
-    cacheLocation: "sessionStorage",
-    storeAuthStateInCookie: false,
-  },
-};
+import { app } from "./firebase.js";
 
-export const loginRequest = {
-  scopes: ["User.Read"],
-};
+import {
+  getAuth,
+  OAuthProvider,
+  signInWithPopup,
+  getRedirectResult,
+  signOut,
+} from "firebase/auth";
+
+export const auth = getAuth(app);
+
+const microsoftProvider = new OAuthProvider("microsoft.com");
+
+microsoftProvider.setCustomParameters({
+  tenant: "89b66541-893d-4f1a-926d-17941da298a1",
+});
+
+export async function signInWithMicrosoft() {
+  return signInWithPopup(auth, microsoftProvider);
+}
+
+export async function getMicrosoftRedirectResult() {
+  return getRedirectResult(auth);
+}
+
+export async function signOutUser() {
+  return signOut(auth);
+}
