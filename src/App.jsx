@@ -64,6 +64,26 @@ const yearGroups = [
   "Staff",
 ];
 
+const activeYearGroups = [
+  "Year 8",
+  "Year 9",
+  "Year 10",
+  "Year 11",
+  "Year 12",
+  "Year 13",
+  "Staff",
+];
+
+const contributorOrder = [
+  "Year 13",
+  "Year 12",
+  "Year 11",
+  "Year 10",
+  "Year 9",
+  "Year 8",
+  "Staff",
+];
+
 const studentHouses = ["Beaumanor", "Bradgate", "Charnwood"];
 const staffHouses = ["Beaumanor", "Bradgate", "Charnwood", "None"];
 const houses = [...studentHouses, "Staff", "None"];
@@ -325,7 +345,9 @@ function StatCard({ icon, label, value, detail, accent = "blue" }) {
   );
 }
 
-function TeacherLeaderboard({ rows, title }) {
+function TeacherLeaderboard({ rows, title, showAll = false }) {
+  const displayedRows = showAll ? rows : rows.slice(0, 5);
+
   return (
     <Card className="rounded-3xl border-slate-200 bg-white shadow-sm">
       <CardContent className="p-5 sm:p-6">
@@ -340,7 +362,7 @@ function TeacherLeaderboard({ rows, title }) {
         </div>
 
         <div className="divide-y divide-slate-100">
-          {rows.slice(0, 5).map((row, index) => (
+          {displayedRows.map((row, index) => (
             <div
               key={row.name}
               className="flex items-center justify-between gap-3 py-3"
@@ -735,6 +757,7 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [isEditingTarget, setIsEditingTarget] = useState(false);
   const [highlightLogForm, setHighlightLogForm] = useState(false);
+  const [csvCopied, setCsvCopied] = useState(false);
   const [form, setForm] = useState({
     name: "",
     group: PLEASE_SELECT,
@@ -1247,8 +1270,66 @@ const totalsBy = (key) =>
       .map(([name, total]) => ({ name, total }))
       .sort((a, b) => b.total - a.total);
 
+  const sortedEntries = useMemo(() => {
+    return [...entries].sort((a, b) => {
+      const timeA = a.createdAt?.seconds 
+        ? a.createdAt.seconds * 1000 
+        : a.createdAt?.toDate 
+        ? a.createdAt.toDate().getTime()
+        : new Date(a.createdAt || a.date || 0).getTime();
+      const timeB = b.createdAt?.seconds 
+        ? b.createdAt.seconds * 1000 
+        : b.createdAt?.toDate 
+        ? b.createdAt.toDate().getTime()
+        : new Date(b.createdAt || b.date || 0).getTime();
+      return timeB - timeA;
+    });
+  }, [entries]);
+
   const individualLeaders = useMemo(() => totalsBy("name"), [entries]);
-  const groupLeaders = useMemo(() => totalsBy("group"), [entries]);
+  const groupLeaders = useMemo(() => {
+    const totals = {};
+    yearGroups.forEach((g) => {
+      totals[g] = 0;
+    });
+
+    entries.forEach((entry) => {
+      const g = entry.group || "Unknown";
+      if (totals[g] !== undefined) {
+        totals[g] += Number(entry.km || 0);
+      }
+    });
+
+    return Object.entries(totals)
+      .map(([name, total]) => ({ name, total }))
+      .sort((a, b) => b.total - a.total);
+  }, [entries]);
+
+  const groupContributors = useMemo(() => {
+    const contributorSets = {};
+    contributorOrder.forEach((g) => {
+      contributorSets[g] = new Set();
+    });
+
+    entries.forEach((entry) => {
+      const g = entry.group || "Unknown";
+      if (contributorSets[g] !== undefined) {
+        const contributorId = entry.userId && entry.userId !== "anonymous"
+          ? entry.userId
+          : (entry.email || entry.name);
+        
+        if (entry.entryMode !== "classTotal") {
+          contributorSets[g].add(contributorId);
+        }
+      }
+    });
+
+    return contributorOrder.map((name) => ({
+      name,
+      count: contributorSets[name].size,
+    }));
+  }, [entries]);
+
   const houseLeaders = useMemo(() => totalsBy("house"), [entries]);
   const unusualEntries = entries.filter((entry) => Number(entry.km || 0) > 50);
   const nextMilestone = Math.ceil(totalKm / 500) * 500 || 500;
@@ -1259,7 +1340,7 @@ const totalsBy = (key) =>
   const currentUserEmail = (account?.email || "").toLowerCase();
 
   const myEntries = account
-    ? entries.filter((entry) => {
+    ? sortedEntries.filter((entry) => {
         const entryEmail = (entry.email || "").toLowerCase();
 
         return (
@@ -1268,6 +1349,33 @@ const totalsBy = (key) =>
         );
       })
     : [];
+
+  const handleExportCSV = () => {
+    const headers = ["Name", "Group", "House", "Distance (km)", "Date", "Email", "Entry Type"];
+    const csvContent = [
+      headers.join(","),
+      ...sortedEntries.map(entry => {
+        const name = `"${(entry.name || "").replace(/"/g, '""')}"`;
+        const group = `"${(entry.group || "").replace(/"/g, '""')}"`;
+        const house = `"${(entry.house || "").replace(/"/g, '""')}"`;
+        const km = entry.km || 0;
+        const date = `"${(entry.date || "").replace(/"/g, '""')}"`;
+        const email = `"${(entry.email || "").replace(/"/g, '""')}"`;
+        const type = entry.entryMode === "classTotal" ? "Class total" : "Personal";
+        return [name, group, house, km, date, email, type].join(",");
+      })
+    ].join("\n");
+
+    navigator.clipboard.writeText(csvContent)
+      .then(() => {
+        setCsvCopied(true);
+        setTimeout(() => setCsvCopied(false), 2000);
+      })
+      .catch(err => {
+        console.error("Failed to copy CSV: ", err);
+        alert("Failed to copy CSV to clipboard.");
+      });
+  };
 
   const myTotalKm = myEntries.reduce(
     (sum, entry) => sum + Number(entry.km || 0),
@@ -2379,7 +2487,7 @@ const totalsBy = (key) =>
                   <div className="mb-3 flex justify-between">
                     <h3 className="font-bold uppercase">Recent activity</h3>
                   </div>
-                  {entries.slice(0, 4).map((entry) => (
+                  {sortedEntries.slice(0, 4).map((entry) => (
                     <div
                       key={entry.id}
                       className="flex items-center gap-3 border-b border-slate-100 py-3 last:border-0"
@@ -2414,10 +2522,48 @@ const totalsBy = (key) =>
           </section>
         ) : isStaff ? (
           <section className="mx-auto mt-4 max-w-7xl space-y-4 px-4 sm:px-6 lg:px-10">
-            <div className="grid gap-4 lg:grid-cols-3">
+            <div className="grid gap-4 lg:grid-cols-3 items-start">
               <TeacherLeaderboard rows={individualLeaders} title="Individuals" />
-              <TeacherLeaderboard rows={groupLeaders} title="Year groups" />
-              <TeacherLeaderboard rows={houseLeaders} title="Houses" />
+              <TeacherLeaderboard rows={groupLeaders} title="Year groups" showAll={true} />
+              <div className="space-y-4">
+                <TeacherLeaderboard rows={houseLeaders} title="Houses" />
+                
+                <Card className="rounded-3xl border-slate-200 bg-white shadow-sm">
+                  <CardContent className="p-5 sm:p-6">
+                    <div className="mb-4 flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-3">
+                        <IconBox accent="purple">👥</IconBox>
+                        <h3 className="text-lg font-bold text-[#00236C]">Contributors</h3>
+                      </div>
+                      <span className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                        Staff only
+                      </span>
+                    </div>
+                    <div className="overflow-x-auto rounded-2xl border border-slate-200">
+                      <table className="w-full text-left text-sm">
+                        <thead className="bg-slate-50 text-slate-600">
+                          <tr>
+                            <th className="px-4 py-3">Year Group</th>
+                            <th className="px-4 py-3">Contributors</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                          {groupContributors.map((group) => (
+                            <tr key={group.name} className="hover:bg-slate-50 transition-colors">
+                              <td className="px-4 py-3 font-medium text-[#00236C]">
+                                {group.name}
+                              </td>
+                              <td className="px-4 py-3 font-bold text-[#FF2BD6]">
+                                {group.count}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
             </div>
 
             <Card className="rounded-3xl border-[#1CFFE3]/40 bg-white shadow-sm">
@@ -2491,8 +2637,11 @@ const totalsBy = (key) =>
               <CardContent className="p-5 sm:p-6">
                 <div className="mb-5 flex items-center justify-between gap-4">
                   <h3 className="text-xl font-bold">Teacher dashboard</h3>
-                  <Button className="border-[#00236C] bg-white px-4 py-2 text-[#00236C]">
-                    Export CSV
+                  <Button 
+                    onClick={handleExportCSV}
+                    className="border-[#00236C] bg-white px-4 py-2 text-[#00236C]"
+                  >
+                    {csvCopied ? "Copied to Clipboard! ✓" : "Export CSV"}
                   </Button>
                 </div>
 
@@ -2511,33 +2660,39 @@ const totalsBy = (key) =>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
-                      {entries.map((entry) => (
-                        <tr key={entry.id}>
-                          <td className="px-4 py-3 font-medium">
-                            {entry.name}
-                          </td>
-                          <td className="px-4 py-3">{entry.group}</td>
-                          <td className="px-4 py-3">{entry.house}</td>
-                          <td className="px-4 py-3">
-                            {formatKm(entry.km)} km
-                          </td>
-                          <td className="px-4 py-3">{entry.date}</td>
-                          <td className="px-4 py-3 text-xs">
-                            {entry.email || "—"}
-                          </td>
-                          <td className="px-4 py-3">
-                            {entry.entryMode === "classTotal" ? "Class total" : "Personal"}
-                          </td>
-                          <td className="px-4 py-3">
-                            <button
-                              onClick={() => handleDeleteOwnEntry(entry.id)}
-                              className="rounded-lg bg-red-50 px-3 py-1 text-sm font-semibold text-red-700 hover:bg-red-100"
-                            >
-                              Delete
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
+                      {sortedEntries.map((entry) => {
+                        const isHighEntry = Number(entry.km || 0) > 50;
+                        return (
+                          <tr 
+                            key={entry.id}
+                            className={isHighEntry ? "bg-amber-100/80 hover:bg-amber-200/70 transition-colors font-medium" : "hover:bg-slate-50 transition-colors"}
+                          >
+                            <td className="px-4 py-3 font-medium text-[#00236C]">
+                              {entry.name}
+                            </td>
+                            <td className="px-4 py-3">{entry.group}</td>
+                            <td className="px-4 py-3">{entry.house}</td>
+                            <td className={`px-4 py-3 ${isHighEntry ? "font-bold text-amber-800" : ""}`}>
+                              {formatKm(entry.km)} km
+                            </td>
+                            <td className="px-4 py-3">{entry.date}</td>
+                            <td className="px-4 py-3 text-xs">
+                              {entry.email || "—"}
+                            </td>
+                            <td className="px-4 py-3">
+                              {entry.entryMode === "classTotal" ? "Class total" : "Personal"}
+                            </td>
+                            <td className="px-4 py-3">
+                              <button
+                                onClick={() => handleDeleteOwnEntry(entry.id)}
+                                className="rounded-lg bg-red-50 px-3 py-1 text-sm font-semibold text-red-700 hover:bg-red-100"
+                              >
+                                Delete
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })}
                     </tbody>
                   </table>
                 </div>
