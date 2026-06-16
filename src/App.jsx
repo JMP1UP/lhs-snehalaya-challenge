@@ -247,6 +247,11 @@ function PublicSplashScreen({
                 <p className="mt-2 text-5xl font-extrabold">
                   {totalKm.toFixed(1)} km
                 </p>
+                {totalKm > 7000 && (
+                  <p className="text-sm font-bold text-[#FF2BD6] mt-1 animate-pulse">
+                    +{formatKm(totalKm - 7000)} km past target!
+                  </p>
+                )}
               </div>
 
               <div className="text-right">
@@ -1245,7 +1250,7 @@ export default function App() {
   );
 
   const challengeComplete = rawTotalKm >= TARGET_KM;
-  const totalKm = Math.min(rawTotalKm, TARGET_KM);
+  const totalKm = rawTotalKm;
   const displayTotalKm = account ? totalKm : (publicStats.totalKm || 0);
   const displayTargetKm = publicStats.targetKm || TARGET_KM;
 
@@ -1659,6 +1664,11 @@ const totalsBy = (key) =>
                   <p className="mt-1 text-3xl font-extrabold text-[#00236C]">
                     {formatKm(totalKm)} <span className="text-base">km</span>
                   </p>
+                  {totalKm > 7000 && (
+                    <p className="text-xs font-bold text-[#FF2BD6] mt-0.5 animate-pulse">
+                      +{formatKm(totalKm - 7000)} km past target!
+                    </p>
+                  )}
                   <p className="text-sm text-slate-500">
                     {challengeComplete ? "7,000 km completed" : "completed"}
                   </p>
@@ -1700,6 +1710,11 @@ const totalsBy = (key) =>
                     <p className="mt-1 text-3xl font-extrabold text-[#00236C]">
                       {formatKm(myTotalKm)} <span className="text-base">km</span>
                     </p>
+                    {myTotalKm > personalTargetKm && (
+                      <p className="text-xs font-bold text-[#FF2BD6] mt-0.5 animate-pulse">
+                        +{formatKm(myTotalKm - personalTargetKm)} km past target!
+                      </p>
+                    )}
                     <p className="text-sm text-slate-500">
                       of {formatKm(personalTargetKm)} km
                     </p>
@@ -2104,6 +2119,11 @@ const totalsBy = (key) =>
                           completed
                         </span>
                       </p>
+                      {totalKm > 7000 && (
+                        <p className="text-sm font-bold text-[#FF2BD6] mt-1 animate-pulse">
+                          +{formatKm(totalKm - 7000)} km past target!
+                        </p>
+                      )}
                     </div>
                     <div className="text-right">
                       <p className="text-2xl font-extrabold">
