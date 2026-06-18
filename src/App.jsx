@@ -209,13 +209,18 @@ function PublicSplashScreen({
         @keyframes confettiFall {
           0% { transform: translateY(-20px) rotate(0deg); opacity: 0; }
           10% { opacity: 1; }
-          100% { transform: translateY(360px) rotate(360deg); opacity: 0; }
+          100% { transform: translateY(800px) rotate(360deg); opacity: 0; }
         }
       `}</style>
 
       <main className="mx-auto flex min-h-screen max-w-4xl flex-col justify-center px-5 py-10">
         <div className="relative overflow-hidden rounded-[2rem] bg-white p-6 text-center shadow-xl ring-1 ring-slate-200 sm:p-10">
           {challengeComplete && <CelebrationConfetti />}
+          {challengeComplete && (
+            <div className="mx-auto mb-4 inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3.5 py-1.5 text-sm font-black text-emerald-700 ring-1 ring-emerald-600/10 animate-bounce">
+              <span>🎉</span> GOAL ACHIEVED! <span>🎉</span>
+            </div>
+          )}
           <h1 className="text-5xl font-black sm:text-7xl">
             <span className="text-[#FF2BD6]">7,000</span> KM CHALLENGE
           </h1>
@@ -1249,10 +1254,10 @@ export default function App() {
     [entries]
   );
 
-  const challengeComplete = rawTotalKm >= TARGET_KM;
   const totalKm = rawTotalKm;
   const displayTotalKm = account ? totalKm : (publicStats.totalKm || 0);
   const displayTargetKm = publicStats.targetKm || TARGET_KM;
+  const challengeComplete = displayTotalKm >= TARGET_KM;
 
   const progress = Math.min((displayTotalKm / displayTargetKm) * 100, 100);
   const remaining = Math.max(displayTargetKm - displayTotalKm, 0);
