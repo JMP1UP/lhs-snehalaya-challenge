@@ -217,8 +217,18 @@ function PublicSplashScreen({
         <div className="relative overflow-hidden rounded-[2rem] bg-white p-6 text-center shadow-xl ring-1 ring-slate-200 sm:p-10">
           {challengeComplete && <CelebrationConfetti />}
           {challengeComplete && (
-            <div className="mx-auto mb-4 inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3.5 py-1.5 text-sm font-black text-emerald-700 ring-1 ring-emerald-600/10 animate-bounce">
-              <span>🎉</span> GOAL ACHIEVED! <span>🎉</span>
+            <div className="flex flex-col items-center mb-4">
+              <div className="mx-auto inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3.5 py-1.5 text-sm font-black text-emerald-700 ring-1 ring-emerald-600/10 animate-bounce">
+                <span>🎉</span> GOAL ACHIEVED! <span>🎉</span>
+              </div>
+              <a
+                href={DONATION_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-2 inline-flex items-center gap-1 text-sm font-bold text-[#FF2BD6] hover:text-[#D91DB7] hover:underline transition-colors"
+              >
+                Celebrate by supporting Snehalaya ➜
+              </a>
             </div>
           )}
           <h1 className="text-5xl font-black sm:text-7xl">
