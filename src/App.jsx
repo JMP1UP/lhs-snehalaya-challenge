@@ -287,7 +287,7 @@ function PublicSplashScreen({
 
             <div className="mt-4 flex justify-between text-sm">
               <span className="font-bold text-[#00AFC4]">
-                {remaining.toFixed(1)} km to go
+                {challengeComplete ? "Target achieved! 🎉" : `${remaining.toFixed(1)} km to go`}
               </span>
 
               <span className="text-slate-500">
@@ -295,6 +295,8 @@ function PublicSplashScreen({
               </span>
             </div>
           </div>
+
+          <ChallengeInfographic />
 
           {isInAppBrowser && (
             <div className="mb-4 rounded-2xl border border-[#FFCC80] bg-[#FFF4E5] p-4 text-left text-sm text-[#663C00]">
@@ -348,6 +350,122 @@ function PublicSplashScreen({
     </div>
   );
 }
+
+function ChallengeInfographic() {
+  return (
+    <Card className="rounded-3xl border border-slate-200 bg-white shadow-sm overflow-hidden mt-6">
+      <div className="bg-[#00236C] p-6 text-white text-center relative overflow-hidden">
+        {/* Glow Effects */}
+        <div className="absolute top-0 left-1/4 w-32 h-32 bg-[#FF2BD6]/30 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 right-1/4 w-32 h-32 bg-[#00AFC4]/30 rounded-full blur-3xl pointer-events-none" />
+        
+        <span className="text-4xl inline-block animate-bounce mb-2">📊</span>
+        <h3 className="text-2xl font-black uppercase tracking-tight">Challenge Hall of Fame</h3>
+        <p className="text-[10px] text-slate-300 uppercase tracking-widest mt-1 font-bold">Leicester High Snehalaya Challenge 2026</p>
+      </div>
+      <CardContent className="p-6">
+        <div className="grid gap-4 grid-cols-2 lg:grid-cols-4 text-center">
+          <div className="rounded-2xl bg-slate-50 p-4 border border-slate-100 flex flex-col justify-center shadow-sm">
+            <span className="text-2xl mb-1">🏃‍♂️</span>
+            <p className="text-2xl font-black text-[#00236C] sm:text-3xl">8,535.1 km</p>
+            <p className="text-xs font-bold text-slate-500 uppercase mt-1">Total Distance</p>
+            <p className="text-[10px] text-[#FF2BD6] font-semibold mt-0.5">122% of target! 🎉</p>
+          </div>
+          <div className="rounded-2xl bg-slate-50 p-4 border border-slate-100 flex flex-col justify-center shadow-sm">
+            <span className="text-2xl mb-1">👥</span>
+            <p className="text-2xl font-black text-[#00236C] sm:text-3xl">125</p>
+            <p className="text-xs font-bold text-slate-500 uppercase mt-1">Unique Contributors</p>
+            <p className="text-[10px] text-emerald-600 font-semibold mt-0.5">Students & Staff</p>
+          </div>
+          <div className="rounded-2xl bg-slate-50 p-4 border border-slate-100 flex flex-col justify-center shadow-sm">
+            <span className="text-2xl mb-1">📝</span>
+            <p className="text-2xl font-black text-[#00236C] sm:text-3xl">849</p>
+            <p className="text-xs font-bold text-slate-500 uppercase mt-1">Activities Logged</p>
+            <p className="text-[10px] text-[#00AFC4] font-semibold mt-0.5">Walks, runs & jogs</p>
+          </div>
+          <div className="rounded-2xl bg-slate-50 p-4 border border-slate-100 flex flex-col justify-center shadow-sm">
+            <span className="text-2xl mb-1">🏆</span>
+            <p className="text-2xl font-black text-[#00236C] sm:text-3xl">176.7 km</p>
+            <p className="text-xs font-bold text-slate-500 uppercase mt-1">Longest Single Log</p>
+            <p className="text-[10px] text-slate-600 truncate mt-0.5">T Johnson (Staff)</p>
+          </div>
+        </div>
+
+        <div className="mt-8 grid gap-6 md:grid-cols-2">
+          {/* Top Individuals */}
+          <div className="rounded-2xl border border-slate-100 p-5 bg-gradient-to-b from-[#F7FAFF] to-white shadow-sm">
+            <h4 className="text-sm font-black uppercase text-[#00236C] mb-4 flex items-center gap-2">
+              🏅 Top 5 Individual Contributors
+            </h4>
+            <div className="space-y-3">
+              {[
+                { name: "T Johnson", group: "Staff", house: "Beaumanor", km: 558.9, entries: 19, rank: "🥇" },
+                { name: "A McMurray", group: "Staff", house: "None", km: 518.6, entries: 34, rank: "🥈" },
+                { name: "K Allen", group: "Staff", house: "Charnwood", km: 357.2, entries: 43, rank: "🥉" },
+                { name: "Charlene Baariu", group: "Year 12", house: "Beaumanor", km: 345.9, entries: 6, rank: "4th" },
+                { name: "Karam Sodhi", group: "Year 12", house: "Charnwood", km: 344.1, entries: 42, rank: "5th" }
+              ].map((ind, index) => (
+                <div key={index} className="flex items-center justify-between p-3 rounded-xl bg-white border border-slate-100 shadow-sm hover:border-[#FF2BD6]/30 transition-all duration-300">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <span className="text-xl font-bold flex-shrink-0 w-8 text-center">{ind.rank}</span>
+                    <div className="min-w-0">
+                      <p className="font-extrabold text-[#00236C] text-sm truncate">{ind.name}</p>
+                      <p className="text-[10px] text-slate-500 font-semibold uppercase">{ind.group} • {ind.house}</p>
+                    </div>
+                  </div>
+                  <div className="text-right flex-shrink-0">
+                    <p className="font-black text-[#FF2BD6] text-sm">{ind.km.toFixed(1)} km</p>
+                    <p className="text-[9px] text-slate-400 font-semibold">{ind.entries} logs</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* House Standings */}
+          <div className="rounded-2xl border border-slate-100 p-5 bg-gradient-to-b from-[#FFF0FB] to-white shadow-sm">
+            <h4 className="text-sm font-black uppercase text-[#00236C] mb-4 flex items-center gap-2">
+              🏰 Final House Standings
+            </h4>
+            <div className="space-y-4">
+              {[
+                { name: "Beaumanor", km: 2641.2, color: "from-[#FF2BD6] to-[#D91DB7]" },
+                { name: "Charnwood", km: 2460.7, color: "from-[#00AFC4] to-[#0092A5]" },
+                { name: "Bradgate", km: 2445.3, color: "from-[#00236C] to-[#001A50]" }
+              ].map((house, index) => {
+                const maxHouseKm = 2641.2;
+                const percentage = (house.km / maxHouseKm) * 100;
+                return (
+                  <div key={index} className="space-y-1">
+                    <div className="flex items-center justify-between text-xs font-bold">
+                      <span className="text-slate-700 flex items-center gap-1.5">
+                        <span className="text-sm">{index === 0 ? "👑" : "🏰"}</span>
+                        {house.name}
+                      </span>
+                      <span className="text-[#00236C]">{house.km.toFixed(1)} km</span>
+                    </div>
+                    <div className="h-3 overflow-hidden rounded-full bg-slate-100 border border-slate-200/50">
+                      <div
+                        className={`h-full rounded-full bg-gradient-to-r ${house.color}`}
+                        style={{ width: `${percentage}%` }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+              <div className="mt-4 rounded-xl bg-purple-50/50 border border-purple-100 p-3 text-center">
+                <p className="text-[11px] leading-relaxed text-purple-950 font-bold">
+                  🎉 Beaumanor House takes the crown, leading with 2,641.2 km! Congratulations to Charnwood and Bradgate for an incredibly close race.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
 function StatCard({ icon, label, value, detail, accent = "blue" }) {
   return (
     <Card className="rounded-2xl border-slate-200/80 bg-white shadow-sm">
@@ -1143,13 +1261,8 @@ export default function App() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-
-    const km =
-      form.type === "steps"
-        ? Number(form.steps || 0) * STEPS_TO_KM
-        : Number(form.km || 0);
-
-    const isClassTotal = isStaff && form.logMode === "classTotal";
+    alert("Submissions are closed. Thank you for your contribution!");
+    return;
 
     if (account && !isStaff && !profile.profileComplete) {
       alert("Please complete your profile first.");
@@ -1842,26 +1955,28 @@ const totalsBy = (key) =>
               <CelebrationConfetti />
               <CardContent className="relative p-6 text-center sm:p-8">
                 <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#1CFFE3]">
-                  Route complete
+                  Challenge Completed & Concluded
                 </p>
                 <h2 className="mt-2 text-3xl font-black sm:text-5xl">
-                  Together we made it!
+                  Together We Smashed Our Goal! 🎉
                 </h2>
-                <p className="mx-auto mt-3 max-w-2xl text-sm text-white/90 sm:text-base">
-                  Leicester High has completed the 7,000 km journey to Snehalaya.
-                  Personal sponsored targets remain open, so keep logging activity
-                  if you are still working towards your own goal.
+                <p className="mx-auto mt-3 max-w-2xl text-sm text-white/90 sm:text-base leading-relaxed">
+                  Leicester High School has officially completed the journey to Snehalaya.
+                  Submissions are now closed. We want to thank every contributor and donor for their amazing efforts.
+                  Thank you for your contribution!
                 </p>
                 <a
                   href={DONATION_URL}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-5 inline-block rounded-2xl bg-white px-5 py-3 text-sm font-bold text-[#00236C] shadow-sm hover:bg-[#EFFFFD]"
+                  className="mt-5 inline-block rounded-2xl bg-white px-5 py-3 text-sm font-bold text-[#00236C] shadow-sm hover:bg-[#EFFFFD] transition-transform hover:scale-105"
                 >
-                  Celebrate by Supporting Snehalaya
+                  Celebrate by Supporting Snehalaya ➜
                 </a>
               </CardContent>
             </Card>
+            
+            <ChallengeInfographic />
           </section>
         )}
 
@@ -2182,177 +2297,19 @@ const totalsBy = (key) =>
                 }`}
               >
                 <CardContent className="p-5 sm:p-6">
-                  <div className="mb-4 flex items-center gap-3">
-                    <IconBox>🏃</IconBox>
-                    <h3 className="text-lg font-bold uppercase">
-                      Log your activity
-                    </h3>
+                  <div className="rounded-2xl border border-[#FF2BD6]/30 bg-purple-50/50 p-6 text-center text-[#00236C] shadow-sm">
+                    <span className="text-5xl" role="img" aria-label="Celebration">🎉</span>
+                    <h4 className="mt-4 text-xl font-extrabold text-[#00236C] tracking-tight">Challenge Submissions Closed</h4>
+                    <p className="mt-2 text-base font-bold text-[#FF2BD6]">
+                      We have successfully completed our challenge!
+                    </p>
+                    <p className="mt-3 text-sm leading-relaxed text-slate-600 font-medium">
+                      Thank you so much for your incredible contributions, energy, and support. Every single step and kilometer you logged helped us smash past our 7,000 km target to reach Snehalaya!
+                    </p>
+                    <div className="mt-4 inline-block rounded-full bg-[#00236C] px-6 py-2 text-sm font-bold text-white shadow-md">
+                      Thank you for your contribution!
+                    </div>
                   </div>
-
-                  <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="grid grid-cols-2 gap-2 border-b border-slate-200 pb-2 text-sm font-bold">
-                      <button
-                        type="button"
-                        onClick={() => setForm({ ...form, type: "km" })}
-                        className={`rounded-lg py-2 ${
-                          form.type === "km"
-                            ? "bg-[#00236C] text-white"
-                            : "text-slate-500"
-                        }`}
-                      >
-                        KM
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setForm({ ...form, type: "steps" })}
-                        className={`rounded-lg py-2 ${
-                          form.type === "steps"
-                            ? "bg-[#00236C] text-white"
-                            : "text-slate-500"
-                        }`}
-                      >
-                        STEPS
-                      </button>
-                    </div>
-
-                    {isStaff && (
-                      <div className="grid grid-cols-2 gap-2 rounded-2xl bg-slate-100 p-1 text-sm font-bold">
-                        <button
-                          type="button"
-                          onClick={() => setForm({ ...form, logMode: "personal" })}
-                          className={`rounded-xl py-2 ${
-                            form.logMode === "personal"
-                              ? "bg-white text-[#00236C] shadow-sm"
-                              : "text-slate-500"
-                          }`}
-                        >
-                          My activity
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setForm({ ...form, logMode: "classTotal" })
-                          }
-                          className={`rounded-xl py-2 ${
-                            form.logMode === "classTotal"
-                              ? "bg-white text-[#00236C] shadow-sm"
-                              : "text-slate-500"
-                          }`}
-                        >
-                          Class total
-                        </button>
-                      </div>
-                    )}
-
-                    {isStaff && form.logMode === "classTotal" && (
-                      <div className="rounded-2xl border border-[#1CFFE3]/40 bg-[#EFFFFD] p-4 text-sm text-[#00236C]">
-                        <p className="font-bold">Class combined total</p>
-                        <p className="mt-1">
-                          Use this when a tutor is logging activity collected from a whole junior class. It will count towards the year group total, but not towards a house total.
-                        </p>
-                      </div>
-                    )}
-
-                    <input
-                      className="w-full rounded-xl border border-slate-200 px-4 py-3 text-base outline-none focus:border-[#00236C] disabled:bg-slate-100"
-                      value={form.name}
-                      disabled={!!account}
-                      onChange={(e) =>
-                        setForm({ ...form, name: e.target.value })
-                      }
-                      placeholder="Name"
-                    />
-
-                    {isStaff && form.logMode === "classTotal" ? (
-                      <div>
-                        <label className="mb-1 block text-sm font-bold text-[#00236C]">
-                          Year group for class total
-                        </label>
-                        <select
-                          className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:border-[#00236C]"
-                          value={form.classYearGroup}
-                          onChange={(e) =>
-                            setForm({ ...form, classYearGroup: e.target.value })
-                          }
-                        >
-                          {yearGroups
-                            .filter((group) => group !== "Staff")
-                            .map((group) => (
-                              <option key={group}>{group}</option>
-                            ))}
-                        </select>
-                      </div>
-                    ) : (
-                      <div className="grid gap-3 sm:grid-cols-2">
-                        <select
-                          className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:border-[#00236C] disabled:bg-slate-100"
-                          value={isStaff ? "Staff" : profile.yearGroup}
-                          disabled={!!account}
-                          onChange={(e) =>
-                            setProfile({ ...profile, yearGroup: e.target.value })
-                          }
-                        >
-                          {!isStaff && <option>{PLEASE_SELECT}</option>}
-                          {yearGroups.map((group) => (
-                            <option key={group}>{group}</option>
-                          ))}
-                        </select>
-
-                        <select
-                          className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:border-[#00236C] disabled:bg-slate-100"
-                          value={isStaff ? profile.house || "None" : profile.house}
-                          disabled={!!account && !isStaff}
-                          onChange={(e) =>
-                            isStaff
-                              ? setProfile({ ...profile, house: e.target.value })
-                              : setProfile({ ...profile, house: e.target.value })
-                          }
-                        >
-                          {!isStaff && <option>{PLEASE_SELECT}</option>}
-                          {(isStaff ? staffHouses : studentHouses).map((house) => (
-                            <option key={house}>{house}</option>
-                          ))}
-                        </select>
-                      </div>
-                    )}
-
-                    {form.type === "steps" ? (
-                      <input
-                        type="number"
-                        min="0"
-                        className="w-full rounded-xl border border-slate-200 px-4 py-3 text-base outline-none focus:border-[#00236C]"
-                        value={form.steps}
-                        onChange={(e) =>
-                          setForm({ ...form, steps: e.target.value })
-                        }
-                        placeholder="Steps, e.g. 10000"
-                      />
-                    ) : (
-                      <input
-                        type="number"
-                        min="0"
-                        step="0.1"
-                        className="w-full rounded-xl border border-slate-200 px-4 py-3 text-base outline-none focus:border-[#00236C]"
-                        value={form.km}
-                        onChange={(e) =>
-                          setForm({ ...form, km: e.target.value })
-                        }
-                        placeholder="Kilometres, e.g. 5.0"
-                      />
-                    )}
-
-                    <div className="rounded-2xl bg-[#EFFFFD] p-4 text-center text-sm text-[#00236C]">
-                      <p className="font-bold">Steps to km conversion</p>
-                      <p className="mt-1">10,000 steps ≈ 8 km</p>
-                    </div>
-
-                    <Button
-                      type="submit"
-                      className="w-full rounded-none bg-[#00236C] py-6 text-base font-bold text-white hover:bg-[#001A50]"
-                    >
-                      Log Activity
-                    </Button>
-                  </form>
                 </CardContent>
               </Card>
 
