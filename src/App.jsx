@@ -993,7 +993,6 @@ export default function App() {
   useEffect(() => {
     async function loadPublicStats() {
       try {
-        const { doc, getDoc } = await import("firebase/firestore");
         const statsRef = doc(db, "publicStats", "challenge");
         const statsSnap = await getDoc(statsRef);
 
