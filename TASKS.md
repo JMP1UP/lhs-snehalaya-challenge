@@ -1,6 +1,9 @@
 # Current priorities — LHS Snehalaya Challenge
 
 ## Now
+- [x] Build LHS 365 home and book-themed reading preview.
+- [x] Write the complete reading design brief.
+- [ ] Review fictional-data preview and settle reading launch rules.
 - [x] Establish 25Thirty Learning design standards in `docs/design.md`.
 - [x] Document challenge entry and house leaderboard user flows in `docs/user-flows.md`.
 - [ ] Audit React component styling (`src/index.css`) for 25Thirty Navy header and Inter typography.

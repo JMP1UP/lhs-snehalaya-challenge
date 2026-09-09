@@ -2,6 +2,17 @@
 
 > **A 25Thirty product**
 
+## LHS 365 reading preview — September 2026
+
+1. Open LHS 365 and choose the featured reading challenge.
+2. Read the session-preview notice; use fictional data.
+3. Add a book through catalogue search or manual entry; confirm the page count and starting page.
+4. Enter the page reached. Only the difference is contributed.
+5. Review personal page totals, completed books and reading-day milestones.
+6. Revisit the original steps challenge through the home collection.
+
+Failed lookup falls back to manual entry. Invalid or duplicate progress is rejected. Failed storage leaves the previous saved state intact. The full [design brief](reading-design-brief.md) distinguishes implemented preview flows from planned launch journeys. Older steps flows below describe the original product intent, not newly implemented reading features.
+
 ## 1. Student Challenge Entry & House Point Logging
 - **User**: Student / House Member
 - **Starting Point**: Challenge Dashboard

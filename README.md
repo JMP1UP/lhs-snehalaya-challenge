@@ -1,12 +1,24 @@
-# LHS Snehalaya Challenge
+# 25Thirty 365
 
-School fundraising and cultural-partnership application for challenge participation, house progress, sponsor pledges, updates, and staff oversight.
+Part of **25Thirty School**, with **LHS 365** as the Leicester High School programme. Intended address: `365.25thirty.school` (not connected yet). See [suite positioning](docs/suite-positioning.md).
+
+The fictional-data preview is published at [25thirty-365.vercel.app](https://25thirty-365.vercel.app) and linked from the live suite. See [deployment status and the remaining DNS record](docs/deployment.md).
+
+Learning and personal development beyond the school day, with a featured termly challenge and a collection of previous challenges.
+
+## Reading design preview — September 2026
+
+The home page now features **Read for Snehalaya** with an editorial book theme. Open `#/reading` to try a temporary bookshelf, book lookup/manual entry, incremental page logging and personal milestones. Reading data is saved only in this tab's session storage; use fictional entries. It is not submitted to school and does not update house or fundraising totals.
+
+The `#/steps` route is a read-only history page. The original steps source and its existing Firebase-hosted application are preserved separately. No route in the 365 preview initialises Firebase, signs in, or loads live participation records.
+
+Read the full [reading design brief](docs/reading-design-brief.md) for the permanent LHS 365 identity, challenge theme, journeys, scoring rules, inclusion and launch decisions. This build is **internal development**, not a live reading launch. Cloud storage, corrections and shared totals remain future work.
 
 ## Current implementation
 
 - React and Vite
 - Tailwind CSS and Framer Motion
-- Microsoft identity through MSAL
+- Microsoft identity through Firebase Authentication's Microsoft OAuth provider (legacy steps app)
 - Cloud Firestore with rules in `firestore.rules`
 - Firebase Hosting configuration in `firebase.json`
 
@@ -19,7 +31,9 @@ Pledges are not evidence of received funds, and student submissions are not veri
 3. Run `npm run dev`.
 4. Run `npm run build` before release.
 
-The repository currently has no automated application or Firestore-rule test command. Real student or financial use is blocked until authorization, school scope, approval, and aggregate-integrity rules have automated coverage.
+Run `npm test` for reading arithmetic and saved-record validation, `npm run lint:reading` for the new frontend, and `npm run build` for the full build. `npm run lint` checks the entire repository and currently reports existing errors in the legacy steps app. There is no TypeScript configuration or separate type-check command. There are still no automated Firestore-rule tests: real student or financial use remains blocked until authorization, school scope, approval and aggregate integrity have coverage.
+
+Book lookup requires a network connection to Google Books and can be unavailable or rate-limited. The manual form remains usable. Browser session storage is temporary and may not survive closing the tab; it is not account storage or a backup.
 
 ## Documentation
 

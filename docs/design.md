@@ -2,6 +2,10 @@
 
 > **by 25Thirty**
 
+## September 2026 — LHS 365 and challenge themes
+
+The new programme home is LHS 365. Its reading challenge uses the book-led visual system specified in [the full reading design brief](reading-design-brief.md): warm paper, forest green, serif display typography, illustrated covers and spines. This is the current direction for the new frontend, superseding the older navy/Inter-only treatment below for those pages. Shared navigation and interaction patterns remain consistent; each challenge can refresh its palette, artwork and editorial language. The existing steps app retains its original design.
+
 ## 1. Product Purpose
 LHS Snehalaya Challenge is a student fundraising, community engagement, and cultural partnership platform. It tracks student fundraising activities, house team progress, sponsor pledges, and cultural updates connecting Leicester High School with Snehalaya.
 

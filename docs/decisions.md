@@ -1,5 +1,17 @@
 # Architecture decisions
 
+## 2026-09-09 — Join the 25Thirty School suite
+
+Use **25Thirty 365** as the product, **LHS 365** as the school programme and `365.25thirty.school` as the planned address. Brand the header and metadata at product level, preserving challenge themes. Add an in-development listing to the suite homepage. This decision does not move hosting or data, or establish multi-school access. See `suite-positioning.md`.
+
+## 2026-09-09 — LHS 365 programme and reading preview
+
+**Status:** Implemented for internal development; live reading decisions pending.
+
+Use a persistent LHS 365 home with a featured challenge and collection of previous challenges. Keep stable navigation and interaction patterns while varying theme, artwork, palette and activity language. Reading uses a book-led editorial theme. Preserve the original steps experience and records at a separate route.
+
+Use temporary session storage for the first reviewable reading experience. Do not write to live school data or invent shared totals. Count incremental pages from an explicit starting point, completed books and distinct logging days. Catalogue metadata is a suggestion requiring edition/page confirmation; manual addition must remain available.
+
 ## 2026-08-01 — Use Microsoft identity and Firestore
 
 **Status:** Accepted for the current implementation

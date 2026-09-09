@@ -2,7 +2,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "node --test src/lhs365/*.test.mjs",
+    "lint": "eslint .",
+    "lint:reading": "eslint src/lhs365 src/main.jsx"
   },
   "dependencies": {
     "@tailwindcss/vite": "latest",
@@ -13,7 +16,12 @@
     "vite": "latest"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@vitejs/plugin-react": "latest",
+    "eslint": "^10.10.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.6",
+    "globals": "^17.12.0",
     "tailwindcss": "latest"
   }
 }

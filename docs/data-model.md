@@ -1,5 +1,11 @@
 # Data model
 
+## Reading preview records
+
+The new preview uses session storage only, isolated from steps records. A book contains `id`, `title`, `author`, `total`, `start`, `current` and `logs`. Each log has positive `pages` and a local calendar `date`. Contributions equal `current - start`; the log sum must agree. Completion requires `current === total` and new progress beyond `start`. Days are distinct logging dates across all books.
+
+Records are validated on restoration and before updates. These are self-reported trial values, not school-approved activity. No shared totals or live reading collections exist yet. Production ownership, corrections, concurrent updates, retention and staff access require implementation before launch.
+
 ## Storage and identity
 
 The application uses Microsoft sign-in through MSAL and Cloud Firestore through `src/firebase.js`. Firestore is the shared store; rules in `firestore.rules` are the authorization boundary. Demo and presentation content may also be embedded in the React application.

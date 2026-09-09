@@ -1,5 +1,13 @@
 # Architecture
 
+## LHS 365 frontend — September 2026
+
+`src/main.jsx` mounts `src/lhs365/Lhs365.jsx`, which provides hash navigation for home, reading and a static steps-history page. `StepsArchive.jsx` has no Firebase imports or live-data actions. The original `src/App.jsx` remains in source but is not imported or bundled by the preview. `src/lhs365/challenges.js` is the catalogue; stable IDs and explicit status keep future challenges distinct.
+
+`ReadingChallenge.jsx` owns the temporary bookshelf UI. `reading.mjs` validates records and computes page deltas, completion and distinct logging days. Session storage uses `lhs365:reading-preview:v1`; it contains only preview book records, not identity. No reading data is written to Firestore. Book search calls Google Books without sending identity or the bookshelf.
+
+Live reading will require a separate school-scoped, owner-authorised data model with tested corrections and aggregates. The preview must not be relabelled live merely by removing its notice.
+
 ## Runtime and frontend
 
 The challenge app is a React application built with Vite and styled with Tailwind and application CSS. `src/App.jsx` contains the principal product workflow; reusable UI components live under `src/components/ui/`. Framer Motion provides animation.
