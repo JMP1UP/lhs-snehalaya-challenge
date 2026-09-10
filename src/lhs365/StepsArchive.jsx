@@ -1,7 +1,7 @@
 export default function StepsArchive() {
   return <>
     <section className="reading-heading">
-      <a className="text-link" href="#/">← Back to the challenge collection</a>
+      <a className="text-link" href="#/challenges">← Back to the challenge collection</a>
       <div className="eyebrow">Our first challenge · Movement & community</div>
       <h1>Steps to <em>Snehalaya.</em></h1>
       <p>A shared journey from Leicester to Snehalaya, one step at a time.</p>

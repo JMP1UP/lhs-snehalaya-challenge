@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   createBook,
   localDate,
@@ -8,6 +8,7 @@ import {
   STORAGE_KEY,
   updateBook,
 } from "./reading.mjs";
+import BookTower from "./BookTower";
 import { searchBooks } from "./catalogue.mjs";
 
 function initialShelf() {
@@ -39,7 +40,7 @@ function BookCard({ book, onUpdate }) {
           {finished ? "Finished" : "Currently reading"}
         </span>
         <h3>{book.title}</h3>
-        <p>{book.author || "Author not added"}</p>
+        {book.author && <p>{book.author}</p>}
         <progress
           max={book.total}
           value={book.current}
@@ -79,7 +80,7 @@ function BookCard({ book, onUpdate }) {
                 aria-describedby={error ? `error-${book.id}` : undefined}
               />
               <button className="button primary" type="submit">
-                Save progress
+                Save pages
               </button>
             </div>
             {error && (
@@ -90,7 +91,7 @@ function BookCard({ book, onUpdate }) {
           </form>
         )}
         {finished && (
-          <p className="completion">✓ Book complete. Your next story awaits.</p>
+          <p className="completion">✓ Finished</p>
         )}
       </div>
     </article>
@@ -116,6 +117,14 @@ export default function ReadingChallenge() {
   const searchId = useRef(0);
   const addButton = useRef(null);
   const stats = readingStats(books);
+  const finishedSummary = useRef(null);
+  const focusFinished = useRef(false);
+  useEffect(() => {
+    if (focusFinished.current) {
+      finishedSummary.current?.focus();
+      focusFinished.current = false;
+    }
+  }, [books]);
 
   function save(next, message) {
     persistBooks(next);
@@ -161,38 +170,18 @@ export default function ReadingChallenge() {
   return (
     <>
       <section className="reading-heading">
-        <a className="text-link" href="#/">
-          ← Back to LHS 365
-        </a>
-        <div className="eyebrow">Autumn term 2026 · Reading & discovery</div>
-        <h1>
-          Read for <em>Snehalaya.</em>
-        </h1>
-        <p>Find a story. Make a little time. See how far it takes you.</p>
+        <div className="eyebrow">LHS 365 · Autumn 2026</div>
+        <h1>Read. Stack. <em>Reach higher.</em></h1>
       </section>
       <div className="preview-note">
-        <strong>You’re trying the reading preview.</strong> Books and progress
-        stay in this tab’s browser session. They are not submitted to school or
-        added to house totals. Use fictional entries for now.
+        Preview · Fictional entries only. Saved in this tab; not sent to school.
       </div>
-      <section className="reading-stats" aria-label="Your preview progress">
-        {[
-          ["Pages contributed", stats.pages],
-          ["Books finished", stats.finished],
-          ["Reading days", stats.days],
-        ].map(([label, value]) => (
-          <div key={label}>
-            <strong>{value.toLocaleString()}</strong>
-            <span>{label}</span>
-          </div>
-        ))}
-      </section>
+      <div className="reading-workspace">
       <div className="reading-layout">
         <section>
           <div className="section-heading">
             <div>
-              <span className="eyebrow">Your next chapter</span>
-              <h2>My bookshelf</h2>
+              <h2>Log your reading</h2>
             </div>
             <button
               ref={addButton}
@@ -386,81 +375,58 @@ export default function ReadingChallenge() {
           {books.length === 0 && !adding && (
             <div className="empty-shelf">
               <span aria-hidden="true">Aa</span>
-              <h3>A whole world on your bookshelf.</h3>
+              <h3>What are you reading?</h3>
               <p>
-                Add your first book, then log the page you’ve reached.
-                <br />
-                Every new page is a little progress.
+                Add a book. Tell us the page you’ve reached.
               </p>
               <button className="text-link" onClick={() => setAdding(true)}>
-                Find my first book →
+                Add my first book →
               </button>
             </div>
           )}
           <div className="books-list">
-            {books.map((book) => (
+            {books.filter((book) => book.current < book.total).map((book) => (
               <BookCard
                 key={book.id}
                 book={book}
-                onUpdate={(next) =>
+                onUpdate={(next) => {
+                  const completed = next.current === next.total;
                   save(
                     books.map((item) => (item.id === next.id ? next : item)),
-                    `${next.current - book.current} pages added. Nicely done.`,
-                  )
-                }
+                    completed
+                      ? `${next.current - book.current} pages added. Finished ${next.title}.`
+                      : `${next.current - book.current} pages added.`,
+                  );
+                  if (completed) focusFinished.current = true;
+                }}
               />
             ))}
           </div>
+          {books.some((book) => book.current === book.total) && (
+            <details className="finished-books">
+              <summary ref={finishedSummary}>Finished books ({books.filter((book) => book.current === book.total).length})</summary>
+              {books.filter((book) => book.current === book.total).map((book) => (
+                <BookCard key={book.id} book={book} />
+              ))}
+            </details>
+          )}
         </section>
-        <aside className="reading-aside">
-          <section className="milestone-panel">
-            <span className="eyebrow">Small steps, lasting habits</span>
-            <h2>Your milestones</h2>
-            {[
-              ["A new chapter", "Log your first pages", stats.pages > 0],
-              [
-                "Between the covers",
-                "Finish your first book",
-                stats.finished > 0,
-              ],
-              ["Making time", "Read on 3 different days", stats.days >= 3],
-              ["Page by page", "Contribute 100 pages", stats.pages >= 100],
-            ].map(([title, detail, earned]) => (
-              <div
-                className={`milestone ${earned ? "earned" : ""}`}
-                key={title}
-              >
-                <span aria-hidden="true">{earned ? "✓" : "○"}</span>
-                <div>
-                  <strong>{title}</strong>
-                  <small>
-                    {detail} · {earned ? "Earned" : "To discover"}
-                  </small>
-                </div>
-              </div>
-            ))}
-          </section>
-          <section className="passport-panel">
-            <span className="eyebrow">A reading passport</span>
-            <h3>Follow your curiosity.</h3>
-            <p>
-              Try a poem. Explore a graphic novel. Discover an Indian author.
-              Read something a friend loves.
-            </p>
-            <p>These are invitations. Choose what interests you.</p>
-          </section>
-          <section className="community-panel">
-            <h3>A shared purpose</h3>
-            <p>
-              The school target and house participation will appear here when
-              the challenge launches.
-            </p>
-            <p>
-              Reading aloud and supported reading belong here too. The launch
-              rules will explain how everyone can take part.
-            </p>
-          </section>
-        </aside>
+      </div>
+        <div className="reading-mission-column">
+      <BookTower pages={stats.pages} />
+      <section className="reading-stats" aria-label="Your preview progress">
+        {[
+          ["Your pages", stats.pages],
+          ["Books", stats.finished],
+          ["Days reading", stats.days],
+        ].map(([label, value]) => (
+          <div key={label}>
+            <strong>{value.toLocaleString()}</strong>
+            <span>{label}</span>
+          </div>
+        ))}
+      </section>
+        </div>
       </div>
     </>
   );

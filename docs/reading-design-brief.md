@@ -1,5 +1,14 @@
 # 25Thirty 365 — Read for Snehalaya at Leicester High School
 
+## Revised direction — 10 September 2026
+
+This direction supersedes the editorial landing-page and milestone-sidebar layouts below. Logging is the primary task: current book, page reached, Save pages. The default route opens this workflow; on desktop the mission sits beside it and on phones below it. Finished books sit in a disclosure; the collection moves to `#/challenges`. Keep the cream paper, serif headings, illustrated books and suite navigation, but remove promotional sections and repeated encouragement.
+
+The mission is **a virtual book tower, as tall as…** Pages are the input; estimated height is the shared visual outcome. The explicit illustrative conversion is 0.05 mm per page (1,000 pages = 5 cm), not measured book thickness. Doorway 2 m = 40,000 pages; representative giraffe 5 m = 100,000 pages; Elizabeth Tower 96 m = 1,920,000 pages. Landmark sources are linked in the in-app disclosure. Drawn book spines are decorative and labelled not to scale; numeric height and the progress bar are authoritative. No weight or real-book-equivalence claim is made.
+
+The current preview uses only the reader's fictional session entries. Landmark buttons explore targets without changing data. Shared aggregation and the actual term target remain future work; choose the target using pupil numbers, expected reading and term length. Do not inflate existing pages to fit a goal.
+
+
 Suite update: **25Thirty 365** is the product within **25Thirty School**. **LHS 365** remains the school programme. The intended product address is `365.25thirty.school`, still planned. Use suite navy/teal branding for navigation and retain the reading theme below within the school experience. See [suite positioning](suite-positioning.md).
 
 Design brief · 9 September 2026 · Internal development preview

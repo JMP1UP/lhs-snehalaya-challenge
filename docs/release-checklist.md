@@ -1,5 +1,12 @@
 # Release checklist
 
+## Tower redesign — 10 September 2026
+
+Classification: **external pilot of a fictional-data design preview**, not a real-pupil release. John Partridge remains the owner. All 19 tests, reading lint and Vite production build pass. Browser verification: default logging route; 20→100 contributes 80 pages/4 mm; finish at 120 contributes 100 pages/5 mm and survives refresh. Backward update rejected. Changing landmark preserves height. Finished books expand correctly; completed-save focus moves to their native summary and announces the book. Independent review and correction verification passed.
+
+Desktop and 390px phone layouts inspected, with no horizontal overflow. Logging precedes the mission on mobile. Challenge collection/archive/return navigation works. Session key and records are unchanged; no authentication, Firebase, email, migration or school totals were added. Existing live lookup verification and DNS limitations remain open. Prior publication is the rollback target in deployment.md.
+
+
 ## 25Thirty 365 suite branding — 9 September 2026
 
 New frontend lint, all 16 reading/catalogue tests and production build pass locally and on Vercel. The preview is published at `https://25thirty-365.vercel.app`, and the suite listing is live. Independent review and correction verification passed. The `#/steps` page is now static; no route loads live Firebase data. The original challenge records remain intact. `365.25thirty.school` awaits Cloudflare DNS access; no data migration has occurred. See `deployment.md` for publication IDs, checks and the exact remaining action.

@@ -1,5 +1,10 @@
 # Roadmap
 
+## Tower follow-up — 10 September 2026
+
+Implemented the logging-first layout and estimated-height landmark preview. Before a school launch, agree a realistic term landmark, implement school-scoped aggregation and correction, and settle inclusive reading rules. Existing DNS and live-provider verification tasks remain open.
+
+
 ## Now
 
 - Review the LHS 365 book-themed frontend and reading flow with fictional data.

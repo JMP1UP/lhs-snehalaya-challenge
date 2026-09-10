@@ -8,7 +8,7 @@ Learning and personal development beyond the school day, with a featured termly 
 
 ## Reading design preview — September 2026
 
-The home page now features **Read for Snehalaya** with an editorial book theme. Open `#/reading` to try a temporary bookshelf, book lookup/manual entry, incremental page logging and personal milestones. Reading data is saved only in this tab's session storage; use fictional entries. It is not submitted to school and does not update house or fundraising totals.
+The home page opens directly into page logging, with current books first and finished books folded away. A book tower converts newly read pages into estimated height (1,000 pages = 5 cm), with doorway, giraffe and Elizabeth Tower comparisons. `#/challenges` holds the challenge collection. Book lookup/manual entry and session storage are preserved. Use fictional entries: nothing is submitted to school or added to shared totals.
 
 The `#/steps` route is a read-only history page. The original steps source and its existing Firebase-hosted application are preserved separately. No route in the 365 preview initialises Firebase, signs in, or loads live participation records.
 

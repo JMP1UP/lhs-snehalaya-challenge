@@ -1,5 +1,10 @@
 # Architecture decisions
 
+## 10 September 2026 — Logging first; a tower as tall as…
+
+Following user feedback, replace the promotional home with the logger and a virtual book tower. Use an explicit estimated 0.05 mm/page conversion, with selectable landmark examples. Keep actual completed books separate from the illustration. The school target is not approved by selecting a preview landmark. Preserve existing session data and original steps records.
+
+
 ## 2026-09-09 — Join the 25Thirty School suite
 
 Use **25Thirty 365** as the product, **LHS 365** as the school programme and `365.25thirty.school` as the planned address. Brand the header and metadata at product level, preserving challenge themes. Add an in-development listing to the suite homepage. This decision does not move hosting or data, or establish multi-school access. See `suite-positioning.md`.

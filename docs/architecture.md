@@ -1,5 +1,10 @@
 # Architecture
 
+## Logging and tower update — 10 September 2026
+
+`/` and `/reading` render the logger; `/challenges` renders the concise catalogue; `/steps` stays static. `tower.mjs` derives estimated height and bounded goal progress from validated contributed pages. `BookTower.jsx` owns only the temporary landmark selection. Stored book records and their key are unchanged; no Firebase or shared-school writes were added.
+
+
 ## LHS 365 frontend — September 2026
 
 `src/main.jsx` mounts `src/lhs365/Lhs365.jsx`, which provides hash navigation for home, reading and a static steps-history page. `StepsArchive.jsx` has no Firebase imports or live-data actions. The original `src/App.jsx` remains in source but is not imported or bundled by the preview. `src/lhs365/challenges.js` is the catalogue; stable IDs and explicit status keep future challenges distinct.

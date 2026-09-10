@@ -1,18 +1,20 @@
 # 25Thirty 365 — published design preview
 
-Date: 9 September 2026. Owner: John Partridge. Classification: external design preview, fictional entries only. This is not a real-pupil pilot.
+Date: 10 September 2026. Owner: John Partridge. Classification: external pilot of a design preview, fictional entries only. This is not a real-pupil pilot.
 
 ## Current publication
 
 - Public preview: `https://25thirty-365.vercel.app`.
 - Host: separate Vercel project `25thirty-365` (`prj_YXRk7mn2TC6sPgv5iPYx1pTEsyJq`).
-- Deployment: `dpl_82c3A513EGVDAXLND3wmSuJGBLYY`, `25thirty-365-pmvhj1eig-john-s-projects7.vercel.app`.
+- Deployment: `dpl_GgKN9tLCBofM9M7BfeTxM7N7e3of`, `25thirty-365-4aao7c91y-john-s-projects7.vercel.app`.
 - Suite: `https://25thirty.school/#365`, with a working preview link.
 - Custom address: `365.25thirty.school`, associated with this project but awaiting DNS.
 
+The logging-first tower redesign is published. Public browser verification confirms the logger and landmark controls render on the default route.
+
 ## Completed checks
 
-- New frontend lint, 16 reading/catalogue tests and Vite build pass locally and on Vercel.
+- New frontend lint, 19 reading/catalogue/tower tests and Vite build pass locally and on Vercel.
 - Public preview returns HTTP 200 and `X-Robots-Tag: noindex, nofollow`.
 - Delivered JavaScript contains the static archive and no Firebase project/auth/Firestore code.
 - Independent implementation review found two issues; static history and separate Vercel hosting corrected both. One verification review passed.
@@ -34,6 +36,6 @@ Do not change nameservers, the root domain or other product records. There were 
 
 ## Rollback and future changes
 
-Previous preview rollback: `25thirty-365-oe0q14jfv-john-s-projects7.vercel.app`; the original steps site remains the historical fallback. To withdraw this preview, remove its suite link and unpublish/disable only the new Vercel project. Do not deploy the root Firebase configuration: `.firebaserc` still names the original steps project.
+Previous preview rollback: `25thirty-365-pmvhj1eig-john-s-projects7.vercel.app`; the original steps site remains the historical fallback. To withdraw this preview, remove its suite link and unpublish/disable only the new Vercel project. Do not deploy the root Firebase configuration: `.firebaserc` still names the original steps project.
 
 Future Vercel deployments use `vercel.json` to run reading lint, tests and build. Keep `.vercel` and `.env.local` ignored. Persistent school data, corrections, shared totals and real-pupil permissions still require separate implementation and approval before a school pilot.

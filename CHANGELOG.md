@@ -1,5 +1,13 @@
 # Changelog — LHS Snehalaya Challenge
 
+## 2026-09-10 — Read. Stack. Reach higher.
+
+- Open directly into logging; move challenge history to its own view and collapse finished books.
+- Replace promotional copy and milestone sidebar with a book tower and landmark targets.
+- Estimate height from contributed pages, keeping saved records and actual completed-book counts separate.
+- Add boundary, conversion and landmark tests; retain the fictional-session limitation.
+
+
 All notable changes to LHS Snehalaya Challenge are recorded here.
 
 ## [Unreleased] - 2026-09-09
