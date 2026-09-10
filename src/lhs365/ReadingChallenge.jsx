@@ -144,7 +144,7 @@ export default function ReadingChallenge() {
       setResults(matches);
       setSearchMessage(
         matches.length
-          ? "Choose your edition, then check its page count against your copy."
+          ? "Choose your book, then check the page count against your copy."
           : "No matches found. Try an ISBN, or add your book manually below.",
       );
     } catch (err) {
@@ -235,7 +235,7 @@ export default function ReadingChallenge() {
                   </button>
                 </div>
                 <small>
-                  Search terms are sent to Google Books. Don’t include personal
+                  Search terms go to Google Books and, if unavailable, Open Library. Don’t include personal
                   information.
                 </small>
               </form>
@@ -262,7 +262,9 @@ export default function ReadingChallenge() {
                             start: "0",
                           });
                           setSearchMessage(
-                            "Book selected. Check the details below before adding it.",
+                            result.pageCountEstimated
+                              ? "Book selected. This is an estimated page count across editions — check your copy before adding it."
+                              : "Book selected. Check the details below before adding it.",
                           );
                           setResults([]);
                         }}
@@ -273,10 +275,10 @@ export default function ReadingChallenge() {
                             "Author unknown"}{" "}
                           · {result.publishedDate || "Date unknown"} ·{" "}
                           {result.pageCount
-                            ? `${result.pageCount} pages`
+                            ? `${result.pageCountEstimated ? "Approx. " : ""}${result.pageCount} pages`
                             : "Page count unavailable"}
                         </span>
-                        <small>{result.publisher || "Publisher unknown"}</small>
+                        <small>{result.source || result.publisher || "Publisher unknown"}{result.pageCountEstimated ? " · Check your edition’s page count" : ""}</small>
                       </button>
                     </li>
                   ))}

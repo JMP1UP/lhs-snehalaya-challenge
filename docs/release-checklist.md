@@ -1,5 +1,10 @@
 # Release checklist
 
+## Catalogue fallback — 10 September 2026
+
+Google Books returned HTTP 429 quota exhaustion for Dune. Added Open Library search fallback on provider failure with bounded timeout/results and sanitised metadata. Open Library work-level median page counts are explicitly approximate and editable, never claimed as edition-specific. Search privacy copy names both providers. Browser verified live Dune/Frank Herbert result and selection prefilling 607 with the estimate warning; 22 tests, reading lint and build pass. Manual fallback and stale-search protection remain intact.
+
+
 ## Celebrating the first adventure — 10 September 2026
 
 Replaced the prose-only steps archive with a finish-line celebration: 8,535.1 km, 122% of the 7,000 km goal, 125 contributors and 849 activities, copied from the original App.jsx Hall of Fame. Illustrated route is explicitly non-geographical. No individual records or Firebase loads. Home recap now celebrates the result. Empty reading shelves open the first-book form immediately without autofocus, preserving quick logging and Cancel. Desktop and 390px layouts checked; first-book submission and 20-page/1-mm update work. Existing 19 tests, reading lint and build passed.

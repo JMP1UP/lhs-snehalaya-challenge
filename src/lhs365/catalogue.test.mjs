@@ -39,3 +39,34 @@ test("rate limits, network failure, malformed responses and timeouts reject for 
 test("blank search never calls the provider", async () => {
   await assert.rejects(searchBooks("  ", async()=>assert.fail("must not call provider")), /Enter a title/);
 });
+
+test("Google quota exhaustion falls back to Open Library and labels edition estimates", async () => {
+  const urls = [];
+  const result = await searchBooks("Dune", async url => {
+    urls.push(url);
+    if (new URL(url).host === "www.googleapis.com") return {ok:false,status:429};
+    assert.equal(new URL(url).searchParams.get("q"), "Dune");
+    return {ok:true,json:async()=>({docs:[{key:"/works/OL893414W",title:"Dune",author_name:["Frank Herbert"],number_of_pages_median:607,first_publish_year:1965}]})};
+  });
+  assert.equal(urls.length, 2);
+  assert.equal(result[0].title, "Dune");
+  assert.equal(result[0].pageCount, 607);
+  assert.equal(result[0].pageCountEstimated, true);
+  assert.equal(result[0].source, "Open Library");
+});
+
+test("fallback handles missing and malformed fields without inventing page counts", async () => {
+  const result = await searchBooks("Book", async url => new URL(url).host === "www.googleapis.com"
+    ? {ok:false,status:503}
+    : {ok:true,json:async()=>({docs:[null,{title:"Book",author_name:[{},"Author"],number_of_pages_median:-1,first_publish_year:{}},{title:" "}]})});
+  assert.equal(result.length, 1);
+  assert.deepEqual(result[0].authors, ["Author"]);
+  assert.equal(result[0].pageCount, undefined);
+  assert.equal(result[0].publishedDate, "");
+});
+
+test("fallback distinguishes a successful empty result from both providers failing", async () => {
+  assert.deepEqual(await searchBooks("Unknown", async url => new URL(url).host === "www.googleapis.com"
+    ? {ok:false,status:429} : {ok:true,json:async()=>({docs:[]})}), []);
+  await assert.rejects(searchBooks("Dune", async () => ({ok:false,status:503})), /unavailable/);
+});

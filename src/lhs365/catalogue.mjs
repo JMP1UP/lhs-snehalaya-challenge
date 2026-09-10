@@ -1,6 +1,6 @@
 const text = (value, limit = 200) => typeof value === "string" ? value.trim().slice(0, limit) : "";
 
-export async function searchBooks(query, fetcher = fetch) {
+async function searchGoogle(query, fetcher) {
   const term = text(query);
   if (!term) throw new Error("Enter a title, author or ISBN.");
   const response = await fetcher(
@@ -22,4 +22,43 @@ export async function searchBooks(query, fetcher = fetch) {
       pageCount: Number.isInteger(volume.pageCount) && volume.pageCount > 0 && volume.pageCount <= 20000 ? volume.pageCount : undefined,
     }];
   });
+}
+
+async function searchOpenLibrary(query, fetcher) {
+  const response = await fetcher(
+    `https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=6&fields=key,title,author_name,number_of_pages_median,first_publish_year`,
+    { signal: AbortSignal.timeout(12000) },
+  );
+  if (!response.ok) throw new Error("Book search is unavailable just now.");
+  const data = await response.json();
+  if (!data || !Array.isArray(data.docs)) throw new Error("The book catalogue returned an invalid response.");
+  return data.docs.slice(0, 6).flatMap((book) => {
+    const title = text(book?.title);
+    if (!title) return [];
+    const pages = book.number_of_pages_median;
+    return [{
+      id: text(book.key), title,
+      authors: Array.isArray(book.author_name) ? book.author_name.map(author => text(author)).filter(Boolean).slice(0, 10) : [],
+      publisher: "",
+      publishedDate: Number.isInteger(book.first_publish_year) ? String(book.first_publish_year) : "",
+      pageCount: Number.isInteger(pages) && pages > 0 && pages <= 20000 ? pages : undefined,
+      pageCountEstimated: true,
+      source: "Open Library",
+    }];
+  });
+}
+
+export async function searchBooks(query, fetcher = fetch) {
+  const term = text(query);
+  if (!term) throw new Error("Enter a title, author or ISBN.");
+  try {
+    return await searchGoogle(term, fetcher);
+  } catch (primaryError) {
+    try {
+      return await searchOpenLibrary(term, fetcher);
+    } catch {
+      // Preserve the primary failure type for the existing timeout/offline UI.
+      throw primaryError;
+    }
+  }
 }

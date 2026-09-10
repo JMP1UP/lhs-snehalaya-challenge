@@ -1,5 +1,10 @@
 # Architecture
 
+## Catalogue fallback — 10 September 2026
+
+Google Books returned HTTP 429 quota exhaustion for Dune. Added Open Library search fallback on provider failure with bounded timeout/results and sanitised metadata. Open Library work-level median page counts are explicitly approximate and editable, never claimed as edition-specific. Search privacy copy names both providers. Browser verified live Dune/Frank Herbert result and selection prefilling 607 with the estimate warning; 22 tests, reading lint and build pass. Manual fallback and stale-search protection remain intact.
+
+
 ## Reading refinements — 10 September 2026
 
 BookTower now receives existing books as well as contributed pages, deriving a decorative stack from up to eight books with positive contributions. No new stored fields; arithmetic remains in tower.mjs.
