@@ -51,3 +51,7 @@ LHS Snehalaya Challenge strictly adheres to the **25Thirty Learning** design mod
 ## 7. Branding Standards
 - Product Name: **LHS Snehalaya Challenge**
 - Endorsement: **by 25Thirty** (Header), **A 25Thirty product** (Footer)
+
+## Reading admin — 10 September 2026
+
+Reading admin uses the bright LHS 365 navy, magenta and yellow palette. Four compact totals lead into the largest contributor, separate student/staff top tens, three house cards and a private no-pages list. Filters affect every report. Fictional preview status remains prominent; live data is accessible only after school admin sign-in.

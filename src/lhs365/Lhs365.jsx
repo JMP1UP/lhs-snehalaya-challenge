@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import ReadingChallenge from "./ReadingChallenge";
+import ReadingAccess from "./ReadingAccess";
+import AdminDashboard from "./AdminDashboard";
+import { liveReading } from "./reading-client.mjs";
 import StepsArchive from "./StepsArchive";
 import "./lhs365.css";
 import "./challenge-brand.css";
@@ -21,11 +23,11 @@ function Home() {
       </section>
       <section className="reading-feature" aria-labelledby="reading-feature-title">
         <div className="reading-feature-copy">
-          <span className="challenge-badge">📚 THIS TERM · READING PREVIEW</span>
+          <span className="challenge-badge">📚 THIS TERM · {liveReading ? "READING CHALLENGE" : "READING PREVIEW"}</span>
           <h2 id="reading-feature-title">Read. Stack.<br /><em>Reach higher.</em></h2>
           <p>Can our book tower grow as tall as a giraffe?</p>
           <a className="challenge-cta" href="#/reading">Log your reading <span aria-hidden="true">➜</span></a>
-          <small>Fictional entries only for now.</small>
+          {!liveReading && <small>Fictional entries only for now.</small>}
         </div>
         <div className="home-book-art" aria-hidden="true">
           <span className="book-art-sticker">HOW HIGH<br />CAN WE GO?</span>
@@ -61,7 +63,7 @@ export default function Lhs365() {
     return () => window.removeEventListener("hashchange", navigate);
   }, []);
   useEffect(() => {
-    document.title = `${route === "/reading" ? "Read for Snehalaya" : route === "/steps" ? "Steps to Snehalaya" : "Learning beyond school"} | 25Thirty 365 · Leicester High School`;
+    document.title = `${route === "/admin" ? "Reading admin" : route === "/reading" ? "Read for Snehalaya" : route === "/steps" ? "Steps to Snehalaya" : "Learning beyond school"} | 25Thirty 365 · Leicester High School`;
   }, [route]);
   return (
     <div className={`lhs365 ${route === "/reading" ? "reading-theme" : "adventure-theme"}`}>
@@ -95,10 +97,11 @@ export default function Lhs365() {
         <span className="school-context">A little every day. <span aria-hidden="true">✦</span></span>
       </header>
       <main id="main-content" ref={main} tabIndex={-1}>
-        {route === "/steps" ? <StepsArchive /> : route === "/reading" ? <ReadingChallenge /> : <Home />}
+        {route === "/steps" ? <StepsArchive /> : route === "/admin" ? <AdminDashboard /> : route === "/reading" ? <ReadingAccess /> : <Home />}
       </main>
       <footer className="site-footer">
         <p>Leicester High School · LHS 365</p>
+        <a href="#/admin">{liveReading ? "Reading admin" : "Admin preview"}</a>
         <a className="suite-link" href="https://25thirty.school">Part of 25Thirty School ↗</a>
       </footer>
     </div>

@@ -28,6 +28,7 @@ function initialShelf() {
 
 function BookCard({ book, onUpdate }) {
   const [page, setPage] = useState("");
+  const [saving,setSaving] = useState(false);
   const [error, setError] = useState("");
   const finished = book.current === book.total;
   return (
@@ -55,21 +56,24 @@ function BookCard({ book, onUpdate }) {
         {!finished && (
           <form
             className="progress-form"
-            onSubmit={(event) => {
+            onSubmit={async (event) => {
               event.preventDefault();
               try {
-                onUpdate(updateBook(book, page, localDate()));
+                if (saving) return;
+                setSaving(true);
+                await onUpdate(page);
                 setPage("");
                 setError("");
               } catch (err) {
                 setError(err.message);
-              }
+              } finally { setSaving(false); }
             }}
           >
             <label htmlFor={`page-${book.id}`}>I’ve reached page</label>
             <div className="input-action">
               <input
                 id={`page-${book.id}`}
+                disabled={saving}
                 type="number"
                 min={book.current + 1}
                 max={book.total}
@@ -79,7 +83,7 @@ function BookCard({ book, onUpdate }) {
                 onChange={(event) => setPage(event.target.value)}
                 aria-describedby={error ? `error-${book.id}` : undefined}
               />
-              <button className="button primary" type="submit">
+              <button className="button primary" type="submit" disabled={saving}>
                 Save pages
               </button>
             </div>
@@ -98,9 +102,12 @@ function BookCard({ book, onUpdate }) {
   );
 }
 
-export default function ReadingChallenge() {
-  const [initial] = useState(initialShelf);
+export default function ReadingChallenge({ repository }) {
+  const [initial] = useState(() => repository ? {books:repository.books,error:""} : initialShelf());
+  const [saving,setSaving] = useState(false);
+  const addRequest = useRef(null);
   const [books, setBooks] = useState(initial.books);
+  const currentBooks = useRef(initial.books);
   const [notice, setNotice] = useState(initial.error);
   const [adding, setAdding] = useState(initial.books.length === 0);
   const [query, setQuery] = useState("");
@@ -127,7 +134,8 @@ export default function ReadingChallenge() {
   }, [books]);
 
   function save(next, message) {
-    persistBooks(next);
+    if (!repository) persistBooks(next);
+    currentBooks.current = next;
     setBooks(next);
     setNotice(message);
   }
@@ -174,7 +182,7 @@ export default function ReadingChallenge() {
         <h1>Read. Stack. <em>Reach higher.</em></h1>
       </section>
       <div className="preview-note">
-        Preview · Fictional entries only. Saved in this tab; not sent to school.
+        {repository ? "Your reading is saved to school. New pages count towards the challenge." : "Preview · Fictional entries only. Saved in this tab; not sent to school."}
       </div>
       <div className="reading-workspace">
       <div className="reading-layout">
@@ -185,6 +193,7 @@ export default function ReadingChallenge() {
             </div>
             <button
               ref={addButton}
+              disabled={saving}
               className="button primary add-book-primary"
               onClick={() => {
                 setAdding(true);
@@ -209,10 +218,12 @@ export default function ReadingChallenge() {
             >
               <div className="section-heading">
                 <h3 id="add-book-title">Add a book</h3>
-                <button className="text-link" onClick={closeForm}>
+                <button className="text-link" onClick={closeForm} disabled={saving}>
                   Cancel
                 </button>
               </div>
+              <fieldset disabled={saving} className="book-entry-fields">
+              <legend className="sr-only">Book details</legend>
               <form onSubmit={search}>
                 <label htmlFor="book-search">
                   Search by title, author or ISBN
@@ -286,12 +297,18 @@ export default function ReadingChallenge() {
               )}
               <form
                 className="manual-book"
-                onSubmit={(event) => {
+                onSubmit={async (event) => {
                   event.preventDefault();
                   try {
-                    const book = createBook(draft);
+                    if (saving) return;
+                    createBook(draft);
+                    setSaving(true);
+                    const fingerprint = JSON.stringify(draft);
+                    if (addRequest.current?.fingerprint !== fingerprint) addRequest.current = {fingerprint,id:crypto.randomUUID()};
+                    const book = repository ? await repository.add(draft,addRequest.current.id) : createBook(draft);
+                    addRequest.current = null;
                     save(
-                      [...books, book],
+                      [...currentBooks.current.filter(item => item.id !== book.id), book],
                       `Added ${book.title}. Update your page to start contributing.`,
                     );
                     setDraft({ title: "", author: "", total: "", start: "0" });
@@ -301,7 +318,7 @@ export default function ReadingChallenge() {
                     closeForm();
                   } catch (err) {
                     setError(err.message);
-                  }
+                  } finally { setSaving(false); }
                 }}
               >
                 <h4>Or add a book yourself</h4>
@@ -370,8 +387,9 @@ export default function ReadingChallenge() {
                     {error}
                   </p>
                 )}
-                <button className="button primary">Add to my bookshelf</button>
+                <button className="button primary" disabled={saving}>{saving ? "Saving…" : "Add to my bookshelf"}</button>
               </form>
+              </fieldset>
             </section>
           )}
           {books.length === 0 && !adding && (
@@ -389,10 +407,11 @@ export default function ReadingChallenge() {
               <BookCard
                 key={book.id}
                 book={book}
-                onUpdate={(next) => {
+                onUpdate={async (page) => {
+                  const next = repository ? await repository.update(book.id,page) : updateBook(book,page,localDate());
                   const completed = next.current === next.total;
                   save(
-                    books.map((item) => (item.id === next.id ? next : item)),
+                    currentBooks.current.map((item) => (item.id === next.id ? next : item)),
                     completed
                       ? `${next.current - book.current} pages added. Finished ${next.title}.`
                       : `${next.current - book.current} pages added.`,
@@ -413,8 +432,8 @@ export default function ReadingChallenge() {
         </section>
       </div>
         <div className="reading-mission-column">
-      <BookTower pages={stats.pages} books={books} />
-      <section className="reading-stats" aria-label="Your preview progress">
+      <BookTower pages={stats.pages} books={books} preview={!repository} />
+      <section className="reading-stats" aria-label="Your reading progress">
         {[
           ["Your pages", stats.pages],
           ["Books", stats.finished],

@@ -172,3 +172,5 @@
   .finish-facts p { font-size: 10px; }
   .finish-next { flex-direction: column; align-items: flex-start; }
 }
+
+.book-entry-fields {border:0;padding:0;margin:0;min-width:0;}

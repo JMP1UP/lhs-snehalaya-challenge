@@ -59,3 +59,7 @@ Next action: review the fictional-data preview and settle the intended year grou
 - [ ] README, decisions, roadmap, and changelog updated
 - [ ] Deployment and rollback steps confirmed
 - [ ] Post-release smoke test completed
+
+## Reading admin — 10 September 2026
+
+For the reading admin extension, use the single scoped operational checklist in reading-admin.md. Mocked API tests and the fictional dashboard are not proof that live Microsoft configuration or deployed Firestore rules are correct. Live flags remain off until those checks and the roster are complete.

@@ -39,3 +39,7 @@ A sponsor pledge is not proof of payment, and a student submission is not verifi
 **Status:** Accepted
 
 The current repository lacks automated Firestore-rule coverage. Real student or financial use is blocked until authorization, school scope, approval, and aggregate-integrity rules are tested.
+
+## Reading admin — 10 September 2026
+
+Reading admin authorisation uses a server environment allowlist, not a display-name suffix or editable profile role. Complete roster membership is the denominator for non-contributors, including accounts that never sign in. New records are isolated from historical steps data. Live mode stays disabled until the one operational checklist in reading-admin.md is completed.

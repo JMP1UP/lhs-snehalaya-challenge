@@ -17,7 +17,7 @@ The home page opens directly into page logging, with current books first and fin
 
 The `#/steps` route is a read-only history page. The original steps source and its existing Firebase-hosted application are preserved separately. No route in the 365 preview initialises Firebase, signs in, or loads live participation records.
 
-Read the full [reading design brief](docs/reading-design-brief.md) for the permanent LHS 365 identity, challenge theme, journeys, scoring rules, inclusion and launch decisions. This build is **internal development**, not a live reading launch. Cloud storage, corrections and shared totals remain future work.
+Read the full [reading design brief](docs/reading-design-brief.md) for the permanent LHS 365 identity, challenge theme, journeys, scoring rules, inclusion and launch decisions. This build is **internal development**, not a live reading launch. The shared-reading API and admin dashboard are implemented behind disabled live flags; credentials, roster and real-account pilot checks remain outstanding. Corrections and shared student-facing totals remain future work.
 
 ## Current implementation
 
@@ -51,3 +51,7 @@ Book lookup requires a network connection to Google Books and can be unavailable
 - `AGENTS.md` — repository-specific working rules
 
 Never commit credentials or confidential student, sponsor, or financial data.
+
+## Reading administration
+
+Open `#/admin` for the fictional dashboard: separate top tens for students and staff, house rankings, participation and an exportable no-pages list. The live version uses Microsoft school sign-in and a server-only admin allowlist; it is not enabled on the public preview. See [configuration, roster format and the single pilot checklist](docs/reading-admin.md). `npm test` includes report and API policy/integrity tests; `npm run lint:reading` includes the new server.

@@ -25,7 +25,7 @@ export default defineConfig([
     },
   },
   {
-    files: ["**/*.test.mjs"],
+    files: ["**/*.test.mjs", "api/**/*.mjs", "server/**/*.mjs"],
     languageOptions: { globals: globals.node },
   },
 ]);

@@ -34,11 +34,11 @@ The challenge app is a React application built with Vite and styled with Tailwin
 
 ## Identity and data
 
-Microsoft authentication is integrated through MSAL in `src/authConfig.js`. `src/firebase.js` configures Cloud Firestore, and `firestore.rules` is the data authorization boundary. Browser role or view state must not be treated as proof of staff authority.
+Microsoft authentication is integrated through Firebase Authentication in `src/authConfig.js`. `src/firebase.js` configures Cloud Firestore, and `firestore.rules` is the data authorization boundary. Browser role or view state must not be treated as proof of staff authority.
 
 ## Hosting and configuration
 
-Firebase hosting is configured by `firebase.json`; Vite environment values are compiled into the browser and therefore cannot contain confidential client secrets. Use `npm run dev` and `npm run build`; the current package has no automated test or lint script.
+Firebase hosting is configured by `firebase.json`; Vite environment values are compiled into the browser and therefore cannot contain confidential client secrets. Use `npm run dev` and `npm run build`; the current package provides reading lint and Node test scripts.
 
 ## Security boundaries
 
@@ -47,3 +47,7 @@ Firestore rules must restrict student and fundraising records to intended users 
 ## Known constraints
 
 There is no versioned database migration process, documented restore test, automated security-rule test, or end-to-end test suite. Before live use, add rule tests and verify tenant/school scoping, approval workflows, record correction, retention, and recovery.
+
+## Reading admin extension — September 2026
+
+`SchoolAccess` and `reading-client.mjs` use a separate named Firebase Auth instance only when VITE_READING_LIVE is enabled. ReadingAccess supplies an asynchronous repository to the existing logger; preview storage is never merged into school records. `/api/reading` verifies revoked/expired sessions, Microsoft school identity, roster membership and a server-only admin allowlist. Admin SDK accesses only the new readingCampaigns namespace. Browser Firestore access stays denied. `admin.mjs` is pure reporting/roster validation; AdminDashboard exposes fictional fixtures in preview and authenticated reports in live mode. Live flags default off. Operational dependencies and data bounds are in reading-admin.md.

@@ -24,3 +24,7 @@ The interface works with participants and house teams, fundraising activities, s
 ## Retention and recovery
 
 Firebase supplies persistence, but no guaranteed retention, export, deletion, or restore procedure is implemented in this repository. These controls and collection-level ownership must be agreed before use with real students or financial records.
+
+## Reading admin — 10 September 2026
+
+The new readingCampaigns/read-for-snehalaya-2026 namespace holds a versioned settings/roster document, members/{emailHash} book counters, and books/{requestUUID} records. Ownership is derived from verified identity. Atomic page updates calculate positive deltas using the London date. Add requests are idempotent by UUID and payload; absolute-page retries cannot add pages twice. See reading-admin.md for limits and retention considerations.
