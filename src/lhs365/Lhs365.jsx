@@ -39,8 +39,8 @@ function Home() {
       </section>
       <section className="past-adventure" aria-labelledby="past-adventure-title">
         <div className="past-route" aria-hidden="true"><span>👟</span><i /> <span>📍</span></div>
-        <div><span className="adventure-tag">OUR FIRST ADVENTURE · CLOSED</span><h2 id="past-adventure-title">Steps to Snehalaya</h2><p>From Leicester to Snehalaya, one step at a time.</p></div>
-        <a href="#/steps">Revisit the journey <span aria-hidden="true">➜</span></a>
+        <div><span className="adventure-tag">OUR FIRST ADVENTURE · WE DID IT!</span><h2 id="past-adventure-title">Steps to Snehalaya</h2><p>8,535.1 km together. 122% of our goal.</p></div>
+        <a href="#/steps">Celebrate the journey <span aria-hidden="true">➜</span></a>
       </section>
     </div>
   );

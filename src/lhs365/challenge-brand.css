@@ -121,3 +121,54 @@
 .reading-theme .button.add-book-primary { background: #ff2bd6; color: #00236c; }
 .reading-theme .button.add-book-primary:hover { background: #ff7ce7; color: #00236c; }
 .reading-theme .paper-stack .tower-start i:nth-child(n) { background: transparent; border: 2px dashed #a59a84; box-shadow: none; }
+/* A finish-line celebration, using the original challenge's aggregate results. */
+.steps-celebration { padding: 26px 0; }
+.steps-celebration > .text-link { font-size: 12px; }
+.finish-party { position: relative; isolation: isolate; overflow: hidden; margin-top: 20px; padding: 34px 30px 12px; border-radius: 30px; background: #00236c; color: white; text-align: center; }
+.finish-badge { display: inline-flex; border: 1px solid #1cffe3; background: #1cffe31a; color: #1cffe3; padding: 6px 15px; font-weight: 850; font-size: 11px; letter-spacing: 1.5px; border-radius: 30px; }
+.finish-party h1 { font-size: clamp(38px, 5vw, 60px); line-height: 1.05; margin: 18px 0 12px; }
+.finish-party h1 span { color: #1cffe3; }
+.finish-distance strong { font-size: clamp(58px, 9vw, 106px); line-height: 1.12; letter-spacing: -5px; font-weight: 950; }
+.finish-distance > span { display: inline-block; font-size: 20px; font-weight: 750; margin-left: 6px; }
+.finish-context { margin-top: 8px !important; color: #e2ebff; font-size: 14px; }
+.finish-stamp { position: absolute; right: 28px; top: 44px; width: 116px; height: 116px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #ff2bd6; color: #00236c; border: 4px solid #00236c; outline: 2px dashed #ff2bd6; transform: rotate(12deg); font-size: 33px; font-weight: 950; }
+.finish-stamp small { font-size: 8px; letter-spacing: 1px; }
+.finish-route { max-width: 920px; margin: 10px auto 0; }
+.finish-route svg { display: block; width: 100%; height: auto; }
+.route-shadow { fill: none; stroke: #1cffe32b; stroke-width: 18px; }
+.route-line { fill: none; stroke: #1cffe3; stroke-width: 4px; stroke-dasharray: 9 9; }
+.finish-route text { fill: white; font: 800 14px 'Segoe UI', sans-serif; }
+.finish-route .route-small { fill: #c2d4ff; font-size: 12px; font-weight: 500; }
+.finish-confetti { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+.finish-confetti i { position: absolute; left: calc(3% + var(--n) * 6%); top: calc(18px + mod(var(--n), 4) * 68px); width: 8px; height: 18px; background: #ff2bd6; opacity: .55; transform: rotate(calc(var(--n) * 37deg)); }
+.finish-confetti i:nth-child(3n) { background: #1cffe3; border-radius: 50%; height: 8px; }
+.finish-confetti i:nth-child(2n) { top: 60%; }
+.finish-facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 18px; }
+.finish-facts > div { padding: 20px 14px; text-align: center; border-radius: 20px; background: white; border: 1px solid #dce5f4; }
+.finish-facts > div > span { display: block; font-size: 23px; }
+.finish-facts strong { display: block; font-size: 36px; font-weight: 900; letter-spacing: -1px; }
+.finish-facts strong small { font-size: 17px; }
+.finish-facts p { color: #51617b; font-size: 12px; }
+.finish-next { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 26px 0 10px; }
+.finish-next h2 { font-size: 23px; }
+.finish-next p { font-size: 13px; margin-top: 6px; }
+.finish-next .challenge-cta { margin-top: 0; font-size: 13px; }
+.finish-source { font-size: 11px; color: #52617b; margin-top: 12px; max-width: 700px; }
+.reading-theme .add-book-primary[hidden] { display: none; }
+.reading-theme .add-book { margin-top: 0; padding: 20px; border-radius: 18px; background: #fffefa; box-shadow: 0 4px 0 #e7ddc7; }
+@media(max-width:650px) {
+  .finish-party { padding: 24px 12px 10px; border-radius: 22px; }
+  .finish-stamp { position: static; width: auto; height: auto; border-radius: 20px; display: inline-flex; flex-direction: row; gap: 6px; padding: 4px 12px; margin-top: 16px; transform: rotate(-3deg); font-size: 20px; }
+  .finish-distance strong { letter-spacing: -3px; }
+  .finish-distance > span { display: block; font-size: 17px; }
+  .finish-context { max-width: 260px; margin-left: auto; margin-right: auto; font-size: 12px; }
+  .finish-route svg { min-height: 110px; }
+  .finish-route text { font-size: 20px; }
+  .finish-route .route-small { font-size: 17px; }
+  .finish-facts { gap: 8px; }
+  .finish-facts > div { padding: 14px 5px; }
+  .finish-facts strong { font-size: 24px; }
+  .finish-facts strong small { font-size: 12px; }
+  .finish-facts p { font-size: 10px; }
+  .finish-next { flex-direction: column; align-items: flex-start; }
+}

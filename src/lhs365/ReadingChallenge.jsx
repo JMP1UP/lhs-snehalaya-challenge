@@ -102,7 +102,7 @@ export default function ReadingChallenge() {
   const [initial] = useState(initialShelf);
   const [books, setBooks] = useState(initial.books);
   const [notice, setNotice] = useState(initial.error);
-  const [adding, setAdding] = useState(false);
+  const [adding, setAdding] = useState(initial.books.length === 0);
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [searchMessage, setSearchMessage] = useState("");
@@ -208,7 +208,7 @@ export default function ReadingChallenge() {
               aria-labelledby="add-book-title"
             >
               <div className="section-heading">
-                <h3 id="add-book-title">Find your next read</h3>
+                <h3 id="add-book-title">Add a book</h3>
                 <button className="text-link" onClick={closeForm}>
                   Cancel
                 </button>
@@ -219,7 +219,7 @@ export default function ReadingChallenge() {
                 </label>
                 <div className="input-action">
                   <input
-                    autoFocus
+                    autoFocus={books.length > 0}
                     id="book-search"
                     value={query}
                     maxLength={200}

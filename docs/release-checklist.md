@@ -1,5 +1,10 @@
 # Release checklist
 
+## Celebrating the first adventure — 10 September 2026
+
+Replaced the prose-only steps archive with a finish-line celebration: 8,535.1 km, 122% of the 7,000 km goal, 125 contributors and 849 activities, copied from the original App.jsx Hall of Fame. Illustrated route is explicitly non-geographical. No individual records or Firebase loads. Home recap now celebrates the result. Empty reading shelves open the first-book form immediately without autofocus, preserving quick logging and Cancel. Desktop and 390px layouts checked; first-book submission and 20-page/1-mm update work. Existing 19 tests, reading lint and build passed.
+
+
 ## Reading refinements — 10 September 2026
 
 Reading refinement verified: 19 existing tests and reading lint passed. Desktop/390px visual checks passed, with no horizontal overflow. A fictional book logged to page 20 produces 1 mm and a named spine; switching to giraffe preserves height. Preview disclosure remains visible. The exact target is available under How does it work. No storage/auth/data-model changes.

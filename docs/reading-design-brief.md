@@ -1,5 +1,10 @@
 # 25Thirty 365 — Read for Snehalaya at Leicester High School
 
+## Celebrating the first adventure — 10 September 2026
+
+Replaced the prose-only steps archive with a finish-line celebration: 8,535.1 km, 122% of the 7,000 km goal, 125 contributors and 849 activities, copied from the original App.jsx Hall of Fame. Illustrated route is explicitly non-geographical. No individual records or Firebase loads. Home recap now celebrates the result. Empty reading shelves open the first-book form immediately without autofocus, preserving quick logging and Cancel. Desktop and 390px layouts checked; first-book submission and 20-page/1-mm update work. Existing 19 tests, reading lint and build passed.
+
+
 ## Reading refinements — 10 September 2026
 
 Reading refinement: keep the headline unchanged. Make Add a book the pink primary action; compact the empty state and retain a quiet fictional-data notice. Give the tower a full-width illustration stage showing up to eight books with logged pages as named decorative spines. At zero show an invitation; after logging show height. Emphasise 20 pages = 1 mm and put the remaining target in the rules disclosure. Use Days logged, a two-challenge navigation badge, and a single suite link in the footer.
