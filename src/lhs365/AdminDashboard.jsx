@@ -48,7 +48,22 @@ function Report({data,onRefresh,onSave,demo=false}) {
     <section className="admin-totals" aria-label="Filtered reading totals">{[[number(report.pages),"Pages stacked"],[`${report.participants} / ${report.enrolled}`,"Readers contributing"],[report.rate===null ? "—" : `${Math.round(report.rate)}%`,data.complete ? "Participation" : "Roster participation"],[number(report.finished),"Books finished"]].map(([value,label])=><div key={label}><strong>{value}</strong><span>{label}</span></div>)}</section>
     <section className="admin-champion"><span aria-hidden="true">★</span><div><span className="eyebrow">LEADING THE STACK · CURRENT FILTER</span><h2>{report.biggest?.name || "Who will start our tower?"}</h2><p>{report.biggest ? `${number(report.biggest.pages)} pages contributed · ${report.biggest.house}` : "The first page is all it takes."}</p></div></section>
     <div className="admin-rankings"><Ranking title="Top 10 students" rows={report.topStudents}/><Ranking title="Top 10 staff" rows={report.topStaff}/></div>
-    <section className="admin-card"><h2>House leaderboard</h2><p>Ranked by pages. Participation shows contributing readers out of active roster members.</p><div className="house-rankings">{report.houses.map((item,index)=><div key={item.id}><span className="house-position">{index+1}</span><h3>{item.name}</h3><strong>{number(item.pages)} <small>pages</small></strong><progress max={Math.max(1,...report.houses.map(h=>h.pages))} value={item.pages} aria-label={`${item.name} pages compared with leading house`}/><p>{item.participants} / {item.enrolled} readers · {item.rate===null ? "No members" : `${Math.round(item.rate)}% participating`}</p></div>)}</div></section>
+    <section className="admin-card house-leaderboard" aria-labelledby="house-leaderboard-title">
+      <h2 id="house-leaderboard-title">House leaderboard</h2>
+      <p className="house-intro">Every page adds up.</p>
+      <div className="house-rankings">
+        {report.houses.map((item,index)=><div className="house-card" key={item.id}>
+          <div className="house-card-heading">
+            <span className="house-position" aria-label={`Rank ${index+1}`}>{index+1}</span>
+            <h3>{item.name}</h3>
+          </div>
+          <p className="house-page-total"><strong>{number(item.pages)}</strong><span>pages</span></p>
+          <progress max={Math.max(1,...report.houses.map(h=>h.pages))} value={item.pages} aria-label={`${item.name} pages compared with leading house`}/>
+          <div className="house-participation"><span>{item.participants} of {item.enrolled} readers</span><strong>{item.rate===null ? "—" : `${Math.round(item.rate)}%`}</strong></div>
+        </div>)}
+      </div>
+      <p className="house-caption">Ranked by pages · Participation is based on the active roster.</p>
+    </section>
     <section className="admin-card"><div className="section-heading"><h2>No pages logged <small>({report.notStarted.length})</small></h2><button className="button secondary" disabled={!notStarted.length} onClick={()=>download(notStarted)}>Export this list</button></div><p>Active roster members with no new pages, including those who haven’t signed in or have only added a book. This list stays in the admin area.</p>
       <label htmlFor="reader-search">Find a reader</label><input id="reader-search" value={search} onChange={e=>setSearch(e.target.value)} type="search"/>
       {notStarted.length ? <div className="admin-table-scroll"><table><thead><tr><th scope="col">Reader</th><th scope="col">Role</th><th scope="col">House</th><th scope="col">Year group</th></tr></thead><tbody>{notStarted.map(person=><tr key={person.id}><th scope="row">{person.name}</th><td>{person.kind}</td><td>{person.house}</td><td>{person.yearGroup}</td></tr>)}</tbody></table></div> : <p>{search ? "No matching readers." : "Everyone in this selection has contributed. Brilliant!"}</p>}

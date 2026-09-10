@@ -6,7 +6,7 @@ Date: 10 September 2026. Owner: John Partridge. Classification: external pilot o
 
 - Public preview: `https://25thirty-365.vercel.app`.
 - Host: separate Vercel project `25thirty-365` (`prj_YXRk7mn2TC6sPgv5iPYx1pTEsyJq`).
-- Deployment: `dpl_2myEU8uRkUBrFcnngjcv1M7ra519`, `25thirty-365-dg7lyovz3-john-s-projects7.vercel.app`.
+- Deployment: `dpl_9s8oFnhDnjrJyvecF5H9eq5uyn6u`, `25thirty-365-30s6wmd9k-john-s-projects7.vercel.app`.
 - Suite: `https://25thirty.school/#365`, with a working preview link.
 - Custom address: `365.25thirty.school`, associated with this project but awaiting DNS.
 
@@ -36,7 +36,7 @@ Do not change nameservers, the root domain or other product records. There were 
 
 ## Rollback and future changes
 
-Previous preview rollback: `25thirty-365-guq0gkq7d-john-s-projects7.vercel.app`; the original steps site remains the historical fallback. To withdraw this preview, remove its suite link and unpublish/disable only the new Vercel project. Do not deploy the root Firebase configuration: `.firebaserc` still names the original steps project.
+Previous preview rollback: `25thirty-365-dg7lyovz3-john-s-projects7.vercel.app`; the original steps site remains the historical fallback. To withdraw this preview, remove its suite link and unpublish/disable only the new Vercel project. Do not deploy the root Firebase configuration: `.firebaserc` still names the original steps project.
 
 Future Vercel deployments use `vercel.json` to run reading lint, tests and build. Keep `.vercel` and `.env.local` ignored. The shared reading API and admin dashboard are implemented behind disabled live flags. School credentials, the complete roster and actual identity/rules verification remain required before a school pilot; see reading-admin.md.
 
@@ -47,3 +47,5 @@ Book search now falls back to Open Library when Google Books fails. Live Dune lo
 `#/admin` now has a clearly labelled fictional dashboard. Desktop browser checks verified separate ten-row rankings, combined filters, empty search results and no overflow. Reading regression: a fictional 100-page book starting at page 20 contributed exactly 80 pages and one finished book; focus moved to Finished books. 33 tests, scoped lint, preview build and live-mode compilation passed. Independent review and correction verification passed. No claim is made for live sign-in or school records; mobile visual verification of the new dashboard is still pending.
 
 The server allowlist contains the two requested admin accounts. Live flags and service credentials remain absent. Hosted API check returns JSON 503 with private/no-store headers, as intended while disabled. Vercel Node 24 with NODE_OPTIONS=--experimental-require-module resolves the Firebase dependency loading failure caught in the first hosted smoke check. Latest validated deployment is listed above; do not roll back to the intermediate 4y5caA86inKmdJDqMmcoQgGw29bg deployment with that runtime failure.
+
+House leaderboard visual correction: rank/name alignment, consistent report heading sizes, slim styled purple bars and clearer reader statistics. Desktop screenshot verified; scoped lint, all 33 tests and production build pass. This remains a fictional-data external preview.

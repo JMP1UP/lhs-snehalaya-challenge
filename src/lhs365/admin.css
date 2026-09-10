@@ -6,5 +6,28 @@
 .admin-filters select {display:block;width:100%;padding:.8rem;border:1px solid #b9bbd0;border-radius:8px;background:white;color:#121576;font:inherit;}
 .admin-totals {display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}.admin-totals div {padding:1.25rem;background:white;border-radius:12px;border-bottom:5px solid #ff00cf;}.admin-totals strong {display:block;font-size:2rem;}.admin-totals span {font-size:.9rem;}
 .admin-champion {display:flex;align-items:center;gap:1.5rem;background:#141673;color:white;padding:1.5rem 2rem;border-radius:14px;margin:1.5rem 0;}.admin-champion>span {font-size:4rem;color:#fff15b;}.admin-champion h2 {color:white;margin:.4rem 0;}.admin-champion p {margin:0;color:white;}
-.admin-rankings {display:grid;grid-template-columns:1fr 1fr;gap:1rem;}.admin-card {background:#fff;padding:1.5rem;border:1px solid #d7d8e2;border-radius:14px;margin-bottom:1rem;min-width:0;}.admin-card h2 {margin-top:0;}.admin-table-scroll {overflow-x:auto;}.admin-card table {width:100%;border-collapse:collapse;font-size:.95rem;}.admin-card th,.admin-card td {padding:.8rem .5rem;text-align:left;border-bottom:1px solid #e7e8ee;}.admin-card th small {display:block;font-weight:400;}.admin-card input[type=search] {max-width:420px;margin:.5rem 0 1rem;}.house-rankings {display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}.house-rankings>div {background:#f3f1fc;padding:1.2rem;border-radius:10px;}.house-rankings strong {display:block;font-size:1.8rem;}.house-rankings strong small {font-size:.8rem;}.house-position {background:#f500d1;color:#121576;padding:.4rem .7rem;border-radius:50%;font-weight:bold;}.house-rankings progress {width:100%;accent-color:#b600a5;margin-top:1rem;}.admin-footnote {font-size:.85rem;}.school-session {padding:.75rem 0;border-bottom:1px solid #ddd;}.roster-confirm {padding:1rem;background:#f4f2fb;margin-top:1rem;}.roster-confirm label {display:block;margin-bottom:1rem;}.roster-confirm input[type=checkbox] {width:auto;}.admin-card summary {cursor:pointer;font-weight:700;}.reading-admin button:disabled {opacity:.5;cursor:default;}
+.admin-rankings {display:grid;grid-template-columns:1fr 1fr;gap:1rem;}.admin-card {background:#fff;padding:1.5rem;border:1px solid #d7d8e2;border-radius:14px;margin-bottom:1rem;min-width:0;}.admin-card h2 {margin-top:0;}.admin-table-scroll {overflow-x:auto;}.admin-card table {width:100%;border-collapse:collapse;font-size:.95rem;}.admin-card th,.admin-card td {padding:.8rem .5rem;text-align:left;border-bottom:1px solid #e7e8ee;}.admin-card th small {display:block;font-weight:400;}.admin-card input[type=search] {max-width:420px;margin:.5rem 0 1rem;}.admin-footnote {font-size:.85rem;}.school-session {padding:.75rem 0;border-bottom:1px solid #ddd;}.roster-confirm {padding:1rem;background:#f4f2fb;margin-top:1rem;}.roster-confirm label {display:block;margin-bottom:1rem;}.roster-confirm input[type=checkbox] {width:auto;}.admin-card summary {cursor:pointer;font-weight:700;}.reading-admin button:disabled {opacity:.5;cursor:default;}
 @media(max-width:700px){.admin-totals {grid-template-columns:1fr 1fr;}.admin-rankings,.house-rankings {grid-template-columns:1fr;}.admin-card {padding:1rem;}.admin-champion {padding:1rem;}.admin-totals strong {font-size:1.6rem;}}
+
+/* Scoped headings avoid the larger challenge-page title rules. */
+.lhs365 .reading-admin .admin-card h2 {font-size:1.35rem;line-height:1.3;letter-spacing:-.025em;margin:0 0 .4rem;}
+.lhs365 .reading-admin .admin-card .section-heading {gap:1rem;align-items:center;margin-bottom:1rem;}
+.lhs365 .reading-admin .admin-card .section-heading h2 {margin:0;}
+.lhs365 .reading-admin .house-intro {margin:0 0 1.25rem;color:#505575;font-size:.95rem;}
+.house-rankings {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;}
+.house-card {background:#f5f3fc;padding:1.25rem;border-radius:12px;min-width:0;}
+.house-card-heading {display:flex;align-items:center;gap:.7rem;}
+.house-position {display:flex;align-items:center;justify-content:center;flex:0 0 1.8rem;width:1.8rem;height:1.8rem;border-radius:50%;background:#e6def4;color:#54206b;font-size:.8rem;font-weight:800;}
+.house-card:first-child .house-position {background:#ff00cf;color:#16166d;}
+.lhs365 .reading-admin .house-card h3 {font-size:1.05rem;line-height:1.3;font-weight:750;letter-spacing:-.02em;margin:0;}
+.lhs365 .reading-admin .house-page-total {display:flex;align-items:baseline;gap:.45rem;margin:1.2rem 0 .85rem;}
+.house-page-total strong {font-size:2rem;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.04em;}
+.house-page-total span {font-size:.85rem;color:#505575;}
+.house-card progress {appearance:none;-webkit-appearance:none;display:block;width:100%;height:6px;border:0;border-radius:10px;overflow:hidden;background:#e4deee;color:#8c2899;}
+.house-card progress::-webkit-progress-bar {background:#e4deee;border-radius:10px;}
+.house-card progress::-webkit-progress-value {background:#8c2899;border-radius:10px;}
+.house-card progress::-moz-progress-bar {background:#8c2899;border-radius:10px;}
+.house-participation {display:flex;justify-content:space-between;align-items:baseline;gap:.5rem;margin-top:.8rem;color:#505575;font-size:.85rem;}
+.house-participation strong {font-size:.85rem;font-weight:700;color:#25276a;}
+.lhs365 .reading-admin .house-caption {margin:.9rem 0 0;font-size:.8rem;color:#505575;}
+@media(max-width:700px){.house-rankings {grid-template-columns:1fr;}.house-card {padding:1.1rem;}}

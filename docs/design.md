@@ -55,3 +55,5 @@ LHS Snehalaya Challenge strictly adheres to the **25Thirty Learning** design mod
 ## Reading admin — 10 September 2026
 
 Reading admin uses the bright LHS 365 navy, magenta and yellow palette. Four compact totals lead into the largest contributor, separate student/staff top tens, three house cards and a private no-pages list. Filters affect every report. Fictional preview status remains prominent; live data is accessible only after school admin sign-in.
+
+House leaderboard polish: aligned rank/name headers, consistent report headings, compact purple comparison bars and separate reader-count/percentage labels replace the overlapping badges and native green bars.
