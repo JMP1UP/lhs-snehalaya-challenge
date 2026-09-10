@@ -1,5 +1,10 @@
 # Architecture
 
+## Bright home and challenge themes
+
+Lhs365 renders Home at / and /challenges, ReadingChallenge at /reading and static StepsArchive at /steps. challenge-brand.css scopes the bright adventure theme and cream reading theme while sharing the original school palette. Empty-hash browser-back navigation restores Home. No record, storage or live-service changes.
+
+
 ## Logging and tower update — 10 September 2026
 
 `/` and `/reading` render the logger; `/challenges` renders the concise catalogue; `/steps` stays static. `tower.mjs` derives estimated height and bounded goal progress from validated contributed pages. `BookTower.jsx` owns only the temporary landmark selection. Stored book records and their key are unchanged; no Firebase or shared-school writes were added.

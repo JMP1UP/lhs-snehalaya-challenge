@@ -1,5 +1,10 @@
 # Release checklist
 
+## Original Steps branding refresh — 10 September 2026
+
+External fictional-data preview. Original palette and LHS school logo restored, concise home added, reading theme kept separate. All 19 tests, reading lint and build passed; independent source review found no confirmed blocker. No data/storage/authentication changes. Desktop/mobile visual verification completed after restarting: home and reading layouts inspected at desktop and 390px, no mobile home overflow; featured reading link, archive and return links work. Fictional 20-page update adds 1 mm and survives refresh. The prior browser outage is resolved. This is not a school-data launch. Prior deployment remains available for rollback.
+
+
 ## Tower redesign — 10 September 2026
 
 Classification: **external pilot of a fictional-data design preview**, not a real-pupil release. John Partridge remains the owner. All 19 tests, reading lint and Vite production build pass. Browser verification: default logging route; 20→100 contributes 80 pages/4 mm; finish at 120 contributes 100 pages/5 mm and survives refresh. Backward update rejected. Changing landmark preserves height. Finished books expand correctly; completed-save focus moves to their native summary and announces the book. Independent review and correction verification passed.

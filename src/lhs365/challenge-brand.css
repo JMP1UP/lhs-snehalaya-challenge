@@ -1,0 +1,89 @@
+/* Original Steps to Snehalaya palette, shared across termly themes. */
+.lhs365 { --challenge-blue: #00236c; --challenge-pink: #ff2bd6; --challenge-aqua: #1cffe3; --challenge-purple: #6d2077; }
+.lhs365 .site-header { background: var(--challenge-blue); border: 0; max-width: none; min-height: 88px; padding: 18px max(24px, calc((100vw - 1060px)/2)); }
+.lhs365 .brand { gap: 12px; }
+.lhs365 .brand > span { font-weight: 850; font-size: 30px; letter-spacing: -.8px; }
+.lhs365 .brand b { color: var(--challenge-aqua); font-weight: 900; }
+.lhs365 .brand .school-logo-tile { display: flex; width: 48px; height: 48px; padding: 6px; background: white; border-radius: 15px; flex-shrink: 0; align-items: center; justify-content: center; }
+.lhs365 .school-logo-tile img { width: 100%; height: 100%; object-fit: contain; }
+.lhs365 .school-context { color: #fff; width: auto; border: 0; padding: 0; font-size: 12px; }
+.lhs365 .school-context > span { color: var(--challenge-aqua); font-size: 25px; }
+.lhs365 .site-header nav { gap: 22px; font-weight: 700; }
+.lhs365 .site-header nav a[aria-current="page"] { border-color: var(--challenge-aqua); }
+.lhs365 .site-header a:focus-visible { outline-color: var(--challenge-aqua); }
+.lhs365 .site-footer { max-width: 1060px; color: var(--challenge-blue); margin-top: 26px; }
+.adventure-theme { background: #f7faff; color: var(--challenge-blue); }
+.adventure-theme h1, .adventure-theme h2, .adventure-theme h3 { font-family: Inter, 'Segoe UI', sans-serif; font-weight: 900; letter-spacing: -.045em; }
+.adventure-theme main { max-width: 1140px; }
+.adventure-intro { position: relative; padding: 38px 0 28px; text-align: center; }
+.adventure-tag { font-size: 10px; letter-spacing: 1.8px; font-weight: 800; }
+.adventure-intro h1 { font-size: clamp(36px, 5.2vw, 62px); line-height: 1.04; margin: 12px 0; }
+.adventure-intro h1 > span { color: #bc098f; }
+.adventure-intro p { color: #51617b; font-size: 15px; }
+.home-spark { position: absolute; font-size: 65px; line-height: 1; }
+.spark-left { left: 6%; top: 75px; color: var(--challenge-pink); transform: rotate(-12deg); }
+.spark-right { right: 7%; top: 40px; color: #00afc4; transform: rotate(15deg); }
+.reading-feature { display: grid; grid-template-columns: 1.15fr 1fr; background: var(--challenge-blue); color: white; border-radius: 30px; overflow: hidden; box-shadow: 0 12px 30px #00236c17; }
+.reading-feature-copy { padding: 34px 38px; }
+.challenge-badge { display: inline-flex; padding: 7px 12px; border-radius: 20px; background: var(--challenge-aqua); color: var(--challenge-blue); font-size: 10px; font-weight: 850; letter-spacing: .7px; }
+.reading-feature h2 { font-size: clamp(32px, 4vw, 48px); line-height: 1.08; margin: 18px 0 12px; }
+.reading-feature h2 em { color: var(--challenge-aqua); font-weight: 850; font-style: normal; }
+.reading-feature p { font-size: 14px; color: #e2ebff; max-width: 280px; }
+.lhs365 .challenge-cta { display: flex; align-items: center; justify-content: space-between; gap: 25px; width: fit-content; min-height: 50px; padding: 12px 20px; border-radius: 14px; margin-top: 22px; background: var(--challenge-pink); color: #00236c; font-weight: 850; box-shadow: 0 4px 0 #950c85; }
+.challenge-cta:hover { background: #ff7ce7; transform: translateY(-1px); }
+.reading-feature small { display: block; margin-top: 13px; font-size: 10px; color: #d2dfff; }
+.home-book-art { position: relative; min-height: 340px; background: radial-gradient(circle at 65% 40%, #543a99 0, #183883 52%, transparent 72%); }
+.book-art-sticker { position: absolute; right: 22px; top: 30px; display: flex; width: 104px; height: 104px; align-items: center; justify-content: center; border-radius: 50%; background: var(--challenge-aqua); color: var(--challenge-blue); font-size: 14px; line-height: 1.15; font-weight: 900; text-align: center; transform: rotate(12deg); border: 4px solid #00236c; box-shadow: 0 0 0 2px #1cffe3; }
+.art-twinkle { position: absolute; top: 46px; left: 25px; font-size: 65px; color: #ff2bd6; }
+.hero-book { position: absolute; height: 52px; left: 10%; width: 78%; bottom: 42px; border-radius: 8px 16px 16px 8px; display: flex; align-items: center; justify-content: space-around; padding: 0 22px 0 14px; font-size: 11px; font-weight: 900; letter-spacing: 1px; border: 3px solid #00236c; box-shadow: inset -12px 0 #fff5de, 0 6px 0 #00134555; }
+.hero-book span { font-size: 24px; }
+.hb-one { bottom: 198px; width: 66%; left: 11%; background: #ff2bd6; color: #00236c; transform: rotate(-7deg); }
+.hb-two { bottom: 146px; background: #fff5de; color: #6d2077; transform: rotate(3deg); }
+.hb-three { bottom: 94px; width: 70%; left: 15%; background: #6d2077; color: #fff; transform: rotate(-3deg); }
+.hb-four { background: #1cffe3; color: #00236c; transform: rotate(2deg); }
+.book-art-ground { position: absolute; bottom: 31px; left: 7%; width: 84%; height: 6px; background: #849cd166; border-radius: 50%; }
+.past-adventure { display: flex; align-items: center; gap: 22px; margin-top: 22px; padding: 24px; border-radius: 24px; border: 1px solid #dbe4f5; background: #fff; }
+.past-adventure h2 { font-size: 23px; margin: 5px 0; }
+.past-adventure p { font-size: 12px; color: #52617b; }
+.past-adventure > a { margin-left: auto; font-size: 12px; font-weight: 800; text-decoration: underline; text-underline-offset: 4px; flex-shrink: 0; padding: 12px 0; }
+.past-route { display: flex; align-items: center; gap: 8px; background: #effcfb; padding: 20px 12px; border-radius: 17px; font-size: 24px; }
+.past-route i { width: 35px; border-top: 3px dashed #00afc4; }
+.reading-theme { --ink: #00236c; --paper: #fffaf0; --green: #00236c; --line: #e2dccc; background: #fffaf0; }
+.reading-theme main { background-image: linear-gradient(#00236c03 1px, transparent 1px); background-size: 100% 32px; }
+.reading-theme .reading-heading em, .reading-theme .tower-copy em { color: #6d2077; }
+.reading-theme .button.primary { background: #00236c; color: white; border-radius: 12px; }
+.reading-theme .button.primary:hover { background: #6d2077; }
+.reading-theme .reading-book { border-radius: 14px; border-color: #e2dccc; box-shadow: 0 4px 0 #e7ddc7; background: #fffefa; }
+.reading-theme .book-spine { background: #6d2077; color: #fff; box-shadow: 5px 3px 0 #e1d6bc; }
+.reading-theme .tower-mission { background: #f5eddb; border-radius: 20px; border-color: #e0d5be; }
+.reading-theme .tower-targets button[aria-pressed="true"] { background: #6d2077; border-color: #6d2077; color: white; }
+.reading-theme .tower-copy progress, .reading-theme .reading-book progress { accent-color: #6d2077; }
+.reading-theme .reading-book progress::-webkit-progress-value { background: #6d2077; }
+.reading-theme .empty-shelf { border-radius: 16px; background: #fffefa; }
+.reading-theme .paper-stack i { background: #1cffe3; border-color: #00236c; }
+.reading-theme .paper-stack i:nth-child(3n + 2) { background: #ff2bd6; border-color: #6d2077; }
+.reading-theme .paper-stack i:nth-child(3n) { background: #6d2077; border-color: #00236c; }
+@media(max-width:760px) {
+  .lhs365 .school-context { display: none; }
+  .lhs365 .site-header { gap: 14px; padding: 14px 20px; }
+  .lhs365 .site-header nav { width: auto; gap: 14px; order: initial; font-size: 12px; }
+  .lhs365 .brand > span { font-size: 25px; }
+  .lhs365 .brand small { font-size: 6px; letter-spacing: 1px; }
+  .lhs365 .brand .school-logo-tile { width: 40px; height: 40px; border-radius: 12px; }
+  .adventure-intro { padding: 28px 0 24px; }
+  .home-spark { font-size: 34px; }
+  .spark-left { left: 0; top: 26px; }
+  .spark-right { right: 0; top: 88px; }
+  .reading-feature { grid-template-columns: 1fr; border-radius: 24px; }
+  .reading-feature-copy { padding: 26px; }
+  .reading-feature h2 { font-size: 40px; }
+  .home-book-art { min-height: 270px; }
+  .book-art-sticker { width: 75px; height: 75px; top: 0; font-size: 11px; }
+  .art-twinkle { top: 0; }
+  .hero-book { font-size: 10px; }
+  .past-adventure { flex-wrap: wrap; padding: 20px; gap: 12px; }
+  .past-route { padding: 12px; font-size: 20px; }
+  .past-adventure > a { margin-left: 0; width: 100%; }
+}
+@media(max-width:380px) { .lhs365 .site-header { padding: 12px; gap: 10px; } .lhs365 .site-header nav { font-size: 11px; gap: 10px; } .lhs365 .brand { gap: 7px; } }
+@media(prefers-reduced-motion:reduce) { .challenge-cta:hover { transform: none; } }

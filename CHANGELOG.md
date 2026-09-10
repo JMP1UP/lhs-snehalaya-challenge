@@ -1,5 +1,12 @@
 # Changelog — LHS Snehalaya Challenge
 
+## 2026-09-10 — Bright challenge branding
+
+- Restore original Steps colours and LHS logo on a concise, illustrated challenge home.
+- Give reading a distinct paper-and-books theme while preserving its logging workflow.
+- Retain direct reading links and the static history route.
+
+
 ## 2026-09-10 — Read. Stack. Reach higher.
 
 - Open directly into logging; move challenge history to its own view and collapse finished books.

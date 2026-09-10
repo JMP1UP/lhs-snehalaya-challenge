@@ -1,5 +1,10 @@
 # Architecture decisions
 
+## 10 September 2026 — Restore the original Steps visual identity
+
+User feedback selects a bright challenge front page and a separate reading theme. Restore LHS logo, royal blue, pink, aqua, purple, bold headings and rounded cards, retaining 25Thirty attribution. Home is no longer the logger; the prominent CTA and header lead directly to logging.
+
+
 ## 10 September 2026 — Logging first; a tower as tall as…
 
 Following user feedback, replace the promotional home with the logger and a virtual book tower. Use an explicit estimated 0.05 mm/page conversion, with selectable landmark examples. Keep actual completed books separate from the illustration. The school target is not approved by selecting a preview landmark. Preserve existing session data and original steps records.

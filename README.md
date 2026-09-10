@@ -1,5 +1,10 @@
 # 25Thirty 365
 
+## Bright challenge home — 10 September 2026
+
+The front page restores the original Steps palette, LHS school logo, bold type and rounded challenge cards. Open the featured reading challenge or use Log reading in the header to reach the logger in one click. Reading keeps its paper, book spines and estimated-height tower, with shared purple/blue accents. The earlier logging-only default has been superseded by this user-requested home.
+
+
 Part of **25Thirty School**, with **LHS 365** as the Leicester High School programme. Intended address: `365.25thirty.school` (not connected yet). See [suite positioning](docs/suite-positioning.md).
 
 The fictional-data preview is published at [25thirty-365.vercel.app](https://25thirty-365.vercel.app) and linked from the live suite. See [deployment status and the remaining DNS record](docs/deployment.md).

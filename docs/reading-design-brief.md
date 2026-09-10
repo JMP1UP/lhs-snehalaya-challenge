@@ -1,5 +1,10 @@
 # 25Thirty 365 — Read for Snehalaya at Leicester High School
 
+## Updated branding direction — 10 September 2026
+
+The user requests the bright fun of the original Steps app. This supersedes the logging-only default route: restore a concise, engaging challenge home at / (and /challenges), with a prominent reading CTA and a smaller past-steps card. Preserve one-click access to /reading. Shared identity uses the original royal blue #00236C, pink #FF2BD6, aqua #1CFFE3 and purple #6D2077, LHS logo and bold rounded styling. LHS 365 is the school-facing brand; 25Thirty School remains the suite attribution. Use darker pink for readable text on the pale background. Reading has a distinct cream-paper and book-spine theme, serif headings and purple accents; retain the existing logger-first reading layout, tower conversion and fictional-data notices. Avoid adding long promotional sections.
+
+
 ## Revised direction — 10 September 2026
 
 This direction supersedes the editorial landing-page and milestone-sidebar layouts below. Logging is the primary task: current book, page reached, Save pages. The default route opens this workflow; on desktop the mission sits beside it and on phones below it. Finished books sit in a disclosure; the collection moves to `#/challenges`. Keep the cream paper, serif headings, illustrated books and suite navigation, but remove promotional sections and repeated encouragement.

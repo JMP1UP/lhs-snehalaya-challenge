@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { challenges } from "./challenges";
 import ReadingChallenge from "./ReadingChallenge";
 import StepsArchive from "./StepsArchive";
 import "./lhs365.css";
+import "./challenge-brand.css";
 
 
 function currentRoute() {
@@ -11,20 +11,38 @@ function currentRoute() {
 
 function Home() {
   return (
-    <section className="challenge-history compact-collection">
-      <h1>Our challenges</h1>
-      <div className="challenge-grid">
-        {challenges.map((challenge) => (
-          <a className="collection-card" href={challenge.href} key={challenge.id}>
-            <div className="collection-content">
-              <span className="eyebrow">{challenge.status === "closed" ? "Completed" : "This term · Preview"}</span>
-              <h2>{challenge.title}</h2>
-              <span className="text-link">{challenge.status === "closed" ? "View journey →" : "Log reading →"}</span>
-            </div>
-          </a>
-        ))}
-      </div>
-    </section>
+    <div className="challenge-home">
+      <section className="adventure-intro">
+        <span className="adventure-tag">LEICESTER HIGH · LHS 365</span>
+        <h1>Small actions.<br /><span>BIG adventures.</span></h1>
+        <p>Our next challenge starts with a page.</p>
+        <span className="home-spark spark-left" aria-hidden="true">✳</span>
+        <span className="home-spark spark-right" aria-hidden="true">✦</span>
+      </section>
+      <section className="reading-feature" aria-labelledby="reading-feature-title">
+        <div className="reading-feature-copy">
+          <span className="challenge-badge">📚 THIS TERM · READING PREVIEW</span>
+          <h2 id="reading-feature-title">Read. Stack.<br /><em>Reach higher.</em></h2>
+          <p>Can our book tower grow as tall as a giraffe?</p>
+          <a className="challenge-cta" href="#/reading">Log your reading <span aria-hidden="true">➜</span></a>
+          <small>Fictional entries only for now.</small>
+        </div>
+        <div className="home-book-art" aria-hidden="true">
+          <span className="book-art-sticker">HOW HIGH<br />CAN WE GO?</span>
+          <span className="art-twinkle">✦</span>
+          <div className="hero-book hb-one">ONE MORE CHAPTER <span>✦</span></div>
+          <div className="hero-book hb-two">A WORLD OF STORIES</div>
+          <div className="hero-book hb-three">READ · STACK · REPEAT</div>
+          <div className="hero-book hb-four">THE LHS BOOK TOWER <span>↗</span></div>
+          <div className="book-art-ground" />
+        </div>
+      </section>
+      <section className="past-adventure" aria-labelledby="past-adventure-title">
+        <div className="past-route" aria-hidden="true"><span>👟</span><i /> <span>📍</span></div>
+        <div><span className="adventure-tag">OUR FIRST ADVENTURE · CLOSED</span><h2 id="past-adventure-title">Steps to Snehalaya</h2><p>From Leicester to Snehalaya, one step at a time.</p></div>
+        <a href="#/steps">Revisit the journey <span aria-hidden="true">➜</span></a>
+      </section>
+    </div>
   );
 }
 
@@ -33,7 +51,7 @@ export default function Lhs365() {
   const main = useRef(null);
   useEffect(() => {
     const navigate = () => {
-      if (window.location.hash.startsWith("#/")) {
+      if (!window.location.hash || window.location.hash.startsWith("#/")) {
         setRoute(currentRoute());
         window.scrollTo(0, 0);
         main.current?.focus();
@@ -43,10 +61,10 @@ export default function Lhs365() {
     return () => window.removeEventListener("hashchange", navigate);
   }, []);
   useEffect(() => {
-    document.title = `${route === "/reading" || route === "/" ? "Read for Snehalaya" : route === "/steps" ? "Steps to Snehalaya" : "Learning beyond school"} | 25Thirty 365 · Leicester High School`;
+    document.title = `${route === "/reading" ? "Read for Snehalaya" : route === "/steps" ? "Steps to Snehalaya" : "Learning beyond school"} | 25Thirty 365 · Leicester High School`;
   }, [route]);
   return (
-    <div className="lhs365">
+    <div className={`lhs365 ${route === "/reading" ? "reading-theme" : "adventure-theme"}`}>
       <a
         className="skip-link"
         href="#main-content"
@@ -59,28 +77,25 @@ export default function Lhs365() {
         Skip to content
       </a>
       <header className="site-header">
-        <a className="brand" href="#/" aria-label="25Thirty 365 home">
-          <span className="suite-mark" aria-hidden="true"><i /><i /><i /><i /></span>
-          <span>
-            25Thirty <b>365</b>
-            <small>PART OF 25THIRTY SCHOOL</small>
-          </span>
+        <a className="brand" href="#/" aria-label="LHS 365 home">
+          <span className="school-logo-tile"><img src="/lhs-logo.png" alt="Leicester High School" /></span>
+          <span>LHS <b>365</b><small>PART OF 25THIRTY SCHOOL</small></span>
         </a>
         <nav aria-label="Main navigation">
-          <a href="#/challenges" aria-current={route === "/challenges" ? "page" : undefined}>
+          <a href="#/" aria-current={route === "/" || route === "/challenges" ? "page" : undefined}>
             Challenges
           </a>
           <a
             href="#/reading"
-            aria-current={route === "/reading" || route === "/" ? "page" : undefined}
+            aria-current={route === "/reading" ? "page" : undefined}
           >
             Log reading
           </a>
         </nav>
-        <span className="school-context"><img src="/lhs-logo.png" alt="" /><span>Leicester High School<small>LHS 365 · A little every day.</small></span></span>
+        <span className="school-context">A little every day. <span aria-hidden="true">✦</span></span>
       </header>
       <main id="main-content" ref={main} tabIndex={-1}>
-        {route === "/steps" ? <StepsArchive /> : route === "/challenges" ? <Home /> : <ReadingChallenge />}
+        {route === "/steps" ? <StepsArchive /> : route === "/reading" ? <ReadingChallenge /> : <Home />}
       </main>
       <footer className="site-footer">
         <a className="footer-brand" href="#/">
