@@ -1,5 +1,10 @@
 # Architecture
 
+## Reading refinements — 10 September 2026
+
+BookTower now receives existing books as well as contributed pages, deriving a decorative stack from up to eight books with positive contributions. No new stored fields; arithmetic remains in tower.mjs.
+
+
 ## Bright home and challenge themes
 
 Lhs365 renders Home at / and /challenges, ReadingChallenge at /reading and static StepsArchive at /steps. challenge-brand.css scopes the bright adventure theme and cream reading theme while sharing the original school palette. Empty-hash browser-back navigation restores Home. No record, storage or live-service changes.

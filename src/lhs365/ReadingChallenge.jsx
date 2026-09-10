@@ -185,7 +185,7 @@ export default function ReadingChallenge() {
             </div>
             <button
               ref={addButton}
-              className="button primary"
+              className="button primary add-book-primary"
               onClick={() => {
                 setAdding(true);
                 setNotice("");
@@ -379,9 +379,7 @@ export default function ReadingChallenge() {
               <p>
                 Add a book. Tell us the page you’ve reached.
               </p>
-              <button className="text-link" onClick={() => setAdding(true)}>
-                Add my first book →
-              </button>
+
             </div>
           )}
           <div className="books-list">
@@ -413,12 +411,12 @@ export default function ReadingChallenge() {
         </section>
       </div>
         <div className="reading-mission-column">
-      <BookTower pages={stats.pages} />
+      <BookTower pages={stats.pages} books={books} />
       <section className="reading-stats" aria-label="Your preview progress">
         {[
           ["Your pages", stats.pages],
           ["Books", stats.finished],
-          ["Days reading", stats.days],
+          ["Days logged", stats.days],
         ].map(([label, value]) => (
           <div key={label}>
             <strong>{value.toLocaleString()}</strong>

@@ -1,5 +1,10 @@
 # Changelog — LHS Snehalaya Challenge
 
+## Reading refinements — 10 September 2026
+
+Reading polish: stronger Add a book action, compact empty state, quieter preview notice, larger landmark stage with named book spines, welcoming zero state, Days logged label, challenge-count badge and simplified footer.
+
+
 ## 2026-09-10 — Bright challenge branding
 
 - Restore original Steps colours and LHS logo on a concise, illustrated challenge home.

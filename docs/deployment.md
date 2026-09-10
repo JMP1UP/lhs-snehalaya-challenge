@@ -6,7 +6,7 @@ Date: 10 September 2026. Owner: John Partridge. Classification: external pilot o
 
 - Public preview: `https://25thirty-365.vercel.app`.
 - Host: separate Vercel project `25thirty-365` (`prj_YXRk7mn2TC6sPgv5iPYx1pTEsyJq`).
-- Deployment: `dpl_G8ar6KG4s8MSWDCp9X3vKPwkRUHb`, `25thirty-365-k8xopwsw9-john-s-projects7.vercel.app`.
+- Deployment: `dpl_GW2Y9aXmtyxHDJJ618zT4nDUgcSH`, `25thirty-365-h63xcka3m-john-s-projects7.vercel.app`.
 - Suite: `https://25thirty.school/#365`, with a working preview link.
 - Custom address: `365.25thirty.school`, associated with this project but awaiting DNS.
 
@@ -36,6 +36,6 @@ Do not change nameservers, the root domain or other product records. There were 
 
 ## Rollback and future changes
 
-Previous preview rollback: `25thirty-365-4aao7c91y-john-s-projects7.vercel.app`; the original steps site remains the historical fallback. To withdraw this preview, remove its suite link and unpublish/disable only the new Vercel project. Do not deploy the root Firebase configuration: `.firebaserc` still names the original steps project.
+Previous preview rollback: `25thirty-365-k8xopwsw9-john-s-projects7.vercel.app`; the original steps site remains the historical fallback. To withdraw this preview, remove its suite link and unpublish/disable only the new Vercel project. Do not deploy the root Firebase configuration: `.firebaserc` still names the original steps project.
 
 Future Vercel deployments use `vercel.json` to run reading lint, tests and build. Keep `.vercel` and `.env.local` ignored. Persistent school data, corrections, shared totals and real-pupil permissions still require separate implementation and approval before a school pilot.

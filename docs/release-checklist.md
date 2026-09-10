@@ -1,5 +1,10 @@
 # Release checklist
 
+## Reading refinements — 10 September 2026
+
+Reading refinement verified: 19 existing tests and reading lint passed. Desktop/390px visual checks passed, with no horizontal overflow. A fictional book logged to page 20 produces 1 mm and a named spine; switching to giraffe preserves height. Preview disclosure remains visible. The exact target is available under How does it work. No storage/auth/data-model changes.
+
+
 ## Original Steps branding refresh — 10 September 2026
 
 External fictional-data preview. Original palette and LHS school logo restored, concise home added, reading theme kept separate. All 19 tests, reading lint and build passed; independent source review found no confirmed blocker. No data/storage/authentication changes. Desktop/mobile visual verification completed after restarting: home and reading layouts inspected at desktop and 390px, no mobile home overflow; featured reading link, archive and return links work. Fictional 20-page update adds 1 mm and survives refresh. The prior browser outage is resolved. This is not a school-data launch. Prior deployment remains available for rollback.

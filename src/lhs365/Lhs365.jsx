@@ -83,7 +83,7 @@ export default function Lhs365() {
         </a>
         <nav aria-label="Main navigation">
           <a href="#/" aria-current={route === "/" || route === "/challenges" ? "page" : undefined}>
-            Challenges
+            Challenges <span className="nav-challenge-count" aria-label="2 challenges">2</span>
           </a>
           <a
             href="#/reading"
@@ -98,9 +98,6 @@ export default function Lhs365() {
         {route === "/steps" ? <StepsArchive /> : route === "/reading" ? <ReadingChallenge /> : <Home />}
       </main>
       <footer className="site-footer">
-        <a className="footer-brand" href="#/">
-          25Thirty <b>365</b>
-        </a>
         <p>Leicester High School · LHS 365</p>
         <a className="suite-link" href="https://25thirty.school">Part of 25Thirty School ↗</a>
       </footer>

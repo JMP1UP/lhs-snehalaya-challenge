@@ -87,3 +87,37 @@
 }
 @media(max-width:380px) { .lhs365 .site-header { padding: 12px; gap: 10px; } .lhs365 .site-header nav { font-size: 11px; gap: 10px; } .lhs365 .brand { gap: 7px; } }
 @media(prefers-reduced-motion:reduce) { .challenge-cta:hover { transform: none; } }
+/* Reading refinements: clear first action and a book-led tower. */
+.reading-theme .add-book-primary { min-height: 56px; padding: 14px 24px; font-size: 16px; font-weight: 850; background: #ff2bd6; color: #00236c; box-shadow: 0 4px 0 #b30a9b; }
+.reading-theme .add-book-primary:hover { background: #ff7ce7; color: #00236c; }
+.reading-theme .empty-shelf { padding: 18px 20px; }
+.reading-theme .empty-shelf h3 { font-size: 23px; }
+.reading-theme .empty-shelf p { margin-top: 8px; }
+.reading-theme .preview-note { background: transparent; border: 0; padding: 4px 0 8px; font-size: 11px; color: #666354; }
+.reading-theme .tower-mission { display: block; padding: 20px 24px; }
+.reading-theme .tower-art { min-height: 0; height: 225px; margin: 10px 0 18px; overflow: hidden; background: radial-gradient(ellipse at 50% 85%, #fffaf0 0, transparent 70%); }
+.reading-theme .landmark-silhouette { transform: none; right: 24px; opacity: .65; }
+.reading-theme .landmark-silhouette.door { height: 185px; width: 80px; bottom: 20px; }
+.reading-theme .landmark-silhouette.giraffe { bottom: 65px; }
+.reading-theme .landmark-silhouette.big-ben { bottom: 20px; }
+.reading-theme .tower-flag { right: 16px; top: 0; font-weight: 750; }
+.reading-theme .paper-stack { width: 56%; left: 8px; bottom: 20px; }
+.reading-theme .paper-stack > i { width: 92%; height: 23px; min-height: 23px; border-width: 2px; box-shadow: inset -8px 0 #fff5de; display: flex; align-items: center; justify-content: center; padding: 0 12px 0 6px; color: #00236c; }
+.reading-theme .paper-stack > i:nth-child(3n + 2) { width: 100%; }
+.reading-theme .paper-stack > i:nth-child(3n) { width: 86%; color: white; }
+.reading-theme .paper-stack > i span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 750 10px 'Segoe UI', sans-serif; font-style: normal; }
+.reading-theme .tower-start { width: 100%; padding: 0; }
+.reading-theme .tower-start i { display: block; height: 23px; width: 90%; margin: 2px auto; border: 2px dashed #a59a84; background: transparent; box-shadow: none; opacity: .65; }
+.reading-theme .tower-start i:nth-child(2) { width: 100%; }
+.reading-theme .tower-welcome { display: block; font-size: 17px; font-weight: 700; line-height: 1.4; }
+.reading-theme .tower-remaining { margin-top: 8px; }
+.nav-challenge-count { display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; margin-left: 3px; padding: 0 4px; border-radius: 50%; background: #1cffe3; color: #00236c; font-size: 10px; }
+@media(max-width:600px) {
+  .reading-theme .tower-mission { padding: 18px; }
+  .reading-theme .add-book-primary { padding: 12px 17px; font-size: 14px; }
+  .reading-theme .tower-art { height: 215px; }
+  .reading-theme .landmark-silhouette { right: 14px; }
+}
+.reading-theme .button.add-book-primary { background: #ff2bd6; color: #00236c; }
+.reading-theme .button.add-book-primary:hover { background: #ff7ce7; color: #00236c; }
+.reading-theme .paper-stack .tower-start i:nth-child(n) { background: transparent; border: 2px dashed #a59a84; box-shadow: none; }
