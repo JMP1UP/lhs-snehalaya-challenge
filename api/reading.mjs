@@ -23,16 +23,23 @@ export function createHandler(getServices = services) { return async function ha
   try {
     if (!["GET", "POST"].includes(req.method)) { res.setHeader("Allow", "GET, POST"); fail("Method not allowed.", 405); }
     const {auth,db,admins} = getServices();
+    const resource = req.query.resource || "me";
+    const campaign = db.collection("readingCampaigns").doc(CAMPAIGN);
+    if (req.method === "GET" && resource === "summary") {
+      const snapshot = await campaign.collection("books").limit(10001).get();
+      if (snapshot.size > 10000) fail("The community total is temporarily unavailable.", 409);
+      const {community} = buildReport([],snapshot.docs.map(doc=>doc.data()));
+      res.setHeader("Cache-Control", "public, s-maxage=60, stale-while-revalidate=300");
+      return res.status(200).json(community);
+    }
     const bearer = req.headers.authorization;
     if (typeof bearer !== "string" || !bearer.startsWith("Bearer ")) fail("Sign in to school reading.", 401);
     let token;
     try { token = await auth.verifyIdToken(bearer.slice(7), true); } catch { fail("Your session has expired. Sign in again.", 401); }
     const identity = authorisedIdentity(token, admins);
-    const campaign = db.collection("readingCampaigns").doc(CAMPAIGN);
     const rosterRef = campaign.collection("settings").doc("roster");
     const rosterDoc = await rosterRef.get();
     const roster = rosterDoc.exists ? rosterDoc.data() : {people:[],complete:false};
-    const resource = req.query.resource || "me";
     if (req.method === "GET" && resource === "admin") {
       requireAdmin(identity);
       const [snapshot,membersSnapshot] = await Promise.all([

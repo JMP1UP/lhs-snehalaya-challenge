@@ -5,7 +5,9 @@ import reactRefresh from "eslint-plugin-react-refresh";
 import { defineConfig, globalIgnores } from "eslint/config";
 
 export default defineConfig([
-  globalIgnores(["dist"]),
+  // The original Steps application is retained as an historical reference;
+  // src/main.jsx mounts the maintained LHS 365 application instead.
+  globalIgnores(["dist", "src/App.jsx"]),
   {
     files: ["**/*.{js,jsx,mjs}"],
     extends: [

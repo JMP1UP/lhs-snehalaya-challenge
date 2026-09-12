@@ -1,5 +1,9 @@
 # Release checklist
 
+## Final controlled-pilot gate — 12 September 2026
+
+Classification: **controlled internal school pilot**. The production and fictional-data journeys were rechecked across the public homepage, completed Steps celebration, student add/progress/finish flow, aggregate-only teacher view and private administrator tools. Desktop and 390 px layouts have no document-level horizontal overflow. The public homepage now reads a cached aggregate containing only pages, estimated height, reader count and completed-book count; anonymous requests do not load the roster. All 42 focused tests, whole-project lint, production build and production dependency audit pass. Live anonymous API access remains denied for personal resources. The only remaining human check is a complete sign-in/data-write cycle with an actual school account and, where applicable, the approved roster.
+
 ## Launch-ready fictional preview — 12 September 2026
 
 Classification: **external pilot of a fictional-data design preview**. Visitor, enthusiastic-reader, quick-log, teacher and administrator journeys were exercised in the browser. The teacher surface exposed aggregates only; the administrator successfully checked participation and performed two additive roster imports without losing earlier members. Reload persistence, phone layout and browser-console errors were checked. All 40 focused tests, reading lint, production build and dependency audit pass; the audit reports zero known vulnerabilities. Live school flags remain off, so real Microsoft tenant, roster, Firestore, backup/restore and account-switching checks remain explicitly unverified and gate any real-pupil pilot.

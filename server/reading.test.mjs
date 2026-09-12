@@ -39,6 +39,15 @@ test('admin report includes roster version; roster replacement checks optimistic
  assert.equal((await f.call(null,'admin')).data.version,2);
  assert.equal((await fixture().call({action:'roster',people:[person],complete:true,version:1})).code,403);
 });
+test('public summary exposes only cached whole-school aggregates',async()=>{
+ const f=fixture();
+ const draft={action:'add',id:'cccccccc-cccc-cccc-cccc-cccccccccccc',title:'Public total',author:'',total:100,start:10};
+ await f.call(draft);await f.call({action:'progress',id:draft.id,page:35});
+ const summary=await f.call(null,'summary',{});
+ assert.equal(summary.code,200);
+ assert.deepEqual(summary.data,{pages:25,participants:1,finished:0});
+ assert.equal(summary.headers['Cache-Control'],'public, s-maxage=60, stale-while-revalidate=300');
+});
 test('roster merge adds joiners without removing existing people',async()=>{
  const f=fixture({admin:true});
  const newcomer={email:'new@leicesterhigh.co.uk',name:'New Joiner',kind:'student',house:'Charnwood',yearGroup:'Year 9',formGroup:'9B'};

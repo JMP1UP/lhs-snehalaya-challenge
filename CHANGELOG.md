@@ -1,5 +1,12 @@
 # Changelog — LHS Snehalaya Challenge
 
+## Pre-launch production review — 12 September 2026
+
+- Replaced the public reading placeholder with a cached, privacy-safe community total: pages, estimated height, participating readers and finished books. No names, roster records or individual activity are returned.
+- Moved roster loading behind authentication so anonymous requests never read the private roster.
+- Added HSTS, clickjacking protection and a restrictive browser-permissions policy to production responses.
+- Rechecked the visitor, reading, teacher and administrator surfaces at desktop and phone widths; the fictional add, progress, finish and reload journey reconciles to the expected total.
+
 ## Public project story and community celebration — 12 September 2026
 
 - Reworked the pre-sign-in homepage to explain LHS 365 and its purpose within the Snehalaya partnership.

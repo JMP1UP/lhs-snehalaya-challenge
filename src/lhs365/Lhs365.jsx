@@ -3,6 +3,7 @@ import ReadingAccess from "./ReadingAccess";
 import AdminDashboard from "./AdminDashboard";
 import { liveReading } from "./reading-client.mjs";
 import StepsArchive from "./StepsArchive";
+import { formatHeight, PAGE_HEIGHT_MM } from "./tower.mjs";
 import "./lhs365.css";
 import "./challenge-brand.css";
 
@@ -13,6 +14,23 @@ function currentRoute() {
 
 function Home() {
   const aboutDialog = useRef(null);
+  const [community,setCommunity] = useState(null);
+  useEffect(() => {
+    if (!liveReading) return undefined;
+    let active=true;
+    fetch("/api/reading?resource=summary",{cache:"no-store",signal:AbortSignal.timeout(10000)})
+      .then(response => response.ok ? response.json() : Promise.reject())
+      .then(summary => {
+        if (active && [summary.pages,summary.participants,summary.finished].every(Number.isSafeInteger)) setCommunity(summary);
+      })
+      .catch(() => {});
+    return () => {active=false;};
+  },[]);
+  const currentUpdate = community
+    ? community.pages > 0
+      ? {title:`${community.pages.toLocaleString("en-GB")} pages stacked`,detail:`${formatHeight(community.pages * PAGE_HEIGHT_MM)} high · ${community.participants.toLocaleString("en-GB")} readers · ${community.finished.toLocaleString("en-GB")} books finished`}
+      : {title:"The first page starts the tower",detail:"Sign in and help build it."}
+    : {title:liveReading ? "Reading is under way" : "Preparing for launch",detail:liveReading ? "Sign in to add your pages." : "Preview only · No shared height is published yet."};
 
   return (
     <div className="challenge-home">
@@ -44,8 +62,8 @@ function Home() {
           <p>Every page adds to one whole-school book tower.</p>
           <div className="community-update" aria-label="Current project update">
             <span>COMMUNITY TOWER UPDATE</span>
-            <strong>{liveReading ? "Reading is under way" : "Preparing for launch"}</strong>
-            <p>{liveReading ? "Sign in to add your pages. Verified community height is coming soon." : "Preview only · No shared height is published yet."}</p>
+            <strong>{currentUpdate.title}</strong>
+            <p>{currentUpdate.detail}</p>
           </div>
           <a className="challenge-cta" href="#/reading">Log your reading <span aria-hidden="true">➜</span></a>
         </div>
