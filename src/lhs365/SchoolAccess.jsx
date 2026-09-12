@@ -35,7 +35,7 @@ export default function SchoolAccess({ children, admin = false, staff = false })
     <div className="school-session">
       <span>{account ? `Signed in as ${account.me.person?.name || "Leicester High reader"}` : "School reading"}</span>
       {(account?.me.isAdmin||account?.me.canViewForms) && <a href="#/admin">Form progress</a>}
-      {client && <button className="text-link" onClick={async () => {setAccount(null);try {await client.signOut();} catch {setError("Sign-out failed. Close this tab to end this session.");}}}>Sign out</button>}
+      {account && <button className="text-link" onClick={async () => {setAccount(null);try {await client.signOut();} catch {setError("Sign-out failed. Close this tab to end this session.");}}}>Sign out</button>}
     </div>
     {error && <p role="alert">{error} <button onClick={()=>{setBusy(true);setRetry(n=>n+1);}}>Try again</button></p>}
     {busy ? <p role="status">Loading school reading…</p> : allowed ? children(account) : <section className="admin-card">
