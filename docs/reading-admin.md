@@ -33,6 +33,8 @@ Only `readingCampaigns/read-for-snehalaya-2026/**` is accessed by the new server
 
 Admin imports JSON, CSV or TSV through Manage the school roster. Add or update is the default: matching normalised school emails are updated and omitted people remain, so later uploads can safely add new joiners. Full replacement is a separate, explicitly confirmed action. A trailing `(staff)` marker can classify an imported row, but it is stripped from the stored name and never grants access by itself. Duplicate emails and invalid fields are rejected. Stale roster versions cannot overwrite a newer import. Removing a person disables their logging but does not delete books. Unmatched books are flagged; inactive readers are excluded from active totals. Keep roster exports within approved school storage. CSV downloads contain personal data in live mode and remain the administrator's responsibility.
 
+Start from `docs/reading-roster-template.csv`. Replace its fictional rows inside approved school storage; do not commit or email the completed roster. Upload the approved file through the private administrator interface after verified sign-in.
+
 An added book with no new pages remains a non-contributor. Starting pages never count retrospectively. Rankings count pages, with alphabetical tie order; student/staff rankings are separate. Form-group competition uses average pages per active student and also shows participation percentage, alongside the all-student school equivalents. Verified rostered staff can view these aggregate form figures; individual rankings and non-contributor names remain admin-only and are never published to students. The access decision uses verified identity plus the stored roster role, not an editable login display name.
 
 ## One pilot checklist

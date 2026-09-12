@@ -1,0 +1,3 @@
+Name,Email,Role,House,Year group,Form group,Active
+Example Pupil,example.pupil@leicesterhigh.co.uk,student,Bradgate,Year 8,8A,true
+Example Teacher (staff),example.teacher@leicesterhigh.co.uk,,None,,8A,true
