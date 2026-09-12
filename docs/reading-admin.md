@@ -23,7 +23,7 @@ Public build-time configuration:
 - `VITE_READING_FIREBASE_CONFIG`: JSON public Firebase web configuration, matching the server project.
 - `VITE_READING_MICROSOFT_TENANT`: the school's Microsoft tenant ID.
 
-Configure the Microsoft provider to the school tenant and authorise the deployment hostname in Firebase Auth. The client tenant parameter is not the access-control boundary: the API verifies a Firebase ID token with revocation checks, the Microsoft provider, verified school email, and the server allowlist or active roster membership. Verify actual tenant isolation in the pilot. In live mode, missing configuration fails closed; it never falls back to local preview storage. Signing out clears the displayed report/bookshelf. Admin names and roster records are not public endpoints.
+Configure the Microsoft provider to the school tenant and authorise the deployment hostname in Firebase Auth. The client tenant parameter is not the access-control boundary: the API verifies a Firebase ID token with revocation checks, the Microsoft provider and a verified Leicester High email. Any verified school account may use the reading challenge; the roster supplies school grouping and participation denominators, not basic access. Admin access still requires the server allowlist, and staff aggregate access requires an active staff roster record. Verify actual tenant isolation in the pilot. In live mode, missing configuration fails closed; it never falls back to local preview storage. Signing out clears the displayed report/bookshelf. Admin names and roster records are not public endpoints.
 
 ## Data and roster
 
@@ -35,7 +35,7 @@ Admin imports JSON, CSV or TSV through Manage the school roster. Add or update i
 
 Start from `docs/reading-roster-template.csv`. Replace its fictional rows inside approved school storage; do not commit or email the completed roster. Upload the approved file through the private administrator interface after verified sign-in.
 
-An added book with no new pages remains a non-contributor. Starting pages never count retrospectively. Rankings count pages, with alphabetical tie order; student/staff rankings are separate. Form-group competition uses average pages per active student and also shows participation percentage, alongside the all-student school equivalents. Verified rostered staff can view these aggregate form figures; individual rankings and non-contributor names remain admin-only and are never published to students. The access decision uses verified identity plus the stored roster role, not an editable login display name.
+An added book with no new pages remains a non-contributor. Starting pages never count retrospectively. The community tower includes reading from every verified school account. Rankings, houses, forms and participation percentages use matched active roster members only. The admin report highlights valid school accounts that have signed in but are not on the roster, so they can be reconciled. Form-group competition uses average pages per active student and also shows participation percentage, alongside the all-student school equivalents. Verified rostered staff can view these aggregate form figures; individual rankings, reconciliation emails and non-contributor names remain admin-only and are never published to students. Staff authority uses verified identity plus the stored roster role, not an editable login display name.
 
 ## One pilot checklist
 

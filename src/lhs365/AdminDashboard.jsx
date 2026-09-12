@@ -70,6 +70,15 @@ function ParticipationCheck({data}) {
     {rows.length>0&&<div className="admin-table-scroll participation-results"><table><thead><tr><th scope="col">Person</th><th scope="col">Status</th><th scope="col">Pages</th></tr></thead><tbody>{rows.map((row,index)=><tr key={`${row.email||row.name}-${index}`}><th scope="row">{row.matchedName||row.name||row.email}</th><td><span className={`participation-status ${row.state}`}>{row.state==="participated"?"Taken part":row.state==="not-started"?"Not yet":"Check match"}</span></td><td>{row.state==="unmatched"?"—":number(row.pages)}</td></tr>)}</tbody></table></div>}
   </section>;
 }
+function RosterReconciliation({rows=[]}) {
+  if(!rows.length)return null;
+  return <section className="admin-card roster-reconciliation" aria-labelledby="roster-reconciliation-title">
+    <span className="eyebrow">ACTION NEEDED · PRIVATE</span>
+    <h2 id="roster-reconciliation-title">Signed in, not on the roster <small>({rows.length})</small></h2>
+    <p>These valid Leicester High accounts have opened reading. Add them to the roster so their form and house participation is counted correctly.</p>
+    <div className="admin-table-scroll"><table><thead><tr><th scope="col">School account</th><th scope="col">First seen</th><th scope="col">Last seen</th></tr></thead><tbody>{rows.map(row=><tr key={row.email}><th scope="row">{row.email}</th><td>{new Date(row.firstSeenAt).toLocaleString("en-GB")}</td><td>{new Date(row.lastSeenAt).toLocaleString("en-GB")}</td></tr>)}</tbody></table></div>
+  </section>;
+}
 function Report({data,onRefresh,onSave,demo=false}) {
   const [house,setHouse]=useState(""),[kind,setKind]=useState(""),[yearGroup,setYear]=useState(""),[search,setSearch]=useState("");
   const result=useMemo(()=>{try{return {report:buildReport(data.people,data.books,{house,kind,yearGroup})};}catch{return {error:"Reading records could not be reconciled. Refresh or contact the administrator before using this report."};}},[data,house,kind,yearGroup]);
@@ -80,12 +89,12 @@ function Report({data,onRefresh,onSave,demo=false}) {
     <header className="admin-heading"><div><span className="eyebrow">LHS 365 · READING {demo ? "DEMO" : "ADMIN"}</span><h1>Every page. <em>Everyone.</em></h1></div>{onRefresh && <button className="button secondary" onClick={onRefresh}>Refresh report</button>}</header>
     {demo ? <p className="admin-notice" role="status"><strong>Fictional demo</strong> · No school records</p> : <p className="admin-notice">Private staff report · {data.complete ? "Complete roster" : "Partial roster"} · Loaded {new Date(data.updatedAt).toLocaleString("en-GB")}</p>}
     {!demo && !data.complete && <p>People missing from the roster cannot appear in the “No pages logged” list.</p>}
-    {report.unmatchedBooks>0 && <p role="alert">{report.unmatchedBooks} book records have no matching roster member and are excluded. Check the roster before using totals.</p>}
+    {report.unmatchedBooks>0 && <p role="alert">{report.unmatchedBooks} book records from {report.unmatchedReaders} participating reader{report.unmatchedReaders===1?"":"s"} are included in the community tower but not in roster, form or house figures.</p>}
     <section className="admin-celebration" aria-labelledby="community-tower-title">
       <div className="admin-celebration-copy">
         <span className="eyebrow">OUR COMMUNITY BOOK TOWER</span>
-        <h2 id="community-tower-title"><strong>{number(report.pages)}</strong> pages.<br/><em>{towerHeight(report.pages)} high.</em></h2>
-        <p>{report.participants} readers · {number(report.finished)} books finished</p>
+        <h2 id="community-tower-title"><strong>{number(report.community.pages)}</strong> pages.<br/><em>{towerHeight(report.community.pages)} high.</em></h2>
+        <p>{report.community.participants} readers · {number(report.community.finished)} books finished</p>
       </div>
       <div className="admin-book-stack" aria-hidden="true">
         <i>EVERY PAGE COUNTS</i><i>READ TOGETHER</i><i>ONE MORE CHAPTER</i><i>LHS 365</i><i>KEEP STACKING</i>
@@ -98,6 +107,7 @@ function Report({data,onRefresh,onSave,demo=false}) {
     </div>
     <section className="admin-totals" aria-label="Filtered reading totals">{[[number(report.pages),"Pages stacked"],[`${report.participants} / ${report.enrolled}`,"Readers contributing"],[report.rate===null ? "—" : `${Math.round(report.rate)}%`,data.complete ? "Participation" : "Roster participation"],[number(report.finished),"Books finished"]].map(([value,label])=><div key={label}><strong>{value}</strong><span>{label}</span></div>)}</section>
     <FormGroupBoard summary={report.studentSummary} groups={report.formGroups} complete={data.complete}/>
+    {!demo&&<RosterReconciliation rows={data.unmatchedLogins}/>}
     <ParticipationCheck data={data}/>
     <section className="admin-champion"><span aria-hidden="true">★</span><div><span className="eyebrow">LEADING THE STACK · CURRENT FILTER</span><h2>{report.biggest?.name || "Who will start our tower?"}</h2><p>{report.biggest ? `${number(report.biggest.pages)} pages contributed · ${report.biggest.house}` : "The first page is all it takes."}</p></div></section>
     <div className="admin-rankings"><Ranking title="Top 10 students" rows={report.topStudents}/><Ranking title="Top 10 staff" rows={report.topStaff}/></div>

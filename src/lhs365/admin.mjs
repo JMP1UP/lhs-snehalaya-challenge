@@ -82,6 +82,15 @@ export function buildReport(roster, books, filters = {}) {
     list.push(book); byPerson.set(book.ownerKey, list);
   }
   const known = new Set(roster.map(person => person.id));
+  const unmatchedBooks=books.filter(book => !known.has(book.ownerKey));
+  const unmatchedByOwner=new Map();
+  for(const book of unmatchedBooks){const list=unmatchedByOwner.get(book.ownerKey)||[];list.push(book);unmatchedByOwner.set(book.ownerKey,list);}
+  const unmatchedStats=[...unmatchedByOwner.values()].map(readingStats);
+  const community={
+    pages:[...byPerson.values()].reduce((sum,ownerBooks)=>sum+readingStats(ownerBooks).pages,0),
+    participants:[...byPerson.values()].filter(ownerBooks=>readingStats(ownerBooks).pages>0).length,
+    finished:[...byPerson.values()].reduce((sum,ownerBooks)=>sum+readingStats(ownerBooks).finished,0),
+  };
   const all = roster.filter(person => person.active !== false).map(person => ({ ...person, ...readingStats(byPerson.get(person.id) || []) }));
   const people = all.filter(person => (!filters.kind || person.kind === filters.kind) && (!filters.house || person.house === filters.house) && (!filters.yearGroup || person.yearGroup === filters.yearGroup));
   const participants = people.filter(person => person.pages > 0);
@@ -105,7 +114,9 @@ export function buildReport(roster, books, filters = {}) {
     enrolled: people.length, participants: participants.length, rate: people.length ? participants.length / people.length * 100 : null,
     topStudents: ranked.filter(p => p.kind === "student").slice(0, 10), topStaff: ranked.filter(p => p.kind === "staff").slice(0, 10), biggest: ranked[0] || null,
     notStarted: people.filter(p => p.pages === 0).sort((a,b) => a.name.localeCompare(b.name)), houses,
-    unmatchedBooks: books.filter(book => !known.has(book.ownerKey)).length,
+    unmatchedBooks: unmatchedBooks.length,
+    unmatchedReaders:unmatchedStats.filter(stats=>stats.pages>0).length,
+    community,
     studentSummary:{pages:studentPages,enrolled:students.length,participants:studentParticipants,rate:students.length?studentParticipants/students.length*100:null,averagePages:students.length?studentPages/students.length:null},
     formGroups,
   };

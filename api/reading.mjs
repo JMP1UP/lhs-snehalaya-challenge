@@ -35,9 +35,15 @@ export function createHandler(getServices = services) { return async function ha
     const resource = req.query.resource || "me";
     if (req.method === "GET" && resource === "admin") {
       requireAdmin(identity);
-      const snapshot = await campaign.collection("books").limit(10001).get();
+      const [snapshot,membersSnapshot] = await Promise.all([
+        campaign.collection("books").limit(10001).get(),
+        campaign.collection("members").limit(1001).get(),
+      ]);
       if (snapshot.size > 10000) fail("This report exceeds the pilot limit. Contact the administrator before exporting.", 409);
-      return res.status(200).json({people:roster.people,complete:roster.complete,version:roster.version || 0,books:snapshot.docs.map(d => d.data()),updatedAt:new Date().toISOString()});
+      if (membersSnapshot.size > 1000) fail("This sign-in report exceeds the pilot limit. Contact the administrator.",409);
+      const rosterKeys=new Set(roster.people.map(person=>person.id));
+      const unmatchedLogins=membersSnapshot.docs.map(doc=>doc.data()).filter(member=>member.email&&!rosterKeys.has(member.key)).map(({email,firstSeenAt,lastSeenAt})=>({email,firstSeenAt,lastSeenAt}));
+      return res.status(200).json({people:roster.people,complete:roster.complete,version:roster.version || 0,books:snapshot.docs.map(d => d.data()),unmatchedLogins,updatedAt:new Date().toISOString()});
     }
     if (req.method === "GET" && resource === "staff") {
       const person=requireMember(identity,roster.people);
@@ -49,9 +55,15 @@ export function createHandler(getServices = services) { return async function ha
     }
     if (req.method === "GET" && resource === "me") {
       const person = roster.people.find(p => p.id === identity.key && p.active !== false) || null;
-      const snapshot = person ? await campaign.collection("books").where("ownerKey","==",identity.key).limit(201).get() : null;
-      if (snapshot?.size > 200) fail("This bookshelf exceeds the pilot limit.",409);
-      return res.status(200).json({isAdmin:identity.isAdmin,canViewForms:person?.kind==="staff",person,books:snapshot?.docs.map(d => d.data()) || []});
+      const memberRef=campaign.collection("members").doc(identity.key);
+      const now=new Date().toISOString();
+      await db.runTransaction(async tx=>{
+        const current=await tx.get(memberRef),prior=current.data()||{};
+        tx.set(memberRef,{...prior,key:identity.key,email:identity.email,firstSeenAt:prior.firstSeenAt||now,lastSeenAt:now});
+      });
+      const snapshot = await campaign.collection("books").where("ownerKey","==",identity.key).limit(201).get();
+      if (snapshot.size > 200) fail("This bookshelf exceeds the pilot limit.",409);
+      return res.status(200).json({isAdmin:identity.isAdmin,canViewForms:person?.kind==="staff",person,books:snapshot.docs.map(d => d.data())});
     }
     if (req.method !== "POST") fail("Unknown reading resource.",404);
     if (!req.headers["content-type"]?.startsWith("application/json")) fail("Use JSON for this request.",415);
@@ -73,14 +85,12 @@ export function createHandler(getServices = services) { return async function ha
       });
       return res.status(200).json({saved:true});
     }
-    requireMember(identity, roster.people);
     if (body.action === "add") {
       if (typeof body.title !== "string" || typeof body.author !== "string" || typeof body.id !== "string" || !/^[a-f0-9-]{36}$/.test(body.id)) fail("Enter valid book details.");
       const book = createBook({title:body.title,author:body.author,total:body.total,start:body.start ?? "0"}, body.id);
       const bookRef = campaign.collection("books").doc(book.id);
       const memberRef = campaign.collection("members").doc(identity.key);
       const saved = await db.runTransaction(async tx => {
-        requireMember(identity, (await tx.get(rosterRef)).data()?.people || []);
         const existing = await tx.get(bookRef);
         if (existing.exists) {
           const prior = existing.data();
@@ -90,7 +100,8 @@ export function createHandler(getServices = services) { return async function ha
         const member = await tx.get(memberRef);
         if ((member.data()?.bookCount || 0) >= 200) fail("The reading pilot supports up to 200 books per person.",409);
         tx.create(bookRef, {...book,ownerKey:identity.key});
-        tx.set(memberRef,{bookCount:(member.data()?.bookCount || 0)+1});
+        const prior=member.data()||{};
+        tx.set(memberRef,{...prior,key:identity.key,email:identity.email,bookCount:(prior.bookCount || 0)+1});
         return book;
       });
       return res.status(201).json(saved);
@@ -99,7 +110,6 @@ export function createHandler(getServices = services) { return async function ha
       if (typeof body.id !== "string" || !/^[a-zA-Z0-9-]{1,80}$/.test(body.id)) fail("Invalid book.");
       const ref = campaign.collection("books").doc(body.id);
       const updated = await db.runTransaction(async tx => {
-        requireMember(identity, (await tx.get(rosterRef)).data()?.people || []);
         const doc = await tx.get(ref);
         if (!doc.exists || doc.data().ownerKey !== identity.key) fail("Book not found.",404);
         const book = doc.data(); restoreBooks(JSON.stringify([book]));

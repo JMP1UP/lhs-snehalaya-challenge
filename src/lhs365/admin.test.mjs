@@ -37,6 +37,12 @@ test('roster rejects duplicates, external email, missing year, invalid house and
  assert.throws(()=>validateRoster([row,{...row,email:row.email.toUpperCase()}]));
  assert.throws(()=>validateRoster({}));assert.throws(()=>validateRoster(Array(1001).fill(row)));
 });
+test('community tower includes verified readers outside the roster without changing roster participation',()=>{
+ const roster=[{id:'known',name:'Known',kind:'student',house:'Bradgate',yearGroup:'Year 8',formGroup:'8A',active:true}];
+ const books=[{id:'known-book',ownerKey:'known',title:'A',author:'',total:100,start:0,current:20,finished:false,logs:[{date:'2026-09-12',pages:20}]},{id:'other-book',ownerKey:'other',title:'B',author:'',total:100,start:0,current:30,finished:false,logs:[{date:'2026-09-12',pages:30}]}];
+ const report=buildReport(roster,books);
+ assert.equal(report.pages,20);assert.equal(report.participants,1);assert.deepEqual(report.community,{pages:50,participants:2,finished:0});assert.equal(report.unmatchedReaders,1);
+});
 test('roster merges preserve existing pupils, update matches and add joiners',()=>{
  const existing=[{id:'a',email:'a@leicesterhigh.co.uk',name:'A',formGroup:'8A'},{id:'b',email:'b@leicesterhigh.co.uk',name:'B',formGroup:'8B'}];
  const incoming=[{id:'b',email:'b@leicesterhigh.co.uk',name:'B Updated',formGroup:'8C'},{id:'c',email:'c@leicesterhigh.co.uk',name:'C',formGroup:'8C'}];

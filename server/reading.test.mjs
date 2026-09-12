@@ -11,7 +11,7 @@ function fixture({admin=false,identity=token,revoked=false,rosterPerson=person}=
  const ref=path=>({path,collection:name=>ref(`${path}/${name}`),doc:name=>ref(`${path}/${name}`),get:async()=>({exists:records.has(path),data:()=>structuredClone(records.get(path))}),limit:()=>query(path),where:(field,op,value)=>query(path,field,value)});
  const query=(path,field,value)=>({limit(){return this;},async get(){bookReads++;const docs=[...records].filter(([key,data])=>key.startsWith(path+'/') && (!field || data[field]===value)).map(([,data])=>({data:()=>structuredClone(data)}));return {docs,size:docs.length};}});
  const db={collection:name=>ref(name),runTransaction:async fn=>{const writes=[];const result=await fn({get:r=>r.get(),set:(r,v)=>writes.push([r.path,v]),create:(r,v)=>{assert.ok(!records.has(r.path));writes.push([r.path,v]);}});for(const [key,value]of writes)records.set(key,structuredClone(value));return result;}};
- const handler=createHandler(()=>({db,admins:admin?[email]:[],auth:{verifyIdToken:async(raw,check)=>{assert.equal(check,true);if(revoked)throw new Error('revoked');return identity;}}}));
+ const handler=createHandler(()=>({db,admins:admin?[identity.email.toLowerCase()]:[],auth:{verifyIdToken:async(raw,check)=>{assert.equal(check,true);if(revoked)throw new Error('revoked');return identity;}}}));
  async function call(body,resource='me',headers={authorization:'Bearer fixture','content-type':'application/json'}){const res={headers:{},setHeader(k,v){this.headers[k]=v;},status(code){this.code=code;return this;},json(data){this.data=data;return this;}};await handler({method:body?'POST':'GET',headers,query:{resource},body},res);return res;}
  return {call,records,reads:()=>bookReads};
 }
@@ -70,8 +70,11 @@ test('adding is idempotent, ignores forged owner/logs; progress ownership, basel
  const key=[...f.records.keys()].find(k=>k.endsWith(draft.id));f.records.get(key).ownerKey='someone-else';
  assert.equal((await f.call({action:'progress',id:draft.id,page:50})).code,404);
 });
-test('unrostered accounts cannot log and cannot see another bookshelf',async()=>{
+test('unrostered school accounts can log, see only their bookshelf and appear for admin reconciliation',async()=>{
  const f=fixture({identity:{...token,email:'unknown@leicesterhigh.co.uk'}});
  assert.equal((await f.call()).data.person,null);assert.deepEqual((await f.call()).data.books,[]);
- assert.equal((await f.call({action:'progress',id:'abc',page:10})).code,403);
+ const draft={action:'add',id:'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',title:'Outside roster',author:'',total:50,start:0};
+ assert.equal((await f.call(draft)).code,201);assert.equal((await f.call()).data.books.length,1);
+ const admin=fixture({admin:true,identity:{...token,email:'unknown@leicesterhigh.co.uk'}});await admin.call();
+ const report=await admin.call(null,'admin');assert.equal(report.data.unmatchedLogins.length,1);assert.equal(report.data.unmatchedLogins[0].email,'unknown@leicesterhigh.co.uk');
 });
