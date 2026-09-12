@@ -1,14 +1,14 @@
-# 25Thirty 365 — published design preview
+# 25Thirty 365 — controlled school pilot
 
-Date: 10 September 2026. Owner: John Partridge. Classification: external pilot of a design preview, fictional entries only. This is not a real-pupil pilot.
+Updated: 12 September 2026. Owner: John Partridge. Classification: controlled internal school pilot.
 
 ## Current publication
 
-- Public preview: `https://25thirty-365.vercel.app`.
+- Public address: `https://365.25thirty.school` (Vercel fallback: `https://25thirty-365.vercel.app`).
 - Host: separate Vercel project `25thirty-365` (`prj_YXRk7mn2TC6sPgv5iPYx1pTEsyJq`).
-- Deployment: `dpl_H5QsQrdBnBN8sZZw5hwC9U44ACHQ`, `25thirty-365-gepswgys9-john-s-projects7.vercel.app`.
+- Deployment: `dpl_BrYSaneeGfsuSysSK3N3CA7ikoSd`, `25thirty-365-ju9e6j87o-john-s-projects7.vercel.app`.
 - Suite: `https://25thirty.school/#365`, with a working preview link.
-- Custom address: `365.25thirty.school`, associated with this project but awaiting DNS.
+- Custom address: `365.25thirty.school`, live with HTTPS.
 
 The bright Steps-brand home is the default route, with the separate reading theme at #/reading. Desktop and 390px mobile checks confirm layouts, reading entry, saved progress and archive navigation. Hosted lint, 33 tests and production build passed. The earlier browser outage is resolved.
 
@@ -20,19 +20,19 @@ The bright Steps-brand home is the default route, with the separate reading them
 - Independent implementation review found two issues; static history and separate Vercel hosting corrected both. One verification review passed.
 - Original Firebase site, authentication and pupil records were not changed. No migration or live-data writes occurred. Fictional session entries from localhost do not transfer to the hosted origin.
 
-## Remaining domain action
+## Domain configuration
 
-Sign in to Cloudflare for `25thirty.school`, then add the exact record returned by Vercel:
+Cloudflare DNS was configured and verified on 12 September 2026:
 
 | Field | Value |
 | --- | --- |
-| Type | CNAME |
+| Type | A |
 | Name | `365` |
-| Target | `bce0c756752aef8e.vercel-dns-017.com` |
+| Target | `76.76.21.21` |
 | Proxy | DNS only (off) |
 | TTL | Auto |
 
-Do not change nameservers, the root domain or other product records. There were no conflicting `365` records when checked. After saving, run `vercel domains verify 365.25thirty.school`, verify public HTTPS and the preview response, then switch the suite's preview link to the custom address. Cloudflare was still at sign-in when this record was prepared.
+The record is DNS-only. Cloudflare authoritative DNS and `1.1.1.1` returned the expected address, Vercel accepted the domain, a certificate was issued, and the custom HTTPS homepage returned HTTP 200 with the expected security headers. Nameservers, the root domain and all other product records were left unchanged.
 
 ## Rollback and future changes
 

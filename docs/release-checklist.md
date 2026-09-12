@@ -41,7 +41,7 @@ Desktop and 390px phone layouts inspected, with no horizontal overflow. Logging 
 
 ## 25Thirty 365 suite branding — 9 September 2026
 
-New frontend lint, all 16 reading/catalogue tests and production build pass locally and on Vercel. The preview is published at `https://25thirty-365.vercel.app`, and the suite listing is live. Independent review and correction verification passed. The `#/steps` page is now static; no route loads live Firebase data. The original challenge records remain intact. `365.25thirty.school` awaits Cloudflare DNS access; no data migration has occurred. See `deployment.md` for publication IDs, checks and the exact remaining action.
+New frontend lint, all 16 reading/catalogue tests and production build pass locally and on Vercel. The preview was first published at `https://25thirty-365.vercel.app`, and the suite listing is live. Independent review and correction verification passed. The `#/steps` page is now static; no route loads legacy Firebase data. The original challenge records remain intact. `https://365.25thirty.school` became live with Cloudflare DNS and Vercel HTTPS on 12 September 2026. See `deployment.md` for current publication IDs and checks.
 
 Final pre-merge verification: 16 tests, reading lint and production build pass locally and on Vercel. Browser checks confirm 42→68 adds 26 pages, backward progress is rejected, finishing at 120 adds 78 total, and refresh retains totals. Static archive and suite navigation work. Numeric/date corruption, malformed catalogue fields and failed storage writes are covered. Independent verification found no remaining merge blocker. Live provider success remains unverified; manual entry works.
 
