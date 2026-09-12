@@ -6,7 +6,7 @@ Updated: 12 September 2026. Owner: John Partridge. Classification: controlled in
 
 - Public address: `https://365.25thirty.school` (Vercel fallback: `https://25thirty-365.vercel.app`).
 - Host: separate Vercel project `25thirty-365` (`prj_YXRk7mn2TC6sPgv5iPYx1pTEsyJq`).
-- Deployment: `dpl_BrYSaneeGfsuSysSK3N3CA7ikoSd`, `25thirty-365-ju9e6j87o-john-s-projects7.vercel.app`.
+- Deployment: `dpl_CKSa85mThnbRvTCpuAABJSbzepFK`, `25thirty-365-ivvgeewjs-john-s-projects7.vercel.app`.
 - Suite: `https://25thirty.school/#365`, with a working preview link.
 - Custom address: `365.25thirty.school`, live with HTTPS.
 
@@ -36,7 +36,7 @@ The record is DNS-only. Cloudflare authoritative DNS and `1.1.1.1` returned the 
 
 ## Rollback and future changes
 
-Previous preview rollback: `25thirty-365-dg7lyovz3-john-s-projects7.vercel.app`; the original steps site remains the historical fallback. To withdraw this preview, remove its suite link and unpublish/disable only the new Vercel project. Do not deploy the root Firebase configuration: `.firebaserc` still names the original steps project.
+Immediate rollback: `25thirty-365-iytoz7u0w-john-s-projects7.vercel.app`; the original steps site remains the historical fallback. To withdraw this pilot, remove its suite link and unpublish/disable only the new Vercel project. Do not deploy the root Firebase configuration: `.firebaserc` still names the original steps project.
 
 Future Vercel deployments use `vercel.json` to run reading lint, tests and build. Keep `.vercel` and `.env.local` ignored. The shared reading API and Microsoft login are enabled for a controlled school pilot. The roster is an auditing and grouping tool rather than a sign-in gate; see reading-admin.md for the remaining operational checks.
 
@@ -57,3 +57,5 @@ The public experience now includes the LHS 365/Snehalaya story, verified histori
 ## Controlled live school pilot — 12 September 2026
 
 Production deployment `dpl_7dm9mkAkGtYVyLqQPuSrKDzF547T` enables Microsoft school login and the private reading API. Any verified `@leicesterhigh.co.uk` Microsoft account may log reading; admin reporting remains separately allowlisted and staff form reporting remains roster-role controlled. Unmatched school logins are highlighted privately for reconciliation, and their pages count in the community tower without changing roster/form/house denominators. The anonymous API returns 401 and anonymous direct Firestore REST access returns 403. All 41 focused tests, scoped lint and the production build pass locally and in Vercel. Real-account completion, external-account rejection, sign-out, multi-device save and restore checks remain open in reading-admin.md.
+
+Final gate deployment `dpl_CKSa85mThnbRvTCpuAABJSbzepFK` adds the anonymous aggregate-only `summary` resource used by the public homepage. Production smoke checks returned `{pages:0, participants:0, finished:0}` with an edge-cache hit on repeat, while the personal `me` resource remained 401 without a session. HSTS, frame denial and browser permissions restrictions are active. All 42 focused tests, whole-project lint, production build and dependency audit pass.
