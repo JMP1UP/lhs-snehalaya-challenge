@@ -1,11 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { schoolClient } from "./reading-client.mjs";
+function SchoolLoginArt() {
+  return <div className="school-login-art" aria-hidden="true"><span>ONE SCHOOL</span><i>TURN THE PAGE</i><i>READ TOGETHER</i><i>REACH HIGHER</i><b>✦</b></div>;
+}
 export default function SchoolAccess({ children, admin = false, staff = false }) {
   const [client,setClient] = useState(null);
   const [account,setAccount] = useState(null);
   const [error,setError] = useState("");
   const [busy,setBusy] = useState(true);
   const [retry,setRetry] = useState(0);
+  const wasAllowed=useRef(false);
   useEffect(() => {
     let active=true, unsubscribe, generation=0;
     schoolClient().then(api => {
@@ -31,21 +35,25 @@ export default function SchoolAccess({ children, admin = false, staff = false })
     finally {setBusy(false);}
   }
   const allowed=account && (!admin || account.me.isAdmin) && (!staff || account.me.isAdmin || account.me.canViewForms);
+  useEffect(() => {
+    if (allowed && !wasAllowed.current) window.scrollTo(0,0);
+    wasAllowed.current=Boolean(allowed);
+  },[allowed]);
   return <>
     {account && <div className="school-session">
-      <span>{`Signed in as ${account.me.person?.name || "Leicester High reader"}`}</span>
-      {(account?.me.isAdmin||account?.me.canViewForms) && <a href="#/admin">Form progress</a>}
+      <span>{account.me.person?.name ? `Signed in as ${account.me.person.name}` : "Signed in with Microsoft"}</span>
+      {staff ? <a href="#/reading">My reading</a> : (account?.me.isAdmin||account?.me.canViewForms) && <a href="#/admin">{account.me.isAdmin ? "Admin dashboard" : "Form progress"}</a>}
       {account && <button className="text-link" onClick={async () => {setAccount(null);try {await client.signOut();} catch {setError("Sign-out failed. Close this tab to end this session.");}}}>Sign out</button>}
     </div>}
     {error && <p className="school-access-error" role="alert">{error} <button onClick={()=>{setBusy(true);setRetry(n=>n+1);}}>Try again</button></p>}
-    {busy ? <p className="school-access-loading" role="status">Opening school reading…</p> : allowed ? children(account) : <section className="school-login-card">
+    {busy ? <section className="school-login-card school-login-loading" role="status"><div className="school-login-copy"><span className="eyebrow">LHS 365 · SCHOOL ACCESS</span><h1>Opening reading…</h1></div><SchoolLoginArt /></section> : allowed ? children(account) : <section className="school-login-card">
       <div className="school-login-copy">
         <span className="eyebrow">LHS 365 · SCHOOL ACCESS</span>
         <h1>{account ? (staff?"Staff access required":"Admin access required") : "Ready to read?"}</h1>
         <p>{account ? (staff?"This area is for staff identified in the school roster.":"This area is for the authorised reading administrators.") : "Use your Leicester High Microsoft account."}</p>
         {!account && client && <button className="button primary school-login-button" onClick={signIn}>Continue with Microsoft <span aria-hidden="true">➜</span></button>}
       </div>
-      <div className="school-login-art" aria-hidden="true"><span>ONE SCHOOL</span><i>TURN THE PAGE</i><i>READ TOGETHER</i><i>REACH HIGHER</i><b>✦</b></div>
+      <SchoolLoginArt />
     </section>}
   </>;
 }

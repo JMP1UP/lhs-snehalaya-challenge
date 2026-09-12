@@ -1,5 +1,13 @@
 # Changelog — LHS Snehalaya Challenge
 
+## Signed-in flow and empty-state polish — 12 September 2026
+
+- Removed the tiny “Saved to school” strip from the live reading workspace; the signed-in session itself now provides the necessary context.
+- Replaced the short loading strip with a stable, full entrance panel and reset the page to the top when sign-in completes, reducing layout jumps and lost-position confusion.
+- Made the session navigation contextual: administrators see “Admin dashboard” from reading, and “My reading” from admin.
+- Moved roster upload to the top of the administrator report and opens it automatically when the roster is empty.
+- Replaced the oversized zero-page celebration with an intentional “The tower starts here” state and hides meaningless empty rankings and filters until a roster exists.
+
 ## Pre-launch production review — 12 September 2026
 
 - Replaced the public reading placeholder with a cached, privacy-safe community total: pages, estimated height, participating readers and finished books. No names, roster records or individual activity are returned.

@@ -182,9 +182,7 @@ export default function ReadingChallenge({ repository }) {
         <div className="eyebrow">LHS 365 · Autumn 2026</div>
         <h1>Read. Stack. <em>Reach higher.</em></h1>
       </section>
-      <div className="preview-note">
-        {repository ? "Saved to school · New pages count" : "Preview · Fictional data stays in this tab"}
-      </div>
+      {!repository && <div className="preview-note">Preview · Fictional data stays in this tab</div>}
       <div className={`reading-workspace ${activeBooks.length ? "" : "reading-workspace-empty"}`}>
       <div className="reading-layout">
         <section>
