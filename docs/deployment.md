@@ -6,7 +6,7 @@ Date: 10 September 2026. Owner: John Partridge. Classification: external pilot o
 
 - Public preview: `https://25thirty-365.vercel.app`.
 - Host: separate Vercel project `25thirty-365` (`prj_YXRk7mn2TC6sPgv5iPYx1pTEsyJq`).
-- Deployment: `dpl_9s8oFnhDnjrJyvecF5H9eq5uyn6u`, `25thirty-365-30s6wmd9k-john-s-projects7.vercel.app`.
+- Deployment: `dpl_H5QsQrdBnBN8sZZw5hwC9U44ACHQ`, `25thirty-365-gepswgys9-john-s-projects7.vercel.app`.
 - Suite: `https://25thirty.school/#365`, with a working preview link.
 - Custom address: `365.25thirty.school`, associated with this project but awaiting DNS.
 
@@ -52,6 +52,6 @@ House leaderboard visual correction: rank/name alignment, consistent report head
 
 ## Launch-ready fictional preview — 12 September 2026
 
-The public experience now includes the LHS 365/Snehalaya story, verified historical Steps result, current reading-project status, graphic-novel reading interface, screenshot-ready community tower, aggregate teacher form view, and administrator participation/roster tools. Browser journeys covered visitor, keen reader, quick logger, teacher and administrator personas at phone width. Progress survived reload; two consecutive additive roster imports preserved earlier entries. The dependency lock was refreshed without a major application migration and `npm audit --omit=dev` reports zero known vulnerabilities. All 40 focused tests, reading lint and the production build pass.
+The public experience now includes the LHS 365/Snehalaya story, verified historical Steps result, current reading-project status, graphic-novel reading interface, screenshot-ready community tower, aggregate teacher form view, and administrator participation/roster tools. Browser journeys covered visitor, keen reader, quick logger, teacher and administrator personas at phone width. Progress survived reload; two consecutive additive roster imports preserved earlier entries. The dependency lock was refreshed without a major application migration and `npm audit --omit=dev` reports zero known vulnerabilities. All 40 focused tests, reading lint and the production build pass locally and in Vercel. Public smoke checks returned HTTP 200 with `X-Robots-Tag: noindex, nofollow`; `/api/reading` returned the expected private JSON 503 while live mode is disabled. No browser-console errors were reported.
 
 This is launch-ready as a **fictional-data external preview**. It is not authorised for real pupil data: Microsoft/Firebase credentials, tenant isolation, deployed rules, approved roster, backup/restore and real-account checks in `reading-admin.md` remain operational gates. Live flags stay off.
