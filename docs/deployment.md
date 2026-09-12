@@ -49,3 +49,9 @@ Book search now falls back to Open Library when Google Books fails. Live Dune lo
 The server allowlist contains the two requested admin accounts. Live flags and service credentials remain absent. Hosted API check returns JSON 503 with private/no-store headers, as intended while disabled. Vercel Node 24 with NODE_OPTIONS=--experimental-require-module resolves the Firebase dependency loading failure caught in the first hosted smoke check. Latest validated deployment is listed above; do not roll back to the intermediate 4y5caA86inKmdJDqMmcoQgGw29bg deployment with that runtime failure.
 
 House leaderboard visual correction: rank/name alignment, consistent report heading sizes, slim styled purple bars and clearer reader statistics. Desktop screenshot verified; scoped lint, all 33 tests and production build pass. This remains a fictional-data external preview.
+
+## Launch-ready fictional preview — 12 September 2026
+
+The public experience now includes the LHS 365/Snehalaya story, verified historical Steps result, current reading-project status, graphic-novel reading interface, screenshot-ready community tower, aggregate teacher form view, and administrator participation/roster tools. Browser journeys covered visitor, keen reader, quick logger, teacher and administrator personas at phone width. Progress survived reload; two consecutive additive roster imports preserved earlier entries. The dependency lock was refreshed without a major application migration and `npm audit --omit=dev` reports zero known vulnerabilities. All 40 focused tests, reading lint and the production build pass.
+
+This is launch-ready as a **fictional-data external preview**. It is not authorised for real pupil data: Microsoft/Firebase credentials, tenant isolation, deployed rules, approved roster, backup/restore and real-account checks in `reading-admin.md` remain operational gates. Live flags stay off.

@@ -2,7 +2,7 @@
 
 ## Bright challenge home — 10 September 2026
 
-The front page restores the original Steps palette, LHS school logo, bold type and rounded challenge cards. Open the featured reading challenge or use Log reading in the header to reach the logger in one click. Reading keeps its paper, book spines and estimated-height tower, with shared purple/blue accents. The earlier logging-only default has been superseded by this user-requested home.
+The public front page explains LHS 365 and the Snehalaya partnership before sign-in, gives an honest status for the current reading project, and prominently celebrates the completed Steps challenge (8,535.1 km, 122% of target). Open the featured reading challenge or use Log reading in the header to reach the logger in one click. Reading uses a contemporary graphic-novel identity—school-navy ink, warm paper, signal red, sky blue and small flashes of yellow—with an estimated-height book tower. Whole-school reading height is not published until it can be derived from verified school records.
 
 
 Part of **25Thirty School**, with **LHS 365** as the Leicester High School programme. Intended address: `365.25thirty.school` (not connected yet). See [suite positioning](docs/suite-positioning.md).
@@ -13,11 +13,11 @@ Learning and personal development beyond the school day, with a featured termly 
 
 ## Reading design preview — September 2026
 
-The home page opens directly into page logging, with current books first and finished books folded away. A book tower converts newly read pages into estimated height (1,000 pages = 5 cm), with doorway, giraffe and Elizabeth Tower comparisons. `#/challenges` holds the challenge collection. Book lookup/manual entry and session storage are preserved. Use fictional entries: nothing is submitted to school or added to shared totals.
+The home page opens directly into page logging, with current books first and finished books folded away. A book tower converts newly read pages into estimated height (1,000 pages = 5 cm), with doorway, giraffe and Elizabeth Tower comparisons. The admin preview begins with a privacy-safe, screenshot-ready community tower before the detailed staff report, and includes form-group participation/average-page comparisons plus local JSON/CSV/TSV roster and participation tools. `#/challenges` holds the challenge collection. Book lookup/manual entry and session storage are preserved. Use fictional entries: nothing is submitted to school or added to shared totals.
 
 The `#/steps` route is a read-only history page. The original steps source and its existing Firebase-hosted application are preserved separately. No route in the 365 preview initialises Firebase, signs in, or loads live participation records.
 
-Read the full [reading design brief](docs/reading-design-brief.md) for the permanent LHS 365 identity, challenge theme, journeys, scoring rules, inclusion and launch decisions. This build is **internal development**, not a live reading launch. The shared-reading API and admin dashboard are implemented behind disabled live flags; credentials, roster and real-account pilot checks remain outstanding. Corrections and shared student-facing totals remain future work.
+Read the full [reading design brief](docs/reading-design-brief.md) for the permanent LHS 365 identity, challenge theme, journeys, scoring rules, inclusion and launch decisions. This build is an **external fictional-data design preview**, not a live pupil launch. The shared-reading API and role-specific dashboards are implemented behind disabled live flags; credentials, an approved roster and real-account pilot checks remain outstanding.
 
 ## Current implementation
 

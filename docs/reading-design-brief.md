@@ -1,5 +1,7 @@
 # 25Thirty 365 — Read for Snehalaya at Leicester High School
 
+> **Visual update — 12 September 2026:** The current interface uses the **Pages Become Places** editorial graphic-novel system: school-navy ink, warm paper, signal red, sky blue and sparing yellow; sans-serif display type; strongly framed panels; and flat illustrated landmarks. This supersedes references below to the earlier cream-library and neon-wireframe treatments; workflow, arithmetic, accessibility and privacy guidance still applies.
+
 ## Celebrating the first adventure — 10 September 2026
 
 Replaced the prose-only steps archive with a finish-line celebration: 8,535.1 km, 122% of the 7,000 km goal, 125 contributors and 849 activities, copied from the original App.jsx Hall of Fame. Illustrated route is explicitly non-geographical. No individual records or Firebase loads. Home recap now celebrates the result. Empty reading shelves open the first-book form immediately without autofocus, preserving quick logging and Cancel. Desktop and 390px layouts checked; first-book submission and 20-page/1-mm update work. Existing 19 tests, reading lint and build passed.

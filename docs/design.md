@@ -4,7 +4,11 @@
 
 ## September 2026 — LHS 365 and challenge themes
 
-The new programme home is LHS 365. Its reading challenge uses the book-led visual system specified in [the full reading design brief](reading-design-brief.md): warm paper, forest green, serif display typography, illustrated covers and spines. This is the current direction for the new frontend, superseding the older navy/Inter-only treatment below for those pages. Shared navigation and interaction patterns remain consistent; each challenge can refresh its palette, artwork and editorial language. The existing steps app retains its original design.
+The programme home is LHS 365. The reading challenge has its own **Pages Become Places** graphic-novel system: school-navy ink provides structure, warm paper is the canvas, signal red marks primary actions, sky blue communicates progress and yellow is reserved for captions. Thick outlines, flat landmark illustrations and hard print-style shadows replace both the earlier quiet library treatment and the later neon wireframe experiment. The logging flow and privacy boundaries in the [reading design brief](reading-design-brief.md) remain unchanged.
+
+The teacher report begins with a screenshot-ready community panel: total pages, estimated tower height, participating readers and finished books only. It contains no individual identities; named rankings and follow-up lists stay in the private reporting area below.
+
+Staff can compare a pasted or uploaded class list with reading activity locally in the browser. Input supports JSON, CSV and TSV; results distinguish taken part, not yet and unmatched records. A copyable AI tidy-up prompt warns staff to use only a service approved for school personal data.
 
 ## 1. Product Purpose
 LHS Snehalaya Challenge is a student fundraising, community engagement, and cultural partnership platform. It tracks student fundraising activities, house team progress, sponsor pledges, and cultural updates connecting Leicester High School with Snehalaya.

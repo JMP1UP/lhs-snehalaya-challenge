@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { schoolClient } from "./reading-client.mjs";
-export default function SchoolAccess({ children, admin = false }) {
+export default function SchoolAccess({ children, admin = false, staff = false }) {
   const [client,setClient] = useState(null);
   const [account,setAccount] = useState(null);
   const [error,setError] = useState("");
@@ -30,17 +30,17 @@ export default function SchoolAccess({ children, admin = false }) {
     try {await client.signIn();} catch {setError("Sign-in did not finish. Please try again.");}
     finally {setBusy(false);}
   }
-  const allowed=account && (!admin || account.me.isAdmin);
+  const allowed=account && (!admin || account.me.isAdmin) && (!staff || account.me.isAdmin || account.me.canViewForms);
   return <>
     <div className="school-session">
       <span>{account ? `Signed in as ${account.me.person?.name || "school administrator"}` : "School reading"}</span>
-      {account?.me.isAdmin && <a href="#/admin">Reading admin</a>}
+      {(account?.me.isAdmin||account?.me.canViewForms) && <a href="#/admin">Form progress</a>}
       {client && <button className="text-link" onClick={async () => {setAccount(null);try {await client.signOut();} catch {setError("Sign-out failed. Close this tab to end this session.");}}}>Sign out</button>}
     </div>
     {error && <p role="alert">{error} <button onClick={()=>{setBusy(true);setRetry(n=>n+1);}}>Try again</button></p>}
     {busy ? <p role="status">Loading school reading…</p> : allowed ? children(account) : <section className="admin-card">
-      <h1>{account ? "Admin access required" : "Sign in to school reading"}</h1>
-      <p>{account ? "This area is for the authorised reading administrators." : "Use your Leicester High Microsoft account."}</p>
+      <h1>{account ? (staff?"Staff access required":"Admin access required") : "Sign in to school reading"}</h1>
+      <p>{account ? (staff?"This area is for staff identified in the verified school roster.":"This area is for the authorised reading administrators.") : "Use your Leicester High Microsoft account."}</p>
       {!account && client && <button className="button primary" onClick={signIn}>Sign in with Microsoft</button>}
     </section>}
   </>;

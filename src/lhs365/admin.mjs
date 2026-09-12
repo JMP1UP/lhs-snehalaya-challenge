@@ -4,18 +4,71 @@ export function validateRoster(rows) {
   if (!Array.isArray(rows) || rows.length > 1000) throw new Error("Use a roster of up to 1,000 people.");
   const seen = new Set();
   return rows.map((row, index) => {
-    const fail = () => { throw new Error(`Check roster row ${index + 1}: name, school email, student/staff, house and student year group are required.`); };
+    const fail = () => { throw new Error(`Check roster row ${index + 1}: name, school email, student/staff, house, year group and student form group are required.`); };
     if (!row || typeof row.email !== "string" || typeof row.name !== "string") fail();
     const email = row.email.trim().toLowerCase();
+    const staffMarker=/\s*\(staff\)\s*$/i.test(row.name);
+    const kind=row.kind || (staffMarker ? "staff" : "student");
+    const name=row.name.replace(/\s*\(staff\)\s*$/i,"").trim();
     if (!/^[a-z0-9._%+-]+@leicesterhigh\.co\.uk$/.test(email) || email.length > 254 || seen.has(email)) fail();
-    if (!["student", "staff"].includes(row.kind) || !row.name.trim() || row.name.length > 100) fail();
+    if (!["student", "staff"].includes(kind) || !name || name.length > 100) fail();
     const house = row.house || "None";
-    if (!(HOUSE_NAMES.includes(house) || (row.kind === "staff" && house === "None"))) fail();
-    if (row.kind === "student" && (typeof row.yearGroup !== "string" || !/^(EYFS|Year (?:[1-9]|1[0-3]))$/.test(row.yearGroup))) fail();
+    if (!(HOUSE_NAMES.includes(house) || (kind === "staff" && house === "None"))) fail();
+    if (kind === "student" && (typeof row.yearGroup !== "string" || !/^(EYFS|Year (?:[1-9]|1[0-3]))$/.test(row.yearGroup))) fail();
+    const formGroup=typeof row.formGroup==="string" ? row.formGroup.trim() : "";
+    if(kind==="student" && (!formGroup || formGroup.length>40))fail();
+    if(kind==="staff" && formGroup.length>40)fail();
     if (row.active !== undefined && typeof row.active !== "boolean") fail();
     seen.add(email);
-    return { email, name: row.name.trim(), kind: row.kind, house, yearGroup: row.kind === "staff" ? "Staff" : row.yearGroup, active: row.active !== false };
+    return { email, name, kind, house, yearGroup: kind === "staff" ? "Staff" : row.yearGroup, formGroup, active: row.active !== false };
   });
+}
+const clean = value => String(value ?? "").trim();
+function delimitedRows(text, delimiter) {
+  const rows=[];let row=[],cell="",quoted=false;
+  for(let index=0;index<text.length;index+=1){
+    const character=text[index];
+    if(character==='"'){
+      if(quoted&&text[index+1]==='"'){cell+='"';index+=1;}else quoted=!quoted;
+    }else if(character===delimiter&&!quoted){row.push(cell);cell="";}
+    else if((character==='\n'||character==='\r')&&!quoted){
+      if(character==='\r'&&text[index+1]==='\n')index+=1;
+      row.push(cell);if(row.some(value=>clean(value)))rows.push(row);row=[];cell="";
+    }else cell+=character;
+  }
+  row.push(cell);if(row.some(value=>clean(value)))rows.push(row);
+  return rows;
+}
+export function parseRosterUpload(text) {
+  const source=clean(text);
+  if(!source)throw new Error("Paste a roster or choose a file first.");
+  let values;
+  if(source.startsWith("[")){
+    try{values=JSON.parse(source);}catch{throw new Error("That JSON could not be read. Check the commas and quotation marks.");}
+  }else{
+    const delimiter=source.includes("\t")?"\t":source.includes(",")?",":";";
+    const rows=delimitedRows(source,delimiter);
+    const headers=(rows.shift()||[]).map(value=>clean(value).toLowerCase());
+    const aliases={
+      name:["name","full name"],email:["email","email address","school email"],kind:["kind","role","user type"],
+      house:["house"],yearGroup:["year group","yeargroup","year"],formGroup:["form group","formgroup","form","tutor group"],active:["active"],
+    };
+    const column=key=>headers.findIndex(header=>aliases[key].includes(header));
+    if(column("name")<0||column("email")<0)throw new Error("Include Name and Email headings in the roster file.");
+    values=rows.map(row=>Object.fromEntries(Object.keys(aliases).map(key=>[key,column(key)<0?undefined:row[column(key)]])));
+    values=values.map(row=>{
+      const active=clean(row.active);
+      const parsedActive=active===""?undefined:/^(true|yes|1|active)$/i.test(active)?true:/^(false|no|0|inactive)$/i.test(active)?false:active;
+      return {...row,kind:clean(row.kind).toLowerCase()||undefined,active:parsedActive};
+    });
+  }
+  return validateRoster(values);
+}
+export function mergeRoster(existing,incoming) {
+  const updates=new Map(incoming.map(person=>[person.id,person]));
+  const merged=existing.map(person=>updates.has(person.id)?{...person,...updates.get(person.id)}:person);
+  const known=new Set(existing.map(person=>person.id));
+  return [...merged,...incoming.filter(person=>!known.has(person.id))];
 }
 const order = (a, b) => b.pages - a.pages || a.name.localeCompare(b.name) || a.id.localeCompare(b.id);
 export function buildReport(roster, books, filters = {}) {
@@ -33,6 +86,15 @@ export function buildReport(roster, books, filters = {}) {
   const people = all.filter(person => (!filters.kind || person.kind === filters.kind) && (!filters.house || person.house === filters.house) && (!filters.yearGroup || person.yearGroup === filters.yearGroup));
   const participants = people.filter(person => person.pages > 0);
   const ranked = participants.slice().sort(order);
+  const students=all.filter(person=>person.kind==="student");
+  const studentPages=students.reduce((sum,person)=>sum+person.pages,0);
+  const studentParticipants=students.filter(person=>person.pages>0).length;
+  const formNames=[...new Set(students.map(person=>person.formGroup||"Unassigned"))];
+  const formGroups=formNames.map(name=>{
+    const members=students.filter(person=>(person.formGroup||"Unassigned")===name);
+    const pages=members.reduce((sum,person)=>sum+person.pages,0),participating=members.filter(person=>person.pages>0).length;
+    return {name,pages,enrolled:members.length,participants:participating,rate:members.length?participating/members.length*100:null,averagePages:members.length?pages/members.length:null};
+  }).sort((a,b)=>(b.averagePages||0)-(a.averagePages||0)||(b.rate||0)-(a.rate||0)||a.name.localeCompare(b.name));
   const houses = HOUSE_NAMES.map(name => {
     const members = people.filter(person => person.house === name);
     const contributing = members.filter(person => person.pages > 0);
@@ -44,9 +106,11 @@ export function buildReport(roster, books, filters = {}) {
     topStudents: ranked.filter(p => p.kind === "student").slice(0, 10), topStaff: ranked.filter(p => p.kind === "staff").slice(0, 10), biggest: ranked[0] || null,
     notStarted: people.filter(p => p.pages === 0).sort((a,b) => a.name.localeCompare(b.name)), houses,
     unmatchedBooks: books.filter(book => !known.has(book.ownerKey)).length,
+    studentSummary:{pages:studentPages,enrolled:students.length,participants:studentParticipants,rate:students.length?studentParticipants/students.length*100:null,averagePages:students.length?studentPages/students.length:null},
+    formGroups,
   };
 }
 export function reportCsv(rows) {
   const cell = value => `"${String(value ?? "").replace(/^[=+@\-\t\r]/, "'$&").replace(/"/g, '""')}"`;
-  return [["Name", "Role", "House", "Year group", "Pages", "Books finished", "Days logged"], ...rows.map(row => [row.name,row.kind,row.house,row.yearGroup,row.pages,row.finished,row.days])].map(row => row.map(cell).join(",")).join("\r\n");
+  return [["Name", "Role", "House", "Year group", "Form group", "Pages", "Books finished", "Days logged"], ...rows.map(row => [row.name,row.kind,row.house,row.yearGroup,row.formGroup,row.pages,row.finished,row.days])].map(row => row.map(cell).join(",")).join("\r\n");
 }

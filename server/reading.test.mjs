@@ -4,9 +4,9 @@ import {authorisedIdentity,emailKey,requireMember} from './reading-policy.mjs';
 import {createHandler} from '../api/reading.mjs';
 const email='fictional@leicesterhigh.co.uk';
 const token={uid:'uid',email,email_verified:true,firebase:{sign_in_provider:'microsoft.com'}};
-const person={id:emailKey(email),email,name:'Fictional',kind:'student',house:'Bradgate',yearGroup:'Year 8',active:true};
-function fixture({admin=false,identity=token,revoked=false}={}) {
- const records=new Map([['readingCampaigns/read-for-snehalaya-2026/settings/roster',{people:[person],complete:true,version:1}]]);
+const person={id:emailKey(email),email,name:'Fictional',kind:'student',house:'Bradgate',yearGroup:'Year 8',formGroup:'8A',active:true};
+function fixture({admin=false,identity=token,revoked=false,rosterPerson=person}={}) {
+ const records=new Map([['readingCampaigns/read-for-snehalaya-2026/settings/roster',{people:[rosterPerson],complete:true,version:1}]]);
  let bookReads=0;
  const ref=path=>({path,collection:name=>ref(`${path}/${name}`),doc:name=>ref(`${path}/${name}`),get:async()=>({exists:records.has(path),data:()=>structuredClone(records.get(path))}),limit:()=>query(path),where:(field,op,value)=>query(path,field,value)});
  const query=(path,field,value)=>({limit(){return this;},async get(){bookReads++;const docs=[...records].filter(([key,data])=>key.startsWith(path+'/') && (!field || data[field]===value)).map(([,data])=>({data:()=>structuredClone(data)}));return {docs,size:docs.length};}});
@@ -37,6 +37,25 @@ test('admin report includes roster version; roster replacement checks optimistic
  assert.equal((await f.call({action:'roster',people:[person],complete:true,version:1})).code,200);
  assert.equal((await f.call(null,'admin')).data.version,2);
  assert.equal((await fixture().call({action:'roster',people:[person],complete:true,version:1})).code,403);
+});
+test('roster merge adds joiners without removing existing people',async()=>{
+ const f=fixture({admin:true});
+ const newcomer={email:'new@leicesterhigh.co.uk',name:'New Joiner',kind:'student',house:'Charnwood',yearGroup:'Year 9',formGroup:'9B'};
+ assert.equal((await f.call({action:'roster-merge',people:[newcomer],version:1})).code,200);
+ const later={email:'later@leicesterhigh.co.uk',name:'Later Joiner',kind:'student',house:'Beaumanor',yearGroup:'Year 10',formGroup:'10A'};
+ assert.equal((await f.call({action:'roster-merge',people:[later],version:2})).code,200);
+ const report=await f.call(null,'admin');
+ assert.equal(report.data.people.length,3);
+ assert.ok(report.data.people.some(item=>item.email===email));
+ assert.ok(report.data.people.some(item=>item.email===newcomer.email));
+ assert.ok(report.data.people.some(item=>item.email===later.email));
+});
+test('verified rostered staff can read aggregate form figures but pupils cannot',async()=>{
+ const staff={...person,kind:'staff',yearGroup:'Staff',formGroup:'8A'};
+ const allowed=await fixture({rosterPerson:staff}).call(null,'staff');
+ assert.equal(allowed.code,200);assert.equal(allowed.data.formGroup,'8A');
+ assert.equal('people' in allowed.data,false);assert.equal('books' in allowed.data,false);
+ assert.equal((await fixture().call(null,'staff')).code,403);
 });
 test('adding is idempotent, ignores forged owner/logs; progress ownership, baseline and repeated saves',async()=>{
  const f=fixture();const draft={action:'add',id:'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',title:'Example',author:'',total:100,start:20,ownerKey:'forged',logs:[{pages:9999}]};

@@ -9,7 +9,6 @@ export default function StepsArchive() {
         <span className="finish-badge">✦ MISSION ACCOMPLISHED ✦</span>
         <h1 id="finish-title">We made it.<br /><span>And then some.</span></h1>
         <p className="finish-distance"><strong>8,535.1</strong> <span>km together</span></p>
-        <p className="finish-context">Leicester High → Snehalaya. One extraordinary team.</p>
         <div className="finish-stamp" aria-label="122 percent of our target">122%<small>OF OUR TARGET</small></div>
         <div className="finish-route" role="img" aria-label="Illustrated challenge journey from Leicester to the 7,000 kilometre Snehalaya goal, then 1,535.1 kilometres beyond it. Not a geographical map.">
           <svg viewBox="0 0 900 190" aria-hidden="true">
@@ -31,7 +30,7 @@ export default function StepsArchive() {
         <div><span aria-hidden="true">⚡</span><strong>849</strong><p>activities logged</p></div>
         <div><span aria-hidden="true">↗</span><strong>1,535.1 <small>km</small></strong><p>beyond our goal</p></div>
       </section>
-      <div className="finish-next"><div><h2>Small actions. BIG adventures.</h2><p>That was our first. Ready for the next?</p></div><a className="challenge-cta" href="#/reading">Start the reading adventure <span aria-hidden="true">➜</span></a></div>
+      <div className="finish-next"><h2>Our next adventure</h2><a className="challenge-cta" href="#/reading">Start reading <span aria-hidden="true">➜</span></a></div>
       <details className="finish-source"><summary>About these results</summary><p>Final aggregate figures from the original Steps to Snehalaya Hall of Fame: 8,535.1 km against a 7,000 km target, 125 contributors and 849 activities. Percentage rounded to the nearest whole number. This is a static celebration of the completed challenge; individual records stay in the original app.</p></details>
     </div>
   );

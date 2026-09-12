@@ -12,22 +12,42 @@ function currentRoute() {
 }
 
 function Home() {
+  const aboutDialog = useRef(null);
+
   return (
     <div className="challenge-home">
       <section className="adventure-intro">
-        <span className="adventure-tag">LEICESTER HIGH · LHS 365</span>
-        <h1>Small actions.<br /><span>BIG adventures.</span></h1>
-        <p>Our next challenge starts with a page.</p>
+        <span className="adventure-tag">LEICESTER HIGH · LHS 365 · TOGETHER FOR SNEHALAYA</span>
+        <h1>Small actions.<br />One <span>remarkable</span> community.</h1>
+        <p>Whole-school challenges for learning, wellbeing and service.</p>
+        <button className="about-365-trigger" type="button" onClick={() => aboutDialog.current?.showModal()}>
+          What is LHS 365?
+        </button>
         <span className="home-spark spark-left" aria-hidden="true">✳</span>
         <span className="home-spark spark-right" aria-hidden="true">✦</span>
       </section>
+      <dialog className="about-365-dialog" ref={aboutDialog} aria-labelledby="about-365-title">
+        <form method="dialog">
+          <button className="dialog-close" value="close" aria-label="Close">×</button>
+          <span className="adventure-tag">BEYOND THE CLASSROOM</span>
+          <h2 id="about-365-title">What is LHS 365?</h2>
+          <p>Education does not stop at the school gates. LHS 365 helps students notice and embrace opportunities to read, move, create, serve and explore.</p>
+          <p>Our challenges are inclusive, purposeful and shared. When each person contributes a little, the whole community can achieve more than any of us could alone.</p>
+          <p>Every adventure also keeps our friendship with Snehalaya visible—connecting everyday action at Leicester High with a wider sense of community and possibility.</p>
+          <button className="dialog-done" value="close">Got it</button>
+        </form>
+      </dialog>
       <section className="reading-feature" aria-labelledby="reading-feature-title">
         <div className="reading-feature-copy">
-          <span className="challenge-badge">📚 THIS TERM · {liveReading ? "READING CHALLENGE" : "READING PREVIEW"}</span>
-          <h2 id="reading-feature-title">Read. Stack.<br /><em>Reach higher.</em></h2>
-          <p>Can our book tower grow as tall as a giraffe?</p>
+          <span className="challenge-badge">📚 CURRENT PROJECT · AUTUMN 2026</span>
+          <h2 id="reading-feature-title">Read. Stack.<br /><em>Reach higher.</em><br />Together.</h2>
+          <p>Every page adds to one whole-school book tower.</p>
+          <div className="community-update" aria-label="Current project update">
+            <span>COMMUNITY TOWER UPDATE</span>
+            <strong>{liveReading ? "Reading is under way" : "Preparing for launch"}</strong>
+            <p>{liveReading ? "Sign in to add your pages. Verified community height is coming soon." : "Preview only · No shared height is published yet."}</p>
+          </div>
           <a className="challenge-cta" href="#/reading">Log your reading <span aria-hidden="true">➜</span></a>
-          {!liveReading && <small>Fictional entries only for now.</small>}
         </div>
         <div className="home-book-art" aria-hidden="true">
           <span className="book-art-sticker">HOW HIGH<br />CAN WE GO?</span>
@@ -40,9 +60,17 @@ function Home() {
         </div>
       </section>
       <section className="past-adventure" aria-labelledby="past-adventure-title">
-        <div className="past-route" aria-hidden="true"><span>👟</span><i /> <span>📍</span></div>
-        <div><span className="adventure-tag">OUR FIRST ADVENTURE · WE DID IT!</span><h2 id="past-adventure-title">Steps to Snehalaya</h2><p>8,535.1 km together. 122% of our goal.</p></div>
-        <a href="#/steps">Celebrate the journey <span aria-hidden="true">➜</span></a>
+        <div className="past-success-copy">
+          <span className="adventure-tag">OUR FIRST ADVENTURE · MISSION ACCOMPLISHED</span>
+          <h2 id="past-adventure-title">We made it to Snehalaya—and kept going.</h2>
+          <a href="#/steps">See the journey <span aria-hidden="true">➜</span></a>
+        </div>
+        <dl className="past-success-stats" aria-label="Steps to Snehalaya final results">
+          <div className="past-success-total"><dt>Together we reached</dt><dd>8,535.1 <small>km</small></dd></div>
+          <div><dt>Of our 7,000 km goal</dt><dd>122%</dd></div>
+          <div><dt>Beyond the finish line</dt><dd>1,535.1 <small>km</small></dd></div>
+          <div><dt>Community effort</dt><dd>125 <small>people · 849 activities</small></dd></div>
+        </dl>
       </section>
     </div>
   );
@@ -66,7 +94,7 @@ export default function Lhs365() {
     document.title = `${route === "/admin" ? "Reading admin" : route === "/reading" ? "Read for Snehalaya" : route === "/steps" ? "Steps to Snehalaya" : "Learning beyond school"} | 25Thirty 365 · Leicester High School`;
   }, [route]);
   return (
-    <div className={`lhs365 ${route === "/reading" ? "reading-theme" : "adventure-theme"}`}>
+    <div className={`lhs365 ${route === "/reading" || route === "/admin" ? "reading-theme" : "adventure-theme"}`}>
       <a
         className="skip-link"
         href="#main-content"

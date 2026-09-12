@@ -2,7 +2,7 @@ import { initializeApp, getApps, cert } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 import { createBook, updateBook, restoreBooks } from "../src/lhs365/reading.mjs";
-import { validateRoster } from "../src/lhs365/admin.mjs";
+import { buildReport, mergeRoster, validateRoster } from "../src/lhs365/admin.mjs";
 import { CAMPAIGN, emailKey, authorisedIdentity, requireAdmin, requireMember } from "../server/reading-policy.mjs";
 
 function fail(message, status = 400) { const e = new Error(message); e.status = status; throw e; }
@@ -39,27 +39,37 @@ export function createHandler(getServices = services) { return async function ha
       if (snapshot.size > 10000) fail("This report exceeds the pilot limit. Contact the administrator before exporting.", 409);
       return res.status(200).json({people:roster.people,complete:roster.complete,version:roster.version || 0,books:snapshot.docs.map(d => d.data()),updatedAt:new Date().toISOString()});
     }
+    if (req.method === "GET" && resource === "staff") {
+      const person=requireMember(identity,roster.people);
+      if(person.kind!=="staff")fail("Staff access is required.",403);
+      const snapshot=await campaign.collection("books").limit(10001).get();
+      if(snapshot.size>10000)fail("This report exceeds the pilot limit.",409);
+      const report=buildReport(roster.people,snapshot.docs.map(d=>d.data()));
+      return res.status(200).json({formGroup:person.formGroup||"",complete:roster.complete===true,studentSummary:report.studentSummary,formGroups:report.formGroups,updatedAt:new Date().toISOString()});
+    }
     if (req.method === "GET" && resource === "me") {
       const person = roster.people.find(p => p.id === identity.key && p.active !== false) || null;
       const snapshot = person ? await campaign.collection("books").where("ownerKey","==",identity.key).limit(201).get() : null;
       if (snapshot?.size > 200) fail("This bookshelf exceeds the pilot limit.",409);
-      return res.status(200).json({isAdmin:identity.isAdmin,person,books:snapshot?.docs.map(d => d.data()) || []});
+      return res.status(200).json({isAdmin:identity.isAdmin,canViewForms:person?.kind==="staff",person,books:snapshot?.docs.map(d => d.data()) || []});
     }
     if (req.method !== "POST") fail("Unknown reading resource.",404);
     if (!req.headers["content-type"]?.startsWith("application/json")) fail("Use JSON for this request.",415);
     if (JSON.stringify(req.body || {}).length > 500000) fail("The upload is too large.",413);
     const body = typeof req.body === "object" && req.body ? req.body : {};
-    if (body.action === "roster") {
+    if (body.action === "roster" || body.action === "roster-merge") {
       requireAdmin(identity);
-      if (typeof body.complete !== "boolean") fail("Confirm whether the roster is complete.");
-      const people = validateRoster(body.people).map(person => ({...person,id:emailKey(person.email)}));
-      if (!people.length && body.complete) fail("An empty roster cannot be marked complete.");
-      // Replacing roster metadata never deletes reading records; unmatched entries are flagged in reports.
+      if (body.action==="roster" && typeof body.complete !== "boolean") fail("Confirm whether the roster is complete.");
+      const incoming = validateRoster(body.people).map(person => ({...person,id:emailKey(person.email)}));
+      if (!incoming.length) fail("Add at least one person to the roster upload.");
       await db.runTransaction(async tx => {
         const latest = await tx.get(rosterRef);
         const version = latest.data()?.version || 0;
         if (body.version !== version) fail("The roster changed. Refresh before importing again.",409);
-        tx.set(rosterRef,{people,complete:body.complete,version:version+1,updatedAt:new Date().toISOString()});
+        const current=latest.data()?.people||[];
+        const people=body.action==="roster-merge"?mergeRoster(current,incoming):incoming;
+        const complete=body.action==="roster-merge"?(latest.data()?.complete===true):body.complete;
+        tx.set(rosterRef,{people,complete,version:version+1,updatedAt:new Date().toISOString()});
       });
       return res.status(200).json({saved:true});
     }

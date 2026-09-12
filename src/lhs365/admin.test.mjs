@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {buildReport,validateRoster,reportCsv} from './admin.mjs';
+import {buildReport,validateRoster,reportCsv,mergeRoster,parseRosterUpload} from './admin.mjs';
 import {adminDemo} from './admin-demo.mjs';
 import {createBook,updateBook} from './reading.mjs';
 test('rankings separate roles, cap at ten and reconcile pages and houses',()=>{
@@ -10,10 +10,13 @@ test('rankings separate roles, cap at ten and reconcile pages and houses',()=>{
  assert.equal(report.participants,32);assert.equal(report.notStarted.length,8);assert.equal(report.rate,80);
  assert.equal(report.houses.reduce((sum,h)=>sum+h.pages,0),report.pages);
  assert.equal(report.houses.reduce((sum,h)=>sum+h.enrolled,0),report.enrolled);
+ assert.equal(report.formGroups.reduce((sum,form)=>sum+form.enrolled,0),28);
+ assert.equal(report.studentSummary.averagePages,report.studentSummary.pages/28);
+ assert.ok(report.formGroups.every(form=>form.rate>=0&&form.rate<=100));
  assert.ok(report.topStudents.every((p,i,all)=>i===0 || all[i-1].pages>=p.pages));
 });
 test('never signed in and added-only members are non-contributors; baseline excluded',()=>{
- const people=[{id:'a',name:'A',kind:'student',house:'Bradgate',yearGroup:'Year 8'},{id:'b',name:'B',kind:'staff',house:'None'},{id:'c',name:'C',kind:'staff',house:'None'}];
+ const people=[{id:'a',name:'A',kind:'student',house:'Bradgate',yearGroup:'Year 8',formGroup:'8A'},{id:'b',name:'B',kind:'staff',house:'None',formGroup:'8A'},{id:'c',name:'C',kind:'staff',house:'None',formGroup:''}];
  const first={...updateBook(createBook({title:'Book',author:'',total:100,start:50},'one'),75,'2026-09-09'),ownerKey:'a'};
  const added={...createBook({title:'Book',author:'',total:100,start:50},'two'),ownerKey:'b'};
  const report=buildReport(people,[first,added]);assert.equal(report.pages,25);assert.deepEqual(report.notStarted.map(p=>p.id),['b','c']);
@@ -28,11 +31,21 @@ test('unmatched and inactive records cannot inflate active totals; corrupt or du
  assert.equal(buildReport([],[]).rate,null);
 });
 test('roster rejects duplicates, external email, missing year, invalid house and nonboolean active',()=>{
- const row={email:'fictional@leicesterhigh.co.uk',name:'Example',kind:'student',house:'Bradgate',yearGroup:'Year 8'};
+ const row={email:'fictional@leicesterhigh.co.uk',name:'Example',kind:'student',house:'Bradgate',yearGroup:'Year 8',formGroup:'8A'};
  assert.equal(validateRoster([row])[0].active,true);
  for(const patch of [{email:'person@example.com'},{yearGroup:''},{house:'Invalid'},{active:'false'},{kind:'admin'}])assert.throws(()=>validateRoster([{...row,...patch}]));
  assert.throws(()=>validateRoster([row,{...row,email:row.email.toUpperCase()}]));
  assert.throws(()=>validateRoster({}));assert.throws(()=>validateRoster(Array(1001).fill(row)));
+});
+test('roster merges preserve existing pupils, update matches and add joiners',()=>{
+ const existing=[{id:'a',email:'a@leicesterhigh.co.uk',name:'A',formGroup:'8A'},{id:'b',email:'b@leicesterhigh.co.uk',name:'B',formGroup:'8B'}];
+ const incoming=[{id:'b',email:'b@leicesterhigh.co.uk',name:'B Updated',formGroup:'8C'},{id:'c',email:'c@leicesterhigh.co.uk',name:'C',formGroup:'8C'}];
+ assert.deepEqual(mergeRoster(existing,incoming).map(p=>[p.id,p.name,p.formGroup]),[['a','A','8A'],['b','B Updated','8C'],['c','C','8C']]);
+});
+test('CSV roster imports form groups and recognises the staff name marker',()=>{
+ const rows=parseRosterUpload('Name,Email,House,Year group,Form group\nExample Pupil,pupil@leicesterhigh.co.uk,Bradgate,Year 8,8A\nJamie Example (staff),teacher@leicesterhigh.co.uk,None,,8A');
+ assert.deepEqual(rows.map(row=>[row.name,row.kind,row.formGroup]),[['Example Pupil','student','8A'],['Jamie Example','staff','8A']]);
+ assert.throws(()=>parseRosterUpload('Name,Email\nPupil,pupil@leicesterhigh.co.uk'),/roster row/i);
 });
 test('CSV escapes quotes, line breaks and spreadsheet formulas',()=>{
  const csv=reportCsv([{name:'=HYPERLINK("x")',kind:'staff',house:'None'},{name:'Line\nbreak'}]);

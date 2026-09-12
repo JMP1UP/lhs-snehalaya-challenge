@@ -1,5 +1,24 @@
 # Changelog — LHS Snehalaya Challenge
 
+## Public project story and community celebration — 12 September 2026
+
+- Reworked the pre-sign-in homepage to explain LHS 365 and its purpose within the Snehalaya partnership.
+- Added a prominent current-project update that clearly labels the reading experience as a fictional-data preview and does not invent a shared total.
+- Elevated the completed Steps to Snehalaya result into a community celebration with the 8,535.1 km total, 122% achievement, distance beyond target and participation figures.
+- Rebalanced the bold palette so school navy provides structure, aqua identifies progress and magenta is reserved for celebration; reduced the large purple field and decorative competition.
+- Reduced homepage copy and moved the fuller parent/visitor explanation into an accessible “What is LHS 365?” dialog.
+- Removed repeated instructional and promotional copy across the homepage, reading logger, tower, completed challenge and admin preview; kept privacy, preview, validation and reconciliation guidance.
+- Reframed the reading screen as **Pages Become Places**: inked editorial panels, flat landmark illustrations and hard print-style shadows replace the quiet library and neon-wireframe treatments.
+- Added a privacy-safe, screenshot-ready community tower to the teacher report. It turns filtered pages into a visible height and pairs that with aggregate readers and completed books; individual rankings remain below the shareable summary.
+- Completed first-time reader, returning quick-log, keyboard-only quick-log and teacher reporting journeys at desktop and phone widths. Fictional progress survives reloads and invalid backward page updates are rejected without changing totals.
+- Added a private participation checker for staff: upload or paste JSON, CSV or TSV and compare each person with verified reading activity. The list is processed only in the current browser window, with explicit Taken part, Not yet and Check match states.
+- Added a copyable, privacy-qualified AI formatting prompt and replaced the CSS giraffe symbol with a recognisable inked illustration. The admin route now inherits the same paper, ink, red, blue and yellow book-project system as the reading route.
+- Made roster imports additive by default, matching on normalised school email so later new-joiner files do not remove existing members; complete replacement is now a separate confirmed action.
+- Added form groups to JSON/CSV/TSV roster imports and reporting. Staff rows may be marked with a trailing `(staff)`, but access still requires a verified school account matched to a stored staff roster role.
+- Added school and form-group participation percentages plus average pages per active student, with an aggregate-only form progress view for verified rostered staff.
+- Added a fictional teacher/administrator role switch to the disabled-live preview so both permission-shaped interfaces can be reviewed without exposing or inventing school accounts.
+- Refreshed compatible dependency resolutions to clear all reported production audit findings, declared the existing ES-module package format, and reverified 40 tests, reading lint and the production build for the launch-ready fictional preview.
+
 ## Catalogue fallback — 10 September 2026
 
 Google Books returned HTTP 429 quota exhaustion for Dune. Added Open Library search fallback on provider failure with bounded timeout/results and sanitised metadata. Open Library work-level median page counts are explicitly approximate and editable, never claimed as edition-specific. Search privacy copy names both providers. Browser verified live Dune/Frank Herbert result and selection prefilling 607 with the estimate warning; 22 tests, reading lint and build pass. Manual fallback and stale-search protection remain intact.

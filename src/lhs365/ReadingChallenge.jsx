@@ -124,6 +124,7 @@ export default function ReadingChallenge({ repository }) {
   const searchId = useRef(0);
   const addButton = useRef(null);
   const stats = readingStats(books);
+  const activeBooks = books.filter((book) => book.current < book.total);
   const finishedSummary = useRef(null);
   const focusFinished = useRef(false);
   useEffect(() => {
@@ -182,9 +183,9 @@ export default function ReadingChallenge({ repository }) {
         <h1>Read. Stack. <em>Reach higher.</em></h1>
       </section>
       <div className="preview-note">
-        {repository ? "Your reading is saved to school. New pages count towards the challenge." : "Preview · Fictional entries only. Saved in this tab; not sent to school."}
+        {repository ? "Saved to school · New pages count" : "Preview · Fictional data stays in this tab"}
       </div>
-      <div className="reading-workspace">
+      <div className={`reading-workspace ${activeBooks.length ? "" : "reading-workspace-empty"}`}>
       <div className="reading-layout">
         <section>
           <div className="section-heading">
@@ -246,8 +247,7 @@ export default function ReadingChallenge({ repository }) {
                   </button>
                 </div>
                 <small>
-                  Search terms go to Google Books and, if unavailable, Open Library. Don’t include personal
-                  information.
+                  Uses Google Books and Open Library · Avoid personal information
                 </small>
               </form>
               <p role="status" className="search-message">
@@ -309,7 +309,7 @@ export default function ReadingChallenge({ repository }) {
                     addRequest.current = null;
                     save(
                       [...currentBooks.current.filter(item => item.id !== book.id), book],
-                      `Added ${book.title}. Update your page to start contributing.`,
+                      `Added ${book.title}.`,
                     );
                     setDraft({ title: "", author: "", total: "", start: "0" });
                     setQuery("");
@@ -378,9 +378,7 @@ export default function ReadingChallenge({ repository }) {
                   </label>
                 </div>
                 <small>
-                  Use 0 for a new book. Pages you’ve already read won’t count
-                  towards this challenge. For ebooks, use a consistent page
-                  count from your edition.
+                  Only pages read after adding the book count.
                 </small>
                 {error && (
                   <p className="form-error" role="alert">
@@ -396,14 +394,10 @@ export default function ReadingChallenge({ repository }) {
             <div className="empty-shelf">
               <span aria-hidden="true">Aa</span>
               <h3>What are you reading?</h3>
-              <p>
-                Add a book. Tell us the page you’ve reached.
-              </p>
-
             </div>
           )}
           <div className="books-list">
-            {books.filter((book) => book.current < book.total).map((book) => (
+            {activeBooks.map((book) => (
               <BookCard
                 key={book.id}
                 book={book}

@@ -1,5 +1,17 @@
 # Release checklist
 
+## Launch-ready fictional preview — 12 September 2026
+
+Classification: **external pilot of a fictional-data design preview**. Visitor, enthusiastic-reader, quick-log, teacher and administrator journeys were exercised in the browser. The teacher surface exposed aggregates only; the administrator successfully checked participation and performed two additive roster imports without losing earlier members. Reload persistence, phone layout and browser-console errors were checked. All 40 focused tests, reading lint, production build and dependency audit pass; the audit reports zero known vulnerabilities. Live school flags remain off, so real Microsoft tenant, roster, Firestore, backup/restore and account-switching checks remain explicitly unverified and gate any real-pupil pilot.
+
+## Public homepage review — 12 September 2026
+
+Classification remains **external pilot of a fictional-data design preview**. Desktop and 390 px browser checks confirmed the project purpose, current-project status and completed community result are readable, keyboard/semantic navigation remains intact, and there is no horizontal overflow. A fictional book progressed from page 20 to 68 and then 120 across navigation and refresh: the contribution reconciled to 100 pages / 5 mm, completion occurred once, and the finished state survived refresh. No verified whole-school reading aggregate exists yet, so the homepage explicitly publishes no shared height. All 33 tests, reading lint and the production build pass.
+
+Interface reduction pass: repeated taglines and instructions were removed from the homepage, logger, tower, archive and admin preview. Methodology moved behind disclosures; privacy, preview, validation and reconciliation copy remains visible where needed. Homepage, logger/add-book flow, archive and admin preview were rechecked at desktop and 390 px with no document-level horizontal overflow.
+
+Reading visual reset: the wireframe treatment was replaced with the **Pages Become Places** editorial graphic-novel system and an adaptive completed-book action panel. Doorway/giraffe/Big Ben switching, focus state, desktop and 390 px layouts remain functional with no horizontal overflow.
+
 ## Catalogue fallback — 10 September 2026
 
 Google Books returned HTTP 429 quota exhaustion for Dune. Added Open Library search fallback on provider failure with bounded timeout/results and sanitised metadata. Open Library work-level median page counts are explicitly approximate and editable, never claimed as edition-specific. Search privacy copy names both providers. Browser verified live Dune/Frank Herbert result and selection prefilling 607 with the estimate warning; 22 tests, reading lint and build pass. Manual fallback and stale-search protection remain intact.
