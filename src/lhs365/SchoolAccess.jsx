@@ -40,7 +40,7 @@ export default function SchoolAccess({ children, admin = false, staff = false })
     {error && <p role="alert">{error} <button onClick={()=>{setBusy(true);setRetry(n=>n+1);}}>Try again</button></p>}
     {busy ? <p role="status">Loading school reading…</p> : allowed ? children(account) : <section className="admin-card">
       <h1>{account ? (staff?"Staff access required":"Admin access required") : "Sign in to school reading"}</h1>
-      <p>{account ? (staff?"This area is for staff identified in the verified school roster.":"This area is for the authorised reading administrators.") : "Use your Leicester High Microsoft account."}</p>
+      <p>{account ? (staff?"This area is for staff identified in the school roster.":"This area is for the authorised reading administrators.") : "Use your Leicester High Microsoft account."}</p>
       {!account && client && <button className="button primary" onClick={signIn}>Sign in with Microsoft</button>}
     </section>}
   </>;

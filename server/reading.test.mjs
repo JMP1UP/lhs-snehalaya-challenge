@@ -15,8 +15,9 @@ function fixture({admin=false,identity=token,revoked=false,rosterPerson=person}=
  async function call(body,resource='me',headers={authorization:'Bearer fixture','content-type':'application/json'}){const res={headers:{},setHeader(k,v){this.headers[k]=v;},status(code){this.code=code;return this;},json(data){this.data=data;return this;}};await handler({method:body?'POST':'GET',headers,query:{resource},body},res);return res;}
  return {call,records,reads:()=>bookReads};
 }
-test('identity requires verified school Microsoft login, never display names',()=>{
- for(const patch of [{email:'a@example.com'},{email_verified:false},{firebase:{sign_in_provider:'password'}},{uid:''}])assert.throws(()=>authorisedIdentity({...token,...patch},[email]),{status:403});
+test('identity requires school Microsoft login, never display names',()=>{
+ for(const patch of [{email:'a@example.com'},{firebase:{sign_in_provider:'password'}},{uid:''}])assert.throws(()=>authorisedIdentity({...token,...patch},[email]),{status:403});
+ assert.equal(authorisedIdentity({...token,email_verified:false},[]).email,email);
  assert.equal(authorisedIdentity({...token,name:'Admin (staff)'},[]).isAdmin,false);
  assert.equal(authorisedIdentity(token,[email]).isAdmin,true);
  assert.throws(()=>requireMember(authorisedIdentity(token,[]),[{...person,active:false}]),{status:403});
