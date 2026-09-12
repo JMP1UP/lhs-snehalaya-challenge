@@ -32,16 +32,20 @@ export default function SchoolAccess({ children, admin = false, staff = false })
   }
   const allowed=account && (!admin || account.me.isAdmin) && (!staff || account.me.isAdmin || account.me.canViewForms);
   return <>
-    <div className="school-session">
-      <span>{account ? `Signed in as ${account.me.person?.name || "Leicester High reader"}` : "School reading"}</span>
+    {account && <div className="school-session">
+      <span>{`Signed in as ${account.me.person?.name || "Leicester High reader"}`}</span>
       {(account?.me.isAdmin||account?.me.canViewForms) && <a href="#/admin">Form progress</a>}
       {account && <button className="text-link" onClick={async () => {setAccount(null);try {await client.signOut();} catch {setError("Sign-out failed. Close this tab to end this session.");}}}>Sign out</button>}
-    </div>
-    {error && <p role="alert">{error} <button onClick={()=>{setBusy(true);setRetry(n=>n+1);}}>Try again</button></p>}
-    {busy ? <p role="status">Loading school reading…</p> : allowed ? children(account) : <section className="admin-card">
-      <h1>{account ? (staff?"Staff access required":"Admin access required") : "Sign in to school reading"}</h1>
-      <p>{account ? (staff?"This area is for staff identified in the school roster.":"This area is for the authorised reading administrators.") : "Use your Leicester High Microsoft account."}</p>
-      {!account && client && <button className="button primary" onClick={signIn}>Sign in with Microsoft</button>}
+    </div>}
+    {error && <p className="school-access-error" role="alert">{error} <button onClick={()=>{setBusy(true);setRetry(n=>n+1);}}>Try again</button></p>}
+    {busy ? <p className="school-access-loading" role="status">Opening school reading…</p> : allowed ? children(account) : <section className="school-login-card">
+      <div className="school-login-copy">
+        <span className="eyebrow">LHS 365 · SCHOOL ACCESS</span>
+        <h1>{account ? (staff?"Staff access required":"Admin access required") : "Ready to read?"}</h1>
+        <p>{account ? (staff?"This area is for staff identified in the school roster.":"This area is for the authorised reading administrators.") : "Use your Leicester High Microsoft account."}</p>
+        {!account && client && <button className="button primary school-login-button" onClick={signIn}>Continue with Microsoft <span aria-hidden="true">➜</span></button>}
+      </div>
+      <div className="school-login-art" aria-hidden="true"><span>ONE SCHOOL</span><i>TURN THE PAGE</i><i>READ TOGETHER</i><i>REACH HIGHER</i><b>✦</b></div>
     </section>}
   </>;
 }
