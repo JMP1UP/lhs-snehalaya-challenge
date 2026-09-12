@@ -6,7 +6,7 @@ Updated: 12 September 2026. Owner: John Partridge. Classification: controlled in
 
 - Public address: `https://365.25thirty.school` (Vercel fallback: `https://25thirty-365.vercel.app`).
 - Host: separate Vercel project `25thirty-365` (`prj_YXRk7mn2TC6sPgv5iPYx1pTEsyJq`).
-- Deployment: `dpl_CKSa85mThnbRvTCpuAABJSbzepFK`, `25thirty-365-ivvgeewjs-john-s-projects7.vercel.app`.
+- Deployment: `dpl_F6PK7vTuQ8LRmzhG2ur9Fr9HZvHJ`, `25thirty-365-5rjk8w7vi-john-s-projects7.vercel.app`.
 - Suite: `https://25thirty.school/#365`, with a working preview link.
 - Custom address: `365.25thirty.school`, live with HTTPS.
 
@@ -36,7 +36,7 @@ The record is DNS-only. Cloudflare authoritative DNS and `1.1.1.1` returned the 
 
 ## Rollback and future changes
 
-Immediate rollback: `25thirty-365-iytoz7u0w-john-s-projects7.vercel.app`; the original steps site remains the historical fallback. To withdraw this pilot, remove its suite link and unpublish/disable only the new Vercel project. Do not deploy the root Firebase configuration: `.firebaserc` still names the original steps project.
+Immediate rollback: `25thirty-365-ivvgeewjs-john-s-projects7.vercel.app`; the original steps site remains the historical fallback. To withdraw this pilot, remove its suite link and unpublish/disable only the new Vercel project. Do not deploy the root Firebase configuration: `.firebaserc` still names the original steps project.
 
 Future Vercel deployments use `vercel.json` to run reading lint, tests and build. Keep `.vercel` and `.env.local` ignored. The shared reading API and Microsoft login are enabled for a controlled school pilot. The roster is an auditing and grouping tool rather than a sign-in gate; see reading-admin.md for the remaining operational checks.
 
