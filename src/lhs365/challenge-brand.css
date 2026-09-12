@@ -130,9 +130,13 @@
 .reading-theme .empty-shelf h3 { font-size: 23px; }
 .reading-theme .empty-shelf p { margin-top: 8px; }
 .reading-theme .preview-note { width: fit-content; margin-top: 6px; padding: 6px 9px; border: 2px solid #071b45; border-radius: 3px; background: white; font-size: 10px; color: #071b45; }
-.reading-theme .book-search-panel {margin:0 0 18px;padding:11px 12px;border:2px solid #071b45;background:#38c6e8;}
+.reading-theme .book-search-panel {margin:0 0 12px;padding:7px 10px;border:2px solid #071b45;background:#38c6e8;}
 .reading-theme .book-search-panel>summary {cursor:pointer;font-weight:900;}
 .reading-theme .book-search-panel[open]>summary {margin-bottom:14px;}
+.reading-theme .book-search-panel+.manual-book {margin-top:0;padding-top:0;border-top:0;}
+.reading-theme .book-search-panel+.manual-book h4 {margin-bottom:8px;}
+.reading-theme .book-search-panel+.manual-book label {margin-top:9px;}
+.reading-theme .book-search-panel+.manual-book>.button {margin-top:12px;}
 .reading-theme .reading-workspace { grid-template-columns: minmax(0,.82fr) minmax(0,1.18fr); align-items: start; gap: 26px; }
 .reading-theme .reading-layout { padding: 16px 0 12px; }
 .reading-theme .reading-layout > section { padding: 22px; border: 3px solid #071b45; border-radius: 11px; background: white; box-shadow: 7px 7px 0 #071b45; }
