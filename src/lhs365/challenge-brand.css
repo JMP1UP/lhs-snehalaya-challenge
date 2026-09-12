@@ -237,3 +237,147 @@
 }
 
 .book-entry-fields {border:0;padding:0;margin:0;min-width:0;}
+
+/* Homepage: the same bold, printed graphic-novel language as the reading challenge. */
+.adventure-theme {
+  --comic-ink:#071b45;
+  --comic-paper:#fff8e8;
+  --comic-red:#e83d52;
+  --comic-blue:#38c6e8;
+  --comic-yellow:#ffd447;
+  background-color:var(--comic-paper);
+  background-image:radial-gradient(#071b4514 1px,transparent 1px);
+  background-size:12px 12px;
+  color:var(--comic-ink);
+}
+.adventure-theme main {max-width:1140px;}
+.challenge-home {padding:30px 0 12px;}
+.adventure-intro {
+  isolation:isolate;
+  overflow:hidden;
+  margin-bottom:28px;
+  padding:48px 54px;
+  border:3px solid var(--comic-ink);
+  border-radius:10px;
+  background:#fffdf7;
+  box-shadow:9px 9px 0 var(--comic-ink);
+  text-align:left;
+}
+.adventure-intro::before {
+  content:"";
+  position:absolute;
+  z-index:-1;
+  right:-62px;
+  top:-78px;
+  width:330px;
+  height:330px;
+  border:3px solid var(--comic-ink);
+  border-radius:50%;
+  background-color:var(--comic-yellow);
+  background-image:radial-gradient(var(--comic-ink) 1.5px,transparent 1.8px);
+  background-size:12px 12px;
+  transform:rotate(8deg);
+}
+.adventure-intro::after {
+  content:"";
+  position:absolute;
+  z-index:-1;
+  right:238px;
+  bottom:-54px;
+  width:155px;
+  height:155px;
+  background:var(--comic-blue);
+  clip-path:polygon(50% 0,60% 35%,85% 15%,70% 42%,100% 50%,70% 58%,85% 85%,60% 65%,50% 100%,40% 65%,15% 85%,30% 58%,0 50%,30% 42%,15% 15%,40% 35%);
+  transform:rotate(13deg);
+}
+.adventure-tag {
+  display:inline-flex;
+  padding:6px 9px;
+  border:2px solid var(--comic-ink);
+  border-radius:2px;
+  background:var(--comic-yellow);
+  color:var(--comic-ink);
+  box-shadow:3px 3px 0 var(--comic-ink);
+  transform:rotate(-1deg);
+  font-size:9px;
+  font-weight:950;
+  letter-spacing:1.5px;
+}
+.adventure-intro h1 {
+  max-width:790px;
+  margin:22px 0 14px;
+  font-size:clamp(46px,6.6vw,78px);
+  line-height:.91;
+  letter-spacing:-.065em;
+}
+.adventure-intro h1 > span {display:inline-block;color:var(--comic-red);transform:rotate(-1deg);}
+.adventure-intro p {max-width:620px;margin:0;color:#37486b;font-weight:700;}
+.about-365-trigger {
+  margin-top:22px;
+  padding:11px 16px;
+  border:3px solid var(--comic-ink);
+  border-radius:4px;
+  background:var(--comic-blue);
+  color:var(--comic-ink);
+  box-shadow:5px 5px 0 var(--comic-ink);
+  font-size:12px;
+  font-weight:950;
+}
+.about-365-trigger:hover {border-color:var(--comic-ink);background:var(--comic-yellow);transform:translate(-1px,-1px);box-shadow:7px 7px 0 var(--comic-ink);}
+.home-spark {z-index:1;font-family:Inter,'Segoe UI',sans-serif;font-weight:950;}
+.spark-left {display:block;left:auto;right:205px;top:50px;color:var(--comic-red);transform:rotate(-12deg);}
+.spark-right {right:54px;top:66px;color:var(--comic-ink);transform:rotate(15deg);}
+.reading-feature {
+  border:3px solid var(--comic-ink);
+  border-radius:10px;
+  background:#fffdf7;
+  color:var(--comic-ink);
+  box-shadow:9px 9px 0 var(--comic-ink);
+}
+.reading-feature-copy {padding:40px 42px;}
+.challenge-badge {border:2px solid var(--comic-ink);border-radius:3px;background:var(--comic-blue);box-shadow:3px 3px 0 var(--comic-ink);font-weight:950;transform:rotate(-1deg);}
+.reading-feature h2 {font-size:clamp(40px,5vw,62px);line-height:.94;letter-spacing:-.06em;}
+.reading-feature h2 em {color:var(--comic-red);}
+.reading-feature-copy > p {color:#37486b;font-weight:700;}
+.community-update {border:3px solid var(--comic-ink);border-radius:5px;background:var(--comic-yellow);box-shadow:5px 5px 0 var(--comic-ink);}
+.community-update > span,.community-update strong,.community-update p {color:var(--comic-ink);}
+.community-update strong {font-weight:950;}
+.lhs365 .challenge-cta {border:3px solid var(--comic-ink);border-radius:4px;background:var(--comic-red);color:#fff;box-shadow:6px 6px 0 var(--comic-ink);font-weight:950;}
+.lhs365 .challenge-cta:hover {background:#cf2d43;box-shadow:8px 8px 0 var(--comic-ink);}
+.home-book-art {
+  min-height:410px;
+  border-left:3px solid var(--comic-ink);
+  background-color:var(--comic-blue);
+  background-image:radial-gradient(#071b4530 1.5px,transparent 1.8px);
+  background-size:12px 12px;
+}
+.home-book-art::before {content:"";position:absolute;right:-75px;bottom:-90px;width:280px;height:280px;border:3px solid var(--comic-ink);border-radius:50%;background:var(--comic-yellow);}
+.book-art-sticker {right:26px;top:24px;border:4px solid var(--comic-ink);border-radius:3px;background:var(--comic-yellow);box-shadow:7px 7px 0 var(--comic-ink);transform:rotate(7deg);}
+.art-twinkle {top:34px;left:30px;color:var(--comic-red);filter:drop-shadow(3px 3px 0 var(--comic-ink));}
+.hero-book {border-color:var(--comic-ink);box-shadow:inset -12px 0 #fff8e8,6px 6px 0 var(--comic-ink);}
+.hb-one {background:var(--comic-red);color:white;}.hb-two {background:#fffdf7;color:var(--comic-ink);}.hb-three {background:var(--comic-ink);}.hb-four {background:var(--comic-yellow);}
+.book-art-ground {height:4px;background:var(--comic-ink);}
+.past-adventure {margin-top:30px;border:3px solid var(--comic-ink);border-radius:10px;background:#fffdf7;box-shadow:9px 9px 0 var(--comic-red);}
+.past-adventure h2 {font-size:clamp(30px,3.3vw,42px);font-weight:950;letter-spacing:-.055em;}
+.past-success-copy > a {display:inline-flex;padding:8px 11px;border:2px solid var(--comic-ink);background:var(--comic-blue);box-shadow:3px 3px 0 var(--comic-ink);text-decoration:none;}
+.past-success-stats > div {border:2px solid var(--comic-ink);border-radius:5px;box-shadow:4px 4px 0 var(--comic-ink);}
+.past-success-stats > div:nth-child(2) {background:var(--comic-yellow);}.past-success-stats > div:nth-child(3) {background:var(--comic-blue);}.past-success-stats > div:nth-child(4) {background:#fffdf7;}
+.past-success-stats .past-success-total {background:var(--comic-ink);}
+.past-success-stats .past-success-total dd {color:var(--comic-yellow);}
+.about-365-dialog {border:3px solid var(--comic-ink);border-radius:8px;background:var(--comic-paper);box-shadow:10px 10px 0 var(--comic-blue);}
+.dialog-close {border:2px solid var(--comic-ink);border-radius:3px;background:var(--comic-red);color:#fff;}.dialog-done {border:3px solid var(--comic-ink);border-radius:4px;background:var(--comic-yellow);color:var(--comic-ink);box-shadow:4px 4px 0 var(--comic-ink);font-weight:950;}
+
+@media(max-width:760px) {
+  .challenge-home {padding-top:18px;}
+  .adventure-intro {padding:30px 24px;margin-bottom:22px;}
+  .adventure-intro::before {right:-145px;top:-115px;width:280px;height:280px;}
+  .adventure-intro::after {right:-18px;bottom:-45px;width:115px;height:115px;}
+  .adventure-intro h1 {max-width:520px;font-size:clamp(42px,13vw,62px);}
+  .spark-left {display:none;}.spark-right {right:20px;top:35px;font-size:34px;}
+  .reading-feature {border-radius:8px;}
+  .reading-feature-copy {padding:30px 24px;}
+  .reading-feature h2 {font-size:44px;}
+  .home-book-art {min-height:300px;border-left:0;border-top:3px solid var(--comic-ink);}
+  .book-art-sticker {top:18px;right:18px;}
+  .past-adventure {padding:24px 20px;}
+}
