@@ -50,8 +50,8 @@ function RosterImport({data,onSave,open=false}) {
 }
 function FormGroupBoard({summary,groups,ownFormGroup="",complete=true}) {
   return <section className="admin-card form-board" aria-labelledby="form-board-title">
-    <div className="section-heading"><div><span className="eyebrow">LIGHT COMPETITION · ALL STUDENTS</span><h2 id="form-board-title">Form group progress</h2></div><div className="school-form-summary"><strong>{summary.rate===null?"—":`${Math.round(summary.rate)}%`}</strong><span>{complete?"school":"roster"} participation</span><strong>{summary.averagePages===null?"—":number(Math.round(summary.averagePages))}</strong><span>average pages per student</span></div></div>
-    <div className="form-rankings">{groups.map((group,index)=><article className={`form-card${group.name===ownFormGroup?" own-form":""}`} key={group.name}><span className="form-rank">{index+1}</span><div><h3>{group.name}{group.name===ownFormGroup&&<small>Your form</small>}</h3><p><strong>{number(Math.round(group.averagePages||0))}</strong> average pages per student</p><span>{group.rate===null?"—":`${Math.round(group.rate)}%`} participating · {group.participants} of {group.enrolled}</span></div></article>)}</div>
+    <div className="section-heading"><div><span className="eyebrow">LIGHT COMPETITION · ALL STUDENTS</span><h2 id="form-board-title">Form group progress</h2></div><div className="school-form-summary"><strong>{number(summary.pages)}</strong><span>school pages</span><strong>{summary.rate===null?"—":`${Math.round(summary.rate)}%`}</strong><span>{complete?"school":"roster"} participation</span><strong>{summary.averagePages===null?"—":number(Math.round(summary.averagePages))}</strong><span>average per student</span></div></div>
+    <div className="form-rankings">{groups.map((group,index)=><article className={`form-card${group.name===ownFormGroup?" own-form":""}`} key={group.name}><span className="form-rank">{index+1}</span><div><h3>{group.name}{group.name===ownFormGroup&&<small>Your form</small>}</h3><p><strong>{number(group.pages)}</strong> pages · {number(Math.round(group.averagePages||0))} average</p><span>{group.rate===null?"—":`${Math.round(group.rate)}%`} participating · {group.participants} of {group.enrolled}</span></div></article>)}</div>
   </section>;
 }
 function ParticipationCheck({data}) {
@@ -154,12 +154,13 @@ function DemoStaffReport({data,onAdmin}) {
   const report=buildReport(data.people,data.books);
   return <div className="reading-admin staff-report"><div className="preview-role-switch" aria-label="Fictional role preview"><strong>Viewing as teacher</strong><button className="button secondary" onClick={onAdmin}>View administrator</button></div><header className="admin-heading"><div><span className="eyebrow">LHS 365 · STAFF DEMO</span><h1>Every page. <em>Every form.</em></h1></div></header><p className="admin-notice"><strong>Fictional demo</strong> · Aggregate progress only</p><FormGroupBoard summary={report.studentSummary} groups={report.formGroups} ownFormGroup="8A" complete={data.complete}/></div>;
 }
-export default function AdminDashboard() {
+export default function AdminDashboard({view="admin"}) {
   const [demo,setDemo]=useState(adminDemo);
   const [demoRole,setDemoRole]=useState("admin");
   if(!liveReading){
-    if(demoRole==="staff")return <DemoStaffReport data={demo} onAdmin={()=>setDemoRole("admin")}/>;
+    if(view==="teacher"||demoRole==="staff")return <DemoStaffReport data={demo} onAdmin={()=>view==="teacher"?window.location.hash="#/admin":setDemoRole("admin")}/>;
     return <><div className="preview-role-switch" aria-label="Fictional role preview"><strong>Viewing as administrator</strong><button className="button secondary" onClick={()=>setDemoRole("staff")}>View teacher</button></div><Report data={demo} demo onSave={async(people,options)=>setDemo(current=>{const incoming=validateRoster(people).map(person=>({...person,id:current.people.find(existing=>existing.email===person.email)?.id||`preview-${person.email}`}));const byId=new Map(incoming.map(person=>[person.id,person]));const merged=options.replace?incoming:[...current.people.map(person=>byId.get(person.id)||person),...incoming.filter(person=>!current.people.some(existing=>existing.id===person.id))];return {...current,people:merged,complete:options.replace?true:current.complete,updatedAt:"Fictional demonstration"};})}/></>;
   }
-  return <SchoolAccess staff>{({user,me,api})=>me.isAdmin?<LiveReport key={user.uid} user={user} api={api}/>:<StaffReport key={user.uid} user={user} api={api}/>}</SchoolAccess>;
+  if(view==="teacher")return <SchoolAccess staff area="teacher">{({user,api})=><StaffReport key={user.uid} user={user} api={api}/>}</SchoolAccess>;
+  return <SchoolAccess admin area="admin">{({user,api})=><LiveReport key={user.uid} user={user} api={api}/>}</SchoolAccess>;
 }

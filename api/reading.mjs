@@ -53,12 +53,12 @@ export function createHandler(getServices = services) { return async function ha
       return res.status(200).json({people:roster.people,complete:roster.complete,version:roster.version || 0,books:snapshot.docs.map(d => d.data()),unmatchedLogins,updatedAt:new Date().toISOString()});
     }
     if (req.method === "GET" && resource === "staff") {
-      const person=requireMember(identity,roster.people);
-      if(person.kind!=="staff")fail("Staff access is required.",403);
+      const person=identity.isAdmin ? null : requireMember(identity,roster.people);
+      if(person && person.kind!=="staff")fail("Staff access is required.",403);
       const snapshot=await campaign.collection("books").limit(10001).get();
       if(snapshot.size>10000)fail("This report exceeds the pilot limit.",409);
       const report=buildReport(roster.people,snapshot.docs.map(d=>d.data()));
-      return res.status(200).json({formGroup:person.formGroup||"",complete:roster.complete===true,studentSummary:report.studentSummary,formGroups:report.formGroups,updatedAt:new Date().toISOString()});
+      return res.status(200).json({formGroup:person?.formGroup||"",complete:roster.complete===true,studentSummary:report.studentSummary,formGroups:report.formGroups,updatedAt:new Date().toISOString()});
     }
     if (req.method === "GET" && resource === "me") {
       const person = roster.people.find(p => p.id === identity.key && p.active !== false) || null;

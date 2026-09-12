@@ -1,5 +1,6 @@
 .reading-admin {max-width:1180px;margin:auto;padding:1.5rem 0 3rem;}
 .admin-heading,.school-session {display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;}
+.school-view-links {display:flex;align-items:center;justify-content:center;gap:1.25rem;flex-wrap:wrap;}
 .admin-heading h1 {font-size:clamp(2rem,5vw,3.6rem);margin:.4rem 0;}.admin-heading em {color:#a00090;}
 .admin-notice {background:#fff2c6;border-left:5px solid #dd0089;padding:1rem;}
 .admin-filters {display:flex;flex-wrap:wrap;gap:1rem;margin:1.5rem 0;}.admin-filters label {flex:1;min-width:160px;}

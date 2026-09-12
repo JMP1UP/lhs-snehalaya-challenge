@@ -1,5 +1,11 @@
 # Changelog — LHS Snehalaya Challenge
 
+## Explicit teacher dashboard — 12 September 2026
+
+- Added a distinct `#/teacher` dashboard with whole-school pages, participation, average pages per student, and form-group totals, averages and participation.
+- Gave administrators access to both the aggregate teacher view and the private administrator tools; rostered teachers continue to receive aggregates only.
+- Added contextual “Teacher dashboard”, “Admin dashboard” and “My reading” links to the signed-in bar.
+
 ## Signed-in flow and empty-state polish — 12 September 2026
 
 - Removed the tiny “Saved to school” strip from the live reading workspace; the signed-in session itself now provides the necessary context.

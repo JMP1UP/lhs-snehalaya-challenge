@@ -66,6 +66,8 @@ test('verified rostered staff can read aggregate form figures but pupils cannot'
  assert.equal(allowed.code,200);assert.equal(allowed.data.formGroup,'8A');
  assert.equal('people' in allowed.data,false);assert.equal('books' in allowed.data,false);
  assert.equal((await fixture().call(null,'staff')).code,403);
+ const adminView=await fixture({admin:true}).call(null,'staff');
+ assert.equal(adminView.code,200);assert.equal(adminView.data.formGroup,'');
 });
 test('adding is idempotent, ignores forged owner/logs; progress ownership, baseline and repeated saves',async()=>{
  const f=fixture();const draft={action:'add',id:'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',title:'Example',author:'',total:100,start:20,ownerKey:'forged',logs:[{pages:9999}]};

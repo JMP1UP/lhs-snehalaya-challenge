@@ -109,7 +109,7 @@ export default function Lhs365() {
     return () => window.removeEventListener("hashchange", navigate);
   }, []);
   useEffect(() => {
-    document.title = `${route === "/admin" ? "Reading admin" : route === "/reading" ? "Read for Snehalaya" : route === "/steps" ? "Steps to Snehalaya" : "Learning beyond school"} | 25Thirty 365 · Leicester High School`;
+    document.title = `${route === "/admin" ? "Reading admin" : route === "/teacher" ? "Teacher reading dashboard" : route === "/reading" ? "Read for Snehalaya" : route === "/steps" ? "Steps to Snehalaya" : "Learning beyond school"} | 25Thirty 365 · Leicester High School`;
   }, [route]);
   return (
     <div className={`lhs365 ${route === "/reading" || route === "/admin" ? "reading-theme" : "adventure-theme"}`}>
@@ -143,7 +143,7 @@ export default function Lhs365() {
         <span className="school-context">A little every day. <span aria-hidden="true">✦</span></span>
       </header>
       <main id="main-content" ref={main} tabIndex={-1}>
-        {route === "/steps" ? <StepsArchive /> : route === "/admin" ? <AdminDashboard /> : route === "/reading" ? <ReadingAccess /> : <Home />}
+        {route === "/steps" ? <StepsArchive /> : route === "/admin" ? <AdminDashboard /> : route === "/teacher" ? <AdminDashboard view="teacher" /> : route === "/reading" ? <ReadingAccess /> : <Home />}
       </main>
       <footer className="site-footer">
         <p>Leicester High School · LHS 365</p>
