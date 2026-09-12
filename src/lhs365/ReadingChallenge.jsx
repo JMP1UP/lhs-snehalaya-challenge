@@ -223,7 +223,9 @@ export default function ReadingChallenge({ repository }) {
               </div>
               <fieldset disabled={saving} className="book-entry-fields">
               <legend className="sr-only">Book details</legend>
-              <form onSubmit={search}>
+              <details className="book-search-panel">
+                <summary>Find book automatically</summary>
+                <form onSubmit={search}>
                 <label htmlFor="book-search">
                   Search by title, author or ISBN
                 </label>
@@ -247,52 +249,53 @@ export default function ReadingChallenge({ repository }) {
                 <small>
                   Uses Google Books and Open Library · Avoid personal information
                 </small>
-              </form>
-              <p role="status" className="search-message">
-                {searchMessage}
-              </p>
-              {results.length > 0 && (
-                <ul className="book-results">
-                  {results.map((result, index) => (
-                    <li key={`${result.id}-${index}`}>
-                      <button
-                        onClick={() => {
-                          setDraft({
-                            title: result.title.slice(0, 200),
-                            author: (result.authors || [])
-                              .join(", ")
-                              .slice(0, 200),
-                            total:
-                              Number.isInteger(result.pageCount) &&
-                              result.pageCount > 0 &&
-                              result.pageCount <= 20000
-                                ? String(result.pageCount)
-                                : "",
-                            start: "0",
-                          });
-                          setSearchMessage(
-                            result.pageCountEstimated
-                              ? "Book selected. This is an estimated page count across editions — check your copy before adding it."
-                              : "Book selected. Check the details below before adding it.",
-                          );
-                          setResults([]);
-                        }}
-                      >
-                        <strong>{result.title}</strong>
-                        <span>
-                          {(result.authors || []).join(", ") ||
-                            "Author unknown"}{" "}
-                          · {result.publishedDate || "Date unknown"} ·{" "}
-                          {result.pageCount
-                            ? `${result.pageCountEstimated ? "Approx. " : ""}${result.pageCount} pages`
-                            : "Page count unavailable"}
-                        </span>
-                        <small>{result.source || result.publisher || "Publisher unknown"}{result.pageCountEstimated ? " · Check your edition’s page count" : ""}</small>
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              )}
+                </form>
+                <p role="status" className="search-message">
+                  {searchMessage}
+                </p>
+                {results.length > 0 && (
+                  <ul className="book-results">
+                    {results.map((result, index) => (
+                      <li key={`${result.id}-${index}`}>
+                        <button
+                          onClick={() => {
+                            setDraft({
+                              title: result.title.slice(0, 200),
+                              author: (result.authors || [])
+                                .join(", ")
+                                .slice(0, 200),
+                              total:
+                                Number.isInteger(result.pageCount) &&
+                                result.pageCount > 0 &&
+                                result.pageCount <= 20000
+                                  ? String(result.pageCount)
+                                  : "",
+                              start: "0",
+                            });
+                            setSearchMessage(
+                              result.pageCountEstimated
+                                ? "Book selected. This is an estimated page count across editions — check your copy before adding it."
+                                : "Book selected. Check the details below before adding it.",
+                            );
+                            setResults([]);
+                          }}
+                        >
+                          <strong>{result.title}</strong>
+                          <span>
+                            {(result.authors || []).join(", ") ||
+                              "Author unknown"}{" "}
+                            · {result.publishedDate || "Date unknown"} ·{" "}
+                            {result.pageCount
+                              ? `${result.pageCountEstimated ? "Approx. " : ""}${result.pageCount} pages`
+                              : "Page count unavailable"}
+                          </span>
+                          <small>{result.source || result.publisher || "Publisher unknown"}{result.pageCountEstimated ? " · Check your edition’s page count" : ""}</small>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </details>
               <form
                 className="manual-book"
                 onSubmit={async (event) => {
@@ -319,7 +322,7 @@ export default function ReadingChallenge({ repository }) {
                   } finally { setSaving(false); }
                 }}
               >
-                <h4>Or add a book yourself</h4>
+                <h4>Book details</h4>
                 <label htmlFor="book-title">
                   Book title
                   <input
