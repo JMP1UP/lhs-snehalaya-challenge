@@ -25,4 +25,4 @@ Keep roadmap items outcome-focused and link detailed implementation work from TA
 
 ## Reading admin — 10 September 2026
 
-Implemented: reading admin demonstration, top tens by role, house totals/participation, no-pages export, roster import, and disabled-by-default authenticated reading API. Outstanding for live pilot: school Firebase credentials/provider verification, complete roster, actual account/access and restoration checks. See reading-admin.md; no live pupil launch is claimed.
+Implemented: reading admin reporting, top tens by role, house/form totals and participation, no-pages export, additive roster import, school Microsoft login, private reading storage, and unmatched-login reconciliation. A controlled school pilot is enabled. Outstanding verification: complete a real school login, reject an external/other-tenant account, exercise account switching and a second device, and prove backup/restore before live data is at risk. See reading-admin.md.

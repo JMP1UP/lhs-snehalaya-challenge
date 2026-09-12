@@ -41,8 +41,8 @@ An added book with no new pages remains a non-contributor. Starting pages never 
 
 - [x] Fictional reports, arithmetic, role split, roster validation, CSV escaping, and server authorization/ownership/idempotency tested locally.
 - [x] Independent review completed; live privacy wording and draft-edit protection corrected and verified.
-- [ ] Configure matching server credentials, school Microsoft tenant/provider and authorised hostname in a controlled environment. Production live flags remain off meanwhile.
-- [ ] Confirm direct reading Firestore reads/writes are denied for anonymous, student and admin browser clients. API alone should access records.
+- [x] Configure matching server credentials, school Microsoft tenant/provider and authorised hostnames in the controlled production environment; live flags enabled 12 September 2026.
+- [ ] Confirm direct reading Firestore reads/writes are denied for student and admin browser clients. Anonymous REST access is confirmed denied with 403; API access without sign-in returns 401.
 - [ ] Verify both named admins can view reports; a normal school account and an external/other-tenant account cannot retrieve admin data. Verify revocation and sign-out. These are not established by mocked tests.
 - [ ] Import an approved complete roster from school storage, or explicitly keep the partial-roster label. No pupil records have been supplied yet.
 - [ ] With fictional enrolled accounts, sign in, add a book, update pages, retry a save and reconcile the report. Test a second device, account switching and failed network save.
