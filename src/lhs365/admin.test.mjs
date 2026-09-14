@@ -43,6 +43,11 @@ test('community tower includes verified readers outside the roster without chang
  const report=buildReport(roster,books);
  assert.equal(report.pages,20);assert.equal(report.participants,1);assert.deepEqual(report.community,{pages:50,participants:2,finished:0});assert.equal(report.unmatchedReaders,1);
 });
+test('family books count in the community without appearing as roster errors',()=>{
+ const family={...updateBook(createBook({title:'Family book',author:'',total:120,start:0},'family-one'),120,'2026-09-14'),ownerKey:'family:home:reader',householdId:'home',familyReaderId:'reader'};
+ const report=buildReport([], [family]);
+ assert.equal(report.community.pages,120);assert.equal(report.community.participants,1);assert.equal(report.unmatchedBooks,0);assert.equal(report.unmatchedReaders,0);
+});
 test('roster merges preserve existing pupils, update matches and add joiners',()=>{
  const existing=[{id:'a',email:'a@leicesterhigh.co.uk',name:'A',formGroup:'8A'},{id:'b',email:'b@leicesterhigh.co.uk',name:'B',formGroup:'8B'}];
  const incoming=[{id:'b',email:'b@leicesterhigh.co.uk',name:'B Updated',formGroup:'8C'},{id:'c',email:'c@leicesterhigh.co.uk',name:'C',formGroup:'8C'}];

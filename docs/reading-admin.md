@@ -16,6 +16,8 @@ Server-only Vercel environment variables (never prefix with VITE_):
 - `READING_ADMIN_EMAILS`: comma-separated exact authorised school addresses.
 - `READING_FIREBASE_PROJECT_ID`: explicitly selected Firebase project.
 - `READING_FIREBASE_SERVICE_ACCOUNT`: secret service-account JSON for that same project. Use a dedicated identity with only necessary Firestore and Firebase Auth verification/user-read permissions. Do not commit the key.
+- `VERACROSS_CLIENT_ID`, `VERACROSS_CLIENT_SECRET`, `VERACROSS_SCHOOL_ROUTE`: server-only roster connector values.
+- `VERACROSS_SCOPES`: `students:list students:read staff_faculty:list`. Optional URL overrides are `VERACROSS_AUTH_URL` and `VERACROSS_API_BASE_URL`.
 
 Public build-time configuration:
 
@@ -35,7 +37,11 @@ Admin imports JSON, CSV or TSV through Manage the school roster. Add or update i
 
 Start from `docs/reading-roster-template.csv`. Replace its fictional rows inside approved school storage; do not commit or email the completed roster. Upload the approved file through the private administrator interface after verified sign-in.
 
-An added book with no new pages remains a non-contributor. Starting pages never count retrospectively. The community tower includes reading from every verified school account. Rankings, houses, forms and participation percentages use matched active roster members only. The admin report highlights valid school accounts that have signed in but are not on the roster, so they can be reconciled. Form-group competition uses average pages per active student and also shows participation percentage, alongside the all-student school equivalents. Verified rostered staff can view these aggregate form figures; individual rankings, reconciliation emails and non-contributor names remain admin-only and are never published to students. Staff authority uses verified identity plus the stored roster role, not an editable login display name.
+A new book is treated as finished and its whole page count is credited on the server-dated log. Older unfinished records remain compatible with positive page updates. The community tower includes reading from every verified school account and private family readers. Rankings, houses, forms and participation percentages use matched active roster members only. Family books do not appear as unmatched school accounts. The admin report highlights valid school accounts that have signed in but are not on the roster, so they can be reconciled. Form-group competition uses average pages per active student and also shows participation percentage, alongside the all-student school equivalents. Verified rostered staff can view these aggregate form figures; individual rankings, reconciliation emails and non-contributor names remain admin-only and are never published to students. Staff authority uses verified identity plus the stored roster role, not an editable login display name.
+
+Veracross is preview-first. “Check Veracross roster” reads active pupils plus staff and presents the mapped count; the administrator must then choose the existing additive “Add or update people” action. Missing year/form/email records are skipped and reported, rather than invented. Students without a recognised Veracross house are imported as `None` so form-group participation can still be managed.
+
+Family groups are private to linked school accounts. The first pupil creates a group and shares its 10-character code directly with a sibling; the sibling joins the same record. Either account can add a minimal display label such as “Mum” and log books for that reader. Treat the code as private household information. There is no public household search and no parent contact data.
 
 ## One pilot checklist
 

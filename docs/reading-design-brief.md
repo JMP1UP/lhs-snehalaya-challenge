@@ -127,7 +127,7 @@ Open LHS 365 → see the featured reading challenge and its current status → e
 
 ### Add a book
 
-Search by title, author or typed ISBN, or enter details manually. Select a result and confirm the title, author and page count against the actual edition. Enter the page already reached; 0 means a new book. Existing pages establish a starting point and do not contribute retroactively.
+Search by title, author or typed ISBN, or enter details manually. Select a result and confirm the title, author and page count against the actual edition. Logging means the book is finished and credits its full page count; older unfinished records retain their original progress behaviour.
 
 Google Books supplies suggestions. Page counts are not guaranteed and must remain editable before addition. Missing or failed search must never block manual addition. The search sends only the query to the catalogue provider; pupil identity and reading history must not be included. Camera barcode scanning is a later enhancement.
 
@@ -185,7 +185,7 @@ For live release, additionally cover sign-in failure, unauthorised school access
 
 ## 12. Scope delivered in the first build
 
-Implemented: themed LHS 365 front end; challenge catalogue; featured reading and closed steps links; bookshelf; Google Books search with manual fallback; starting page; incremental progress; completion and reading-day milestones; temporary session persistence; input and saved-record validation; responsive styling; automated reading calculation tests.
+Implemented: themed LHS 365 front end; challenge catalogue; featured reading and closed steps links; bookshelf; Google Books search with manual fallback; finished-book logging; shared family readers; temporary session persistence; input and saved-record validation; responsive styling; automated reading calculation tests.
 
 Not yet implemented: cloud reading records, school/house aggregates, campaign target, staff reading tools, persistent personal goals, recommendations/moderation, camera scanning, corrections, reread rules, audiobook/minutes pathway, offline/concurrent synchronisation. These must not be presented as working in the preview.
 

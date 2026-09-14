@@ -13,7 +13,7 @@ export function validateRoster(rows) {
     if (!/^[a-z0-9._%+-]+@leicesterhigh\.co\.uk$/.test(email) || email.length > 254 || seen.has(email)) fail();
     if (!["student", "staff"].includes(kind) || !name || name.length > 100) fail();
     const house = row.house || "None";
-    if (!(HOUSE_NAMES.includes(house) || (kind === "staff" && house === "None"))) fail();
+    if (!(HOUSE_NAMES.includes(house) || house === "None")) fail();
     if (kind === "student" && (typeof row.yearGroup !== "string" || !/^(EYFS|Year (?:[1-9]|1[0-3]))$/.test(row.yearGroup))) fail();
     const formGroup=typeof row.formGroup==="string" ? row.formGroup.trim() : "";
     if(kind==="student" && (!formGroup || formGroup.length>40))fail();
@@ -82,7 +82,7 @@ export function buildReport(roster, books, filters = {}) {
     list.push(book); byPerson.set(book.ownerKey, list);
   }
   const known = new Set(roster.map(person => person.id));
-  const unmatchedBooks=books.filter(book => !known.has(book.ownerKey));
+  const unmatchedBooks=books.filter(book => !book.householdId && !known.has(book.ownerKey));
   const unmatchedByOwner=new Map();
   for(const book of unmatchedBooks){const list=unmatchedByOwner.get(book.ownerKey)||[];list.push(book);unmatchedByOwner.set(book.ownerKey,list);}
   const unmatchedStats=[...unmatchedByOwner.values()].map(readingStats);

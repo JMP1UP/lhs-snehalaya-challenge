@@ -6,7 +6,7 @@
 
 1. Open LHS 365 and choose the featured reading challenge.
 2. Read the session-preview notice; use fictional data.
-3. Add a book through catalogue search or manual entry; confirm the page count and starting page.
+3. Log a finished book through catalogue search or manual entry; confirm its page count.
 4. Enter the page reached. Only the difference is contributed.
 5. Review personal page totals, completed books and reading-day milestones.
 6. Revisit the original steps challenge through the home collection.

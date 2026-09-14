@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import {
   createBook,
+  finishBook,
   localDate,
   persistBooks,
   readingStats,
@@ -107,6 +108,10 @@ export default function ReadingChallenge({ repository }) {
   const [saving,setSaving] = useState(false);
   const addRequest = useRef(null);
   const [books, setBooks] = useState(initial.books);
+  const [family,setFamily]=useState(repository?.family||null);
+  const [reader,setReader]=useState("me");
+  const [familyOpen,setFamilyOpen]=useState(false);
+  const [familyInput,setFamilyInput]=useState("");
   const currentBooks = useRef(initial.books);
   const [notice, setNotice] = useState(initial.error);
   const [adding, setAdding] = useState(initial.books.length === 0);
@@ -123,8 +128,11 @@ export default function ReadingChallenge({ repository }) {
   const [error, setError] = useState("");
   const searchId = useRef(0);
   const addButton = useRef(null);
-  const stats = readingStats(books);
-  const activeBooks = books.filter((book) => book.current < book.total);
+  const visibleBooks = repository ? books.filter(book=>reader==="me"?!book.familyReaderId:book.familyReaderId===reader) : books;
+  const stats = readingStats(visibleBooks);
+  const familyStats = readingStats(books.filter(book=>book.familyReaderId));
+  const activeBooks = visibleBooks.filter((book) => book.current < book.total);
+  const readerName=reader==="me"?"You":family?.readers?.find(item=>item.id===reader)?.name||"Family";
   const finishedSummary = useRef(null);
   const focusFinished = useRef(false);
   useEffect(() => {
@@ -139,6 +147,12 @@ export default function ReadingChallenge({ repository }) {
     currentBooks.current = next;
     setBooks(next);
     setNotice(message);
+  }
+
+  function applyFamily(next) {
+    const personal=currentBooks.current.filter(book=>!book.householdId);
+    const merged=[...personal,...(next.books||[])];
+    currentBooks.current=merged;setBooks(merged);setFamily(next);setFamilyOpen(false);setFamilyInput("");
   }
 
   async function search(event) {
@@ -183,12 +197,22 @@ export default function ReadingChallenge({ repository }) {
         <h1>Read. Stack. <em>Reach higher.</em></h1>
       </section>
       {!repository && <div className="preview-note">Preview · Fictional data stays in this tab</div>}
+      {repository&&<section className="family-reading" aria-label="Choose reader">
+        <div className="reader-switch">
+          <button type="button" aria-pressed={reader==="me"} onClick={()=>setReader("me")}>Me</button>
+          {family?.readers?.map(person=><button type="button" key={person.id} aria-pressed={reader===person.id} onClick={()=>setReader(person.id)}>{person.name}</button>)}
+          <button type="button" className="family-add" onClick={()=>{setFamilyOpen(value=>!value);setError("");}}>+ {family?"Family member":"Family"}</button>
+        </div>
+        {family&&<p><strong>{familyStats.finished.toLocaleString()} family books</strong> · {familyStats.pages.toLocaleString()} pages <span>Sibling code: <code>{family.joinCode}</code></span></p>}
+        {familyOpen&&!family&&<div className="family-setup"><button type="button" className="button primary" disabled={saving} onClick={async()=>{setSaving(true);setError("");try{applyFamily(await repository.createFamily());}catch(err){setError(err.message);}finally{setSaving(false);}}}>Create our family</button><form onSubmit={async event=>{event.preventDefault();setSaving(true);setError("");try{applyFamily(await repository.joinFamily(familyInput));}catch(err){setError(err.message);}finally{setSaving(false);}}}><label htmlFor="family-code">Join a sibling’s family</label><div className="input-action"><input id="family-code" value={familyInput} maxLength="12" required onChange={event=>setFamilyInput(event.target.value)} placeholder="Family code"/><button className="button secondary" disabled={saving}>Join</button></div></form>{error&&<p role="alert">{error}</p>}</div>}
+        {familyOpen&&family&&<form className="family-setup" onSubmit={async event=>{event.preventDefault();setSaving(true);setError("");try{const next=await repository.addFamilyReader(familyInput);applyFamily(next);setReader(next.readers.at(-1).id);}catch(err){setError(err.message);}finally{setSaving(false);}}}><label htmlFor="family-name">Family member’s name</label><div className="input-action"><input id="family-name" value={familyInput} maxLength="50" required onChange={event=>setFamilyInput(event.target.value)} placeholder="e.g. Mum"/><button className="button primary" disabled={saving}>Add</button></div>{error&&<p role="alert">{error}</p>}</form>}
+      </section>}
       <div className={`reading-workspace ${activeBooks.length ? "" : "reading-workspace-empty"}`}>
       <div className="reading-layout">
         <section>
           <div className="section-heading">
             <div>
-              <h2>Log your reading</h2>
+              <h2>{reader==="me"?"Log your reading":`Log for ${readerName}`}</h2>
             </div>
             <button
               ref={addButton}
@@ -201,7 +225,7 @@ export default function ReadingChallenge({ repository }) {
               aria-expanded={adding}
               aria-controls="add-book"
             >
-              + Add a book
+              + Log a book
             </button>
           </div>
           {notice && (
@@ -302,15 +326,18 @@ export default function ReadingChallenge({ repository }) {
                   event.preventDefault();
                   try {
                     if (saving) return;
-                    createBook(draft);
+                    const base = createBook({...draft,start:"0"});
                     setSaving(true);
-                    const fingerprint = JSON.stringify(draft);
+                    const finishedDraft = {...draft,start:"0"};
+                    const fingerprint = JSON.stringify(finishedDraft);
                     if (addRequest.current?.fingerprint !== fingerprint) addRequest.current = {fingerprint,id:crypto.randomUUID()};
-                    const book = repository ? await repository.add(draft,addRequest.current.id) : createBook(draft);
+                    const book = repository
+                      ? await repository.add(finishedDraft,addRequest.current.id,reader==="me"?null:reader)
+                      : finishBook(base,localDate());
                     addRequest.current = null;
                     save(
                       [...currentBooks.current.filter(item => item.id !== book.id), book],
-                      `Added ${book.title}.`,
+                      `Logged ${book.title}.`,
                     );
                     setDraft({ title: "", author: "", total: "", start: "0" });
                     setQuery("");
@@ -346,52 +373,32 @@ export default function ReadingChallenge({ repository }) {
                     }
                   />
                 </label>
-                <div className="form-columns">
-                  <label htmlFor="book-total">
-                    Total pages
-                    <input
-                      id="book-total"
-                      type="number"
-                      required
-                      min="1"
-                      max="20000"
-                      step="1"
-                      value={draft.total}
-                      onChange={(event) =>
-                        setDraft({ ...draft, total: event.target.value })
-                      }
-                    />
-                  </label>
-                  <label htmlFor="book-start">
-                    Page already reached
-                    <input
-                      id="book-start"
-                      type="number"
-                      required
-                      min="0"
-                      max={draft.total || 20000}
-                      step="1"
-                      value={draft.start}
-                      onChange={(event) =>
-                        setDraft({ ...draft, start: event.target.value })
-                      }
-                    />
-                  </label>
-                </div>
-                <small>
-                  Only pages read after adding the book count.
-                </small>
+                <label htmlFor="book-total">
+                  Total pages
+                  <input
+                    id="book-total"
+                    type="number"
+                    required
+                    min="1"
+                    max="20000"
+                    step="1"
+                    value={draft.total}
+                    onChange={(event) =>
+                      setDraft({ ...draft, total: event.target.value })
+                    }
+                  />
+                </label>
                 {error && (
                   <p className="form-error" role="alert">
                     {error}
                   </p>
                 )}
-                <button className="button primary" disabled={saving}>{saving ? "Saving…" : "Add to my bookshelf"}</button>
+                <button className="button primary" disabled={saving}>{saving ? "Saving…" : "Log finished book"}</button>
               </form>
               </fieldset>
             </section>
           )}
-          {books.length === 0 && !adding && (
+          {visibleBooks.length === 0 && !adding && (
             <div className="empty-shelf">
               <span aria-hidden="true">Aa</span>
               <h3>What are you reading?</h3>
@@ -416,10 +423,10 @@ export default function ReadingChallenge({ repository }) {
               />
             ))}
           </div>
-          {books.some((book) => book.current === book.total) && (
+          {visibleBooks.some((book) => book.current === book.total) && (
             <details className="finished-books">
-              <summary ref={finishedSummary}>Finished books ({books.filter((book) => book.current === book.total).length})</summary>
-              {books.filter((book) => book.current === book.total).map((book) => (
+              <summary ref={finishedSummary}>Finished books ({visibleBooks.filter((book) => book.current === book.total).length})</summary>
+              {visibleBooks.filter((book) => book.current === book.total).map((book) => (
                 <BookCard key={book.id} book={book} />
               ))}
             </details>
@@ -427,10 +434,10 @@ export default function ReadingChallenge({ repository }) {
         </section>
       </div>
         <div className="reading-mission-column">
-      <BookTower pages={stats.pages} books={books} preview={!repository} />
+      <BookTower pages={stats.pages} books={visibleBooks} preview={!repository} />
       <section className="reading-stats" aria-label="Your reading progress">
         {[
-          ["Your pages", stats.pages],
+          [reader==="me"?"Your pages":`${readerName}’s pages`, stats.pages],
           ["Books", stats.finished],
           ["Days logged", stats.days],
         ].map(([label, value]) => (

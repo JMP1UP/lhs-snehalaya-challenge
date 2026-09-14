@@ -138,6 +138,17 @@
 .reading-theme .book-search-panel+.manual-book label {margin-top:9px;}
 .reading-theme .book-search-panel+.manual-book>.button {margin-top:12px;}
 .reading-theme .reading-workspace { grid-template-columns: minmax(0,.82fr) minmax(0,1.18fr); align-items: start; gap: 26px; }
+.reading-theme .family-reading { margin: 14px 0 24px; padding: 14px 16px; border: 3px solid #071b45; background: #fffdf7; box-shadow: 5px 5px 0 #071b45; }
+.reading-theme .reader-switch { display: flex; flex-wrap: wrap; gap: 8px; }
+.reading-theme .reader-switch button { min-height: 40px; padding: 7px 14px; border: 2px solid #071b45; background: #fffdf7; color: #071b45; font: 800 14px/1 Inter, 'Segoe UI', sans-serif; cursor: pointer; }
+.reading-theme .reader-switch button[aria-pressed="true"] { background: #ffd447; box-shadow: 3px 3px 0 #071b45; }
+.reading-theme .reader-switch .family-add { margin-left: auto; background: #52bddf; }
+.reading-theme .family-reading > p { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 12px 0 0; }
+.reading-theme .family-reading code { padding: 2px 6px; background: #071b45; color: #fff; font-weight: 900; letter-spacing: .12em; }
+.reading-theme .family-setup { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; margin-top: 14px; padding-top: 14px; border-top: 2px dotted #071b4555; }
+.reading-theme .family-setup form, .reading-theme form.family-setup { flex: 1 1 300px; }
+.reading-theme .family-setup label { display: block; margin-bottom: 5px; font-weight: 800; }
+.reading-theme .family-setup [role="alert"] { flex-basis: 100%; margin: 0; }
 .reading-theme .reading-layout { padding: 16px 0 12px; }
 .reading-theme .reading-layout > section { padding: 22px; border: 3px solid #071b45; border-radius: 11px; background: white; box-shadow: 7px 7px 0 #071b45; }
 .reading-theme .reading-workspace-empty .reading-layout > section { position: relative; overflow: hidden; min-height: 190px; background: #fffdf7; color: #071b45; }

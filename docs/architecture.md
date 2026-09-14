@@ -7,7 +7,7 @@ Google Books returned HTTP 429 quota exhaustion for Dune. Added Open Library sea
 
 ## Reading refinements — 10 September 2026
 
-BookTower now receives existing books as well as contributed pages, deriving a decorative stack from up to eight books with positive contributions. No new stored fields; arithmetic remains in tower.mjs.
+BookTower receives existing books as well as contributed pages, deriving a decorative stack from up to eight logged titles. Display membership and height arithmetic are deliberately separate, so a legacy zero-credit title is still visible.
 
 
 ## Bright home and challenge themes
@@ -51,3 +51,5 @@ There is no versioned database migration process, documented restore test, autom
 ## Reading admin extension — September 2026
 
 `SchoolAccess` and `reading-client.mjs` use a separate named Firebase Auth instance only when VITE_READING_LIVE is enabled. ReadingAccess supplies an asynchronous repository to the existing logger; preview storage is never merged into school records. `/api/reading` verifies revoked/expired sessions, Microsoft school identity, roster membership and a server-only admin allowlist. Its staff endpoint returns aggregate school/form-group figures only; names and book records stay in the admin response. Admin SDK accesses only the new readingCampaigns namespace. Browser Firestore access stays denied. `admin.mjs` is pure reporting, roster parsing/validation and deterministic merge logic; AdminDashboard exposes fictional fixtures in preview and authenticated role-specific reports in live mode. Live flags default off. Operational dependencies and data bounds are in reading-admin.md.
+
+The same API owns shared-household membership and family-book authorization. A high-entropy sibling code links a second verified school account to the existing household; it does not duplicate readers. Family activity is included in the public aggregate but excluded from roster-reconciliation warnings. The admin-only Veracross adapter uses client-credentials OAuth on the server, fetches paginated students and staff, maps value-list-backed year/form/house fields, and returns a preview. It never applies roster changes directly.

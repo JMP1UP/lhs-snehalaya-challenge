@@ -29,11 +29,12 @@ function download(rows) {
 function Ranking({title,rows}) {
   return <section className="admin-card"><h2>{title}</h2>{rows.length ? <div className="admin-table-scroll"><table><thead><tr><th scope="col">Rank</th><th scope="col">Reader</th><th scope="col">Pages</th><th scope="col">Finished</th></tr></thead><tbody>{rows.map((person,index)=><tr key={person.id}><td>{index+1}</td><th scope="row">{person.name}<small>{person.house}{person.kind === "student" ? ` · ${person.yearGroup}` : ""}</small></th><td>{number(person.pages)}</td><td>{person.finished}</td></tr>)}</tbody></table></div> : <p>No pages logged yet.</p>}</section>;
 }
-function RosterImport({data,onSave,open=false}) {
-  const [raw,setRaw]=useState(""),[draft,setDraft]=useState(null),[complete,setComplete]=useState(false),[error,setError]=useState(""),[busy,setBusy]=useState(false),[copied,setCopied]=useState(false);
+function RosterImport({data,onSave,onVeracross,open=false}) {
+  const [raw,setRaw]=useState(""),[draft,setDraft]=useState(null),[complete,setComplete]=useState(false),[error,setError]=useState(""),[busy,setBusy]=useState(false),[copied,setCopied]=useState(false),[sourceNote,setSourceNote]=useState("");
   const inspect=text=>{setError("");try{setDraft(parseRosterUpload(text));}catch(err){setDraft(null);setError(err.message);}};
   return <details className="admin-card roster-manager" id="roster-management" open={open || undefined}><summary>{data.people.length ? "Manage the school roster" : "Upload the school roster"}</summary>
     <p><strong>Add or update is the safe default.</strong> A later upload adds new joiners and updates matching school emails without removing anyone else.</p>
+    {onVeracross&&<><button type="button" className="button primary" disabled={busy} onClick={async()=>{setBusy(true);setError("");setSourceNote("");try{const preview=await onVeracross();setDraft(preview.people);setSourceNote(`${preview.people.length} school accounts found${preview.skipped?` · ${preview.skipped} incomplete records skipped`:""}. Check the totals, then add or update.`);}catch(err){setError(err.message);}finally{setBusy(false);}}}>{busy?"Checking…":"Check Veracross roster"}</button>{sourceNote&&<p role="status">{sourceNote}</p>}</>}
     <details className="ai-list-prompt"><summary>Prompt to arrange roster data with AI</summary><p>Use only an AI service approved for school personal data.</p><textarea aria-label="Roster AI prompt" readOnly value={AI_ROSTER_PROMPT}/><button type="button" className="button secondary" onClick={async()=>{try{await navigator.clipboard.writeText(AI_ROSTER_PROMPT);setCopied(true);}catch{setCopied(false);}}}>{copied?"Prompt copied":"Copy prompt"}</button></details>
     <label htmlFor="roster-file">Upload JSON, CSV or TSV</label><input id="roster-file" type="file" accept=".json,.csv,.tsv,.txt,application/json,text/csv,text/tab-separated-values,text/plain" disabled={busy} onChange={async event=>{
       setDraft(null);setComplete(false);setError("");const file=event.target.files?.[0];if(!file)return;
@@ -44,7 +45,7 @@ function RosterImport({data,onSave,open=false}) {
     {draft && <div className="roster-confirm"><p><strong>{draft.length} people ready to import</strong> · {draft.filter(p=>p.kind==="student").length} students · {draft.filter(p=>p.kind==="staff").length} staff · {draft.filter(p=>p.active).length} active</p>
       <p>Currently {data.people.length} people on the roster.</p>
       <button className="button primary" disabled={busy || !draft.length} onClick={async()=>{setBusy(true);setError("");try{await onSave(draft,{replace:false});setDraft(null);setRaw("");}catch(err){setError(err.message);}finally{setBusy(false);}}}>{busy ? "Saving…" : "Add or update people"}</button>
-      <details className="replace-roster"><summary>Replace the complete roster</summary><p>Only use this for a complete export. Anyone omitted will lose reading access, although their reading records remain.</p><label><input type="checkbox" checked={complete} disabled={busy} onChange={event=>setComplete(event.target.checked)}/> I have checked this is the complete roster.</label><button className="button secondary" disabled={busy||!complete||!draft.length} onClick={async()=>{setBusy(true);setError("");try{await onSave(draft,{replace:true,complete:true});setDraft(null);setRaw("");}catch(err){setError(err.message);}finally{setBusy(false);}}}>Replace complete roster</button></details>
+      <details className="replace-roster"><summary>Replace the complete roster</summary><p>Only use this for a complete export. Anyone omitted will lose their form and house placement, although their reading records remain.</p><label><input type="checkbox" checked={complete} disabled={busy} onChange={event=>setComplete(event.target.checked)}/> I have checked this is the complete roster.</label><button className="button secondary" disabled={busy||!complete||!draft.length} onClick={async()=>{setBusy(true);setError("");try{await onSave(draft,{replace:true,complete:true});setDraft(null);setRaw("");}catch(err){setError(err.message);}finally{setBusy(false);}}}>Replace complete roster</button></details>
     </div>}{error && <p role="alert">{error}</p>}
   </details>;
 }
@@ -79,7 +80,7 @@ function RosterReconciliation({rows=[]}) {
     <div className="admin-table-scroll"><table><thead><tr><th scope="col">School account</th><th scope="col">First seen</th><th scope="col">Last seen</th></tr></thead><tbody>{rows.map(row=><tr key={row.email}><th scope="row">{row.email}</th><td>{new Date(row.firstSeenAt).toLocaleString("en-GB")}</td><td>{new Date(row.lastSeenAt).toLocaleString("en-GB")}</td></tr>)}</tbody></table></div>
   </section>;
 }
-function Report({data,onRefresh,onSave,demo=false}) {
+function Report({data,onRefresh,onSave,onVeracross,demo=false}) {
   const [house,setHouse]=useState(""),[kind,setKind]=useState(""),[yearGroup,setYear]=useState(""),[search,setSearch]=useState("");
   const result=useMemo(()=>{try{return {report:buildReport(data.people,data.books,{house,kind,yearGroup})};}catch{return {error:"Reading records could not be reconciled. Refresh or contact the administrator before using this report."};}},[data,house,kind,yearGroup]);
   if(result.error)return <p role="alert">{result.error}</p>;
@@ -89,7 +90,7 @@ function Report({data,onRefresh,onSave,demo=false}) {
   return <div className="reading-admin">
     <header className="admin-heading"><div><span className="eyebrow">LHS 365 · READING {demo ? "DEMO" : "ADMIN"}</span><h1>Every page. <em>Everyone.</em></h1></div>{onRefresh && <button className="button secondary" onClick={onRefresh}>Refresh report</button>}</header>
     {demo ? <p className="admin-notice" role="status"><strong>Fictional demo</strong> · No school records</p> : <p className="admin-notice">Private staff report · {data.complete ? "Complete roster" : "Partial roster"} · Loaded {new Date(data.updatedAt).toLocaleString("en-GB")}</p>}
-    {onSave && <RosterImport data={data} onSave={onSave} open={!hasRoster}/>}
+    {onSave && <RosterImport data={data} onSave={onSave} onVeracross={onVeracross} open={!hasRoster}/>}
     {!demo && !data.complete && hasRoster && <p>People missing from the roster cannot appear in the “No pages logged” list.</p>}
     {report.unmatchedBooks>0 && <p role="alert">{report.unmatchedBooks} book records from {report.unmatchedReaders} participating reader{report.unmatchedReaders===1?"":"s"} are included in the community tower but not in roster, form or house figures.</p>}
     <section className={`admin-celebration${report.community.pages ? "" : " is-empty"}`} aria-labelledby="community-tower-title">
@@ -131,7 +132,7 @@ function Report({data,onRefresh,onSave,demo=false}) {
       <label htmlFor="reader-search">Find a reader</label><input id="reader-search" value={search} onChange={e=>setSearch(e.target.value)} type="search"/>
       {notStarted.length ? <div className="admin-table-scroll"><table><thead><tr><th scope="col">Reader</th><th scope="col">Role</th><th scope="col">House</th><th scope="col">Year group</th><th scope="col">Form group</th></tr></thead><tbody>{notStarted.map(person=><tr key={person.id}><th scope="row">{person.name}</th><td>{person.kind}</td><td>{person.house}</td><td>{person.yearGroup}</td><td>{person.formGroup||"—"}</td></tr>)}</tbody></table></div> : <p>{search ? "No matching readers." : "Everyone in this selection has contributed. Brilliant!"}</p>}
     </section>
-    <details className="admin-footnote"><summary>How totals work</summary><p>Pages count from each book’s starting page. Reading days are distinct dates with new pages. Rankings use active roster members and current filters; ties are alphabetical. Adding a book alone is not a contribution.</p></details>
+    <details className="admin-footnote"><summary>How totals work</summary><p>Logging a finished book credits its full page count. Older unfinished records count only new pages. Rankings use active roster members and current filters; ties are alphabetical.</p></details>
     </>}
   </div>;
 }
@@ -141,7 +142,7 @@ function LiveReport({user,api}) {
   function refresh(){setData(null);setError("");setRevision(n=>n+1);}
   if(error)return <p role="alert">{error} <button onClick={refresh}>Try again</button></p>;
   if(!data)return <p role="status">Loading private reading report…</p>;
-  return <Report data={data} onRefresh={refresh} onSave={async(people,options)=>{await api.request(user,"admin",{action:options.replace?"roster":"roster-merge",people,complete:options.complete,version:data.version});refresh();}}/>;
+  return <Report data={data} onRefresh={refresh} onVeracross={()=>api.request(user,"admin",{action:"veracross-preview"})} onSave={async(people,options)=>{await api.request(user,"admin",{action:options.replace?"roster":"roster-merge",people,complete:options.complete,version:data.version});refresh();}}/>;
 }
 function StaffReport({user,api}) {
   const [data,setData]=useState(null),[error,setError]=useState("");

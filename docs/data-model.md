@@ -2,7 +2,7 @@
 
 ## Reading preview records
 
-The new preview uses session storage only, isolated from steps records. A book contains `id`, `title`, `author`, `total`, `start`, `current` and `logs`. Each log has positive `pages` and a local calendar `date`. Contributions equal `current - start`; the log sum must agree. Completion requires `current === total` and new progress beyond `start`. Days are distinct logging dates across all books.
+The preview uses session storage only, isolated from steps records. A book contains `id`, `title`, `author`, `total`, `start`, `current` and `logs`. Each log has positive `pages` and a local calendar `date`. New entries are finished by default: `start` is zero, `current` is the total and one dated log credits the whole book. Older unfinished records retain positive-delta progress support.
 
 Records are validated on restoration and before updates. These are self-reported trial values, not school-approved activity. No shared totals or live reading collections exist yet. Production ownership, corrections, concurrent updates, retention and staff access require implementation before launch.
 
@@ -27,4 +27,4 @@ Firebase supplies persistence, but no guaranteed retention, export, deletion, or
 
 ## Reading admin — 10 September 2026
 
-The new readingCampaigns/read-for-snehalaya-2026 namespace holds a versioned settings/roster document, members/{emailHash} book counters, and books/{requestUUID} records. Ownership is derived from verified identity. Atomic page updates calculate positive deltas using the London date. Add requests are idempotent by UUID and payload; absolute-page retries cannot add pages twice. See reading-admin.md for limits and retention considerations.
+The `readingCampaigns/read-for-snehalaya-2026` namespace holds a versioned `settings/roster` document, `members/{emailHash}` counters, `books/{requestUUID}`, private `households/{uuid}`, `familyMemberships/{emailHash}` and hashed `familyCodes/{sha256}` lookups. Personal book ownership is derived from verified identity. Family books carry `householdId` and `familyReaderId`; the API checks household membership before writes. A household stores up to eight linked school-account hashes and twelve minimal named readers. No parent email, date of birth or contact data is collected. Add requests remain idempotent by UUID and payload.

@@ -1,5 +1,13 @@
 # Changelog — LHS Snehalaya Challenge
 
+## Finished-book, family and Veracross flow — 14 September 2026
+
+- Simplified logging so a newly added book is finished by default and its full page count is credited immediately; legacy unfinished records remain updateable.
+- Made every logged title appear in the visual tower, while height continues to use validated contributed pages.
+- Added private shared family groups: one school account creates a 10-character sibling code, linked siblings share named family readers, and either can log finished books for them. Family names remain within the linked household view; family activity contributes only aggregate community totals.
+- Added an administrator-only, preview-first Veracross roster check for active pupils, forms, houses and staff. Applying the result still uses the existing additive roster merge.
+- Verified three successive finished-book entries at desktop and phone widths; all three spines and the 982-page total remained visible.
+
 ## Explicit teacher dashboard — 12 September 2026
 
 - Added a distinct `#/teacher` dashboard with whole-school pages, participation, average pages per student, and form-group totals, averages and participation.

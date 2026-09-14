@@ -25,7 +25,9 @@ export default function BookTower({ pages, books = [], preview = true }) {
   const [selected, setSelected] = useState("door");
   const landmark = landmarks.find((item) => item.id === selected);
   const tower = towerProgress(pages, landmark);
-  const stack = books.filter((book) => book.current > book.start).slice(-8);
+  // Every logged title belongs in the visual bookshelf, even when an older
+  // record has no eligible page contribution. Height still comes from `pages`.
+  const stack = books.slice(-8);
   return (
     <section className="tower-mission" aria-labelledby="tower-title">
       <div className="tower-copy">

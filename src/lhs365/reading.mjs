@@ -55,6 +55,11 @@ export function updateBook(book, value, date) {
   };
 }
 
+export function finishBook(book, date) {
+  if (book.current === book.total) return book;
+  return updateBook(book, book.total, date);
+}
+
 export function readingStats(books) {
   return {
     pages: books.reduce((sum, book) => sum + book.current - book.start, 0),
