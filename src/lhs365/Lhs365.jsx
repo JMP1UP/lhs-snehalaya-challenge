@@ -31,6 +31,8 @@ function Home() {
       ? {title:`${community.pages.toLocaleString("en-GB")} pages stacked`,detail:`${formatHeight(community.pages * PAGE_HEIGHT_MM)} high · ${community.participants.toLocaleString("en-GB")} ${community.participants===1?"reader":"readers"} · ${community.finished.toLocaleString("en-GB")} ${community.finished===1?"book":"books"} finished`}
       : {title:"The first page starts the tower",detail:"Sign in and help build it."}
     : {title:liveReading ? "Reading is under way" : "Preparing for launch",detail:liveReading ? "Sign in to add your pages." : "Preview only · No shared height is published yet."};
+  const visibleBookCount=Math.min(4,community?.finished||0);
+  const towerHeight=community ? formatHeight(community.pages*PAGE_HEIGHT_MM) : "";
 
   return (
     <div className="challenge-home">
@@ -67,13 +69,15 @@ function Home() {
           </div>
           <a className="challenge-cta" href="#/reading">Log your reading <span aria-hidden="true">➜</span></a>
         </div>
-        <div className="home-book-art" aria-hidden="true">
-          <span className="book-art-sticker">HOW HIGH<br />CAN WE GO?</span>
+        <div className="home-book-art" role="img" aria-label={community ? `The whole-school book tower is ${towerHeight} high from ${community.finished} finished ${community.finished===1?"book":"books"}.` : "The whole-school book tower is ready for its first book."}>
+          <span className="book-art-sticker">{community?.pages>0?<>{towerHeight}<br />HIGH SO FAR</>:<>HOW HIGH<br />CAN WE GO?</>}</span>
           <span className="art-twinkle">✦</span>
-          <div className="hero-book hb-one">ONE MORE CHAPTER <span>✦</span></div>
-          <div className="hero-book hb-two">A WORLD OF STORIES</div>
-          <div className="hero-book hb-three">READ · STACK · REPEAT</div>
-          <div className="hero-book hb-four">THE LHS BOOK TOWER <span>↗</span></div>
+          <span className="tower-now-label">OUR TOWER NOW</span>
+          <div className="home-doorway"><strong>2 m</strong><span>DOORWAY</span></div>
+          <div className="home-live-stack" aria-hidden="true">
+            {visibleBookCount>0?Array.from({length:visibleBookCount},(_,index)=><i key={index}>{index===visibleBookCount-1?`${community.finished.toLocaleString("en-GB")} ${community.finished===1?"BOOK":"BOOKS"} · ${community.pages.toLocaleString("en-GB")} PAGES`:"READ · STACK · REPEAT"}</i>):<i className="empty-live-book">FIRST BOOK GOES HERE</i>}
+          </div>
+          <span className="next-landmark">NEXT: DOORWAY · 2 M</span>
           <div className="book-art-ground" />
         </div>
       </section>
