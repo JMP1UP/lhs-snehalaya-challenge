@@ -63,9 +63,7 @@ export function finishBook(book, date) {
 export function readingStats(books) {
   return {
     pages: books.reduce((sum, book) => sum + book.current - book.start, 0),
-    finished: books.filter(
-      (book) => book.current === book.total && book.current > book.start,
-    ).length,
+    finished: books.filter((book) => book.current === book.total).length,
     days: new Set(books.flatMap((book) => book.logs.map((log) => log.date)))
       .size,
   };

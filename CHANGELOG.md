@@ -6,6 +6,7 @@
 - Added the same live hierarchy after sign-in: personal pages/books, optional family pages/books, then the whole-school tower height, pages and completed books.
 - Applied successful book logs to the displayed community snapshot immediately, while the privacy-safe shared endpoint remains the source on load.
 - Replaced the landing-page decorative books with a live community illustration: completed-book spines, current height flag and the next doorway landmark now reflect the real aggregate.
+- Counted every registered finished title in book totals, including older zero-page entries, while keeping pages and participation based only on challenge contributions; corrected singular “book” labels.
 
 ## Finished-book, family and Veracross flow — 14 September 2026
 

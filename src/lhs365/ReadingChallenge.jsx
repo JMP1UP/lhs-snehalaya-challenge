@@ -133,6 +133,7 @@ export default function ReadingChallenge({ repository, community=null }) {
   const stats = readingStats(visibleBooks);
   const familyStats = readingStats(books.filter(book=>book.familyReaderId));
   const personalStats = readingStats(books.filter(book=>!book.familyReaderId));
+  const booksLabel=count=>`${count.toLocaleString()} ${count===1?"book":"books"}`;
   const activeBooks = visibleBooks.filter((book) => book.current < book.total);
   const readerName=reader==="me"?"You":family?.readers?.find(item=>item.id===reader)?.name||"Family";
   const finishedSummary = useRef(null);
@@ -202,9 +203,9 @@ export default function ReadingChallenge({ repository, community=null }) {
       {repository&&<section className="progress-overview" aria-labelledby="progress-overview-title">
         <span className="eyebrow" id="progress-overview-title">WHERE WE ARE NOW</span>
         <div className="progress-levels">
-          <article><span>You</span><strong>{personalStats.pages.toLocaleString()} pages</strong><small>{personalStats.finished.toLocaleString()} books</small></article>
-          {family&&<article><span>Your family</span><strong>{familyStats.pages.toLocaleString()} pages</strong><small>{familyStats.finished.toLocaleString()} books</small></article>}
-          <article className="school-progress"><span>Whole school</span>{community?<><strong>{formatHeight(community.pages*PAGE_HEIGHT_MM)} high</strong><small>{community.pages.toLocaleString()} pages · {community.finished.toLocaleString()} books</small></>:<><strong>Building…</strong><small>Community tower</small></>}</article>
+          <article><span>You</span><strong>{personalStats.pages.toLocaleString()} pages</strong><small>{booksLabel(personalStats.finished)}</small></article>
+          {family&&<article><span>Your family</span><strong>{familyStats.pages.toLocaleString()} pages</strong><small>{booksLabel(familyStats.finished)}</small></article>}
+          <article className="school-progress"><span>Whole school</span>{community?<><strong>{formatHeight(community.pages*PAGE_HEIGHT_MM)} high</strong><small>{community.pages.toLocaleString()} pages · {booksLabel(community.finished)}</small></>:<><strong>Building…</strong><small>Community tower</small></>}</article>
         </div>
       </section>}
       {repository&&<section className="family-reading" aria-label="Choose reader">

@@ -51,10 +51,10 @@ test("multiple books on the same date count as one reading day", () => {
   assert.equal(readingStats([first, second]).days, 1);
 });
 
-test("already finished books do not earn completion or page credit", () => {
+test("already finished books count as registered titles but do not earn page credit", () => {
   assert.deepEqual(readingStats([newBook({ start: 120 })]), {
     pages: 0,
-    finished: 0,
+    finished: 1,
     days: 0,
   });
 });
