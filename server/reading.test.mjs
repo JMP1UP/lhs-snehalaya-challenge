@@ -60,12 +60,12 @@ test('roster merge adds joiners without removing existing people',async()=>{
  assert.ok(report.data.people.some(item=>item.email===newcomer.email));
  assert.ok(report.data.people.some(item=>item.email===later.email));
 });
-test('Veracross roster preview is admin-only and does not write the roster',async()=>{
- const preview={people:[{...person,id:undefined}],skipped:2,sourceRevision:'r1'};
+test('Veracross roster preview is admin-only, reports incomplete pupils and does not write the roster',async()=>{
+ const preview={people:[{...person,id:undefined}],skipped:2,skippedPupils:[{name:'Incomplete Pupil',missing:['year group']}],sourceRevision:'r1'};
  assert.equal((await fixture({veracrossRoster:async()=>preview}).call({action:'veracross-preview'},'admin')).code,403);
  const f=fixture({admin:true,veracrossRoster:async()=>preview});
  const result=await f.call({action:'veracross-preview'},'admin');
- assert.equal(result.code,200);assert.equal(result.data.people.length,1);assert.equal(result.data.skipped,2);
+ assert.equal(result.code,200);assert.equal(result.data.people.length,1);assert.equal(result.data.skipped,2);assert.deepEqual(result.data.skippedPupils,preview.skippedPupils);
  assert.equal((await f.call(null,'admin')).data.version,1);
 });
 test('verified rostered staff can read aggregate form figures but pupils cannot',async()=>{

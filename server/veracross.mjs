@@ -1,5 +1,4 @@
-const ACTIVE_ENROLMENT_STATUSES = new Set([5, 18]);
-const REQUIRED_SCOPES = ["students:list", "students:read", "staff_faculty:list"];
+const REQUIRED_SCOPES = ["students:list", "staff_faculty:list"];
 
 function required(name, environment) {
   const value = environment[name]?.trim();
@@ -21,8 +20,8 @@ function yearGroup(description) {
 }
 
 function formGroup(description) {
-  if (!description || description === "<None>") return "";
-  return description.split(/[/:]/, 1)[0].trim().slice(0, 40);
+  if (!description || description === "<None>") return "Unassigned";
+  return description.trim().slice(0, 40) || "Unassigned";
 }
 
 function schoolEmail(record) {
@@ -81,12 +80,16 @@ export async function fetchVeracrossRoster({environment=process.env,fetcher=fetc
     const houseLabels=labels(students.valueLists,"house_team");
     const people=[];
     let skipped=0;
+    const skippedPupils=[];
     for(const student of students.records){
-      if(!ACTIVE_ENROLMENT_STATUSES.has(Number(student.enrollment_status))){continue;}
       const email=schoolEmail(student),name=displayName(student),year=yearGroup(grades.get(String(student.grade_level)) || ""),form=formGroup(forms.get(String(student.homeroom)) || "");
       const rawHouse=houseLabels.get(String(student.house_team)) || "None";
       const house=["Beaumanor","Bradgate","Charnwood"].includes(rawHouse) ? rawHouse : "None";
-      if(!name||!email.endsWith("@leicesterhigh.co.uk")||!year||!form){skipped+=1;continue;}
+      const missing=[];
+      if(!name)missing.push("name");
+      if(!email.endsWith("@leicesterhigh.co.uk"))missing.push("school email");
+      if(!year)missing.push("year group");
+      if(missing.length){skipped+=1;skippedPupils.push({name:name||email||"Unnamed pupil",missing});continue;}
       people.push({name,email,kind:"student",house,yearGroup:year,formGroup:form,active:true});
     }
     for(const member of staff.records){
@@ -97,7 +100,7 @@ export async function fetchVeracrossRoster({environment=process.env,fetcher=fetc
     const unique=new Map();
     for(const person of people)unique.set(person.email,person);
     if(!unique.size)throw new Error("Veracross returned no usable school accounts.");
-    return {people:[...unique.values()],skipped,sourceRevision:[students.revision,staff.revision].filter(Boolean).join(" / ")};
+    return {people:[...unique.values()],skipped,skippedPupils,sourceRevision:[students.revision,staff.revision].filter(Boolean).join(" / ")};
   } catch(error) {
     if(error?.name === "AbortError")throw new Error("Veracross took too long to respond. Try again.",{cause:error});
     throw error;
