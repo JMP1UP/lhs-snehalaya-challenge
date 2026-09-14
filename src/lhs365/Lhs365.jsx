@@ -28,7 +28,7 @@ function Home() {
   },[]);
   const currentUpdate = community
     ? community.pages > 0
-      ? {title:`${community.pages.toLocaleString("en-GB")} pages stacked`,detail:`${formatHeight(community.pages * PAGE_HEIGHT_MM)} high · ${community.participants.toLocaleString("en-GB")} readers · ${community.finished.toLocaleString("en-GB")} books finished`}
+      ? {title:`${community.pages.toLocaleString("en-GB")} pages stacked`,detail:`${formatHeight(community.pages * PAGE_HEIGHT_MM)} high · ${community.participants.toLocaleString("en-GB")} ${community.participants===1?"reader":"readers"} · ${community.finished.toLocaleString("en-GB")} ${community.finished===1?"book":"books"} finished`}
       : {title:"The first page starts the tower",detail:"Sign in and help build it."}
     : {title:liveReading ? "Reading is under way" : "Preparing for launch",detail:liveReading ? "Sign in to add your pages." : "Preview only · No shared height is published yet."};
 

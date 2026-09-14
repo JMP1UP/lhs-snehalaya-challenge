@@ -6,7 +6,7 @@ Updated: 14 September 2026. Owner: John Partridge. Classification: controlled in
 
 - Public address: `https://365.25thirty.school` (Vercel fallback: `https://25thirty-365.vercel.app`).
 - Host: separate Vercel project `25thirty-365` (`prj_YXRk7mn2TC6sPgv5iPYx1pTEsyJq`).
-- Deployment: `dpl_3ZeeSuc9kfSjQTRkDRWifib4X8Q1`, `25thirty-365-45bvphigg-john-s-projects7.vercel.app`.
+- Deployment: `dpl_HwrSCCh4o6WZfoyMoviXjD92Hti8`, `25thirty-365-8aptu1uaq-john-s-projects7.vercel.app`.
 - Suite: `https://25thirty.school/#365`, with a working preview link.
 - Custom address: `365.25thirty.school`, live with HTTPS.
 
@@ -36,7 +36,7 @@ The record is DNS-only. Cloudflare authoritative DNS and `1.1.1.1` returned the 
 
 ## Rollback and future changes
 
-Immediate rollback: deployment `dpl_2x7ReWtzVmi43EQhQaGRnR53rt7B` (`25thirty-365-n6uzn82ny-john-s-projects7.vercel.app`); the original steps site remains the historical fallback. To withdraw this pilot, remove its suite link and unpublish/disable only the new Vercel project. Do not deploy the root Firebase configuration: `.firebaserc` still names the original steps project.
+Immediate rollback: deployment `dpl_3ZeeSuc9kfSjQTRkDRWifib4X8Q1` (`25thirty-365-45bvphigg-john-s-projects7.vercel.app`); the original steps site remains the historical fallback. To withdraw this pilot, remove its suite link and unpublish/disable only the new Vercel project. Do not deploy the root Firebase configuration: `.firebaserc` still names the original steps project.
 
 Future Vercel deployments use `vercel.json` to run reading lint, tests and build. Keep `.vercel` and `.env.local` ignored. The shared reading API and Microsoft login are enabled for a controlled school pilot. The roster is an auditing and grouping tool rather than a sign-in gate; see reading-admin.md for the remaining operational checks.
 
@@ -63,3 +63,5 @@ Final gate deployment `dpl_CKSa85mThnbRvTCpuAABJSbzepFK` adds the anonymous aggr
 ## Finished-book and family pilot — 14 September 2026
 
 Production deployment `dpl_3ZeeSuc9kfSjQTRkDRWifib4X8Q1` makes finished-book logging the default, keeps every registered title visible in the tower, and adds private shared family readers linked by a sibling code. Family activity contributes to the whole-community total without entering roster-error lists or exposing names publicly. The administrator now has a preview-first Veracross roster control; client ID, route and scopes are configured in Vercel, while the client secret remains to be supplied before the connector can be live-verified. All 48 tests, whole-project lint and production build passed locally and in Vercel. The live signed-out entrance rendered correctly; real signed-in family and roster-provider checks remain operational actions.
+
+Production deployment `dpl_HwrSCCh4o6WZfoyMoviXjD92Hti8` adds one consistent “Where we are now” hierarchy: personal, optional family and whole-school totals after sign-in, plus the same whole-school language on the homepage. The live homepage reconciled to 607 pages, 3 cm, one participating reader and one finished book. All 49 tests, lint and production build passed locally and in Vercel.
