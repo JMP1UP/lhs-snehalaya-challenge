@@ -6,7 +6,7 @@ Updated: 14 September 2026. Owner: John Partridge. Classification: controlled in
 
 - Public address: `https://365.25thirty.school` (Vercel fallback: `https://25thirty-365.vercel.app`).
 - Host: separate Vercel project `25thirty-365` (`prj_YXRk7mn2TC6sPgv5iPYx1pTEsyJq`).
-- Deployment: `dpl_HwrSCCh4o6WZfoyMoviXjD92Hti8`, `25thirty-365-8aptu1uaq-john-s-projects7.vercel.app`.
+- Release source: production branch `master`; app commit `86df97a`. Vercel publishes the current build at the custom address above.
 - Suite: `https://25thirty.school/#365`, with a working preview link.
 - Custom address: `365.25thirty.school`, live with HTTPS.
 
