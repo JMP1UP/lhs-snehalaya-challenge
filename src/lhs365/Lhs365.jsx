@@ -61,7 +61,7 @@ function Home() {
           <h2 id="reading-feature-title">Read. Stack.<br /><em>Reach higher.</em><br />Together.</h2>
           <p>Every page adds to one whole-school book tower.</p>
           <div className="community-update" aria-label="Current project update">
-            <span>COMMUNITY TOWER UPDATE</span>
+            <span>WHERE WE ARE NOW · WHOLE SCHOOL</span>
             <strong>{currentUpdate.title}</strong>
             <p>{currentUpdate.detail}</p>
           </div>

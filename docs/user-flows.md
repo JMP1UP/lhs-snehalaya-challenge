@@ -7,6 +7,7 @@
 1. Open LHS 365 and choose the featured reading challenge.
 2. Read the session-preview notice; use fictional data.
 3. Log a finished book through catalogue search or manual entry; confirm its page count.
+4. See the result at three levels: personal, family where linked, and the whole-school tower.
 4. Enter the page reached. Only the difference is contributed.
 5. Review personal page totals, completed books and reading-day milestones.
 6. Revisit the original steps challenge through the home collection.

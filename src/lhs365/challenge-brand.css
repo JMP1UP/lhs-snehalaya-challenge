@@ -138,6 +138,14 @@
 .reading-theme .book-search-panel+.manual-book label {margin-top:9px;}
 .reading-theme .book-search-panel+.manual-book>.button {margin-top:12px;}
 .reading-theme .reading-workspace { grid-template-columns: minmax(0,.82fr) minmax(0,1.18fr); align-items: start; gap: 26px; }
+.reading-theme .progress-overview { margin: 14px 0 18px; }
+.reading-theme .progress-overview > .eyebrow { display: block; margin-bottom: 7px; }
+.reading-theme .progress-levels { display: grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap: 8px; }
+.reading-theme .progress-levels article { display: grid; min-height: 112px; align-content: center; padding: 14px 16px; border: 3px solid #071b45; background: #fffdf7; box-shadow: 4px 4px 0 #071b45; }
+.reading-theme .progress-levels article:nth-child(2):not(.school-progress) { background: #52bddf; }
+.reading-theme .progress-levels .school-progress { background: #ffd447; }
+.reading-theme .progress-levels span, .reading-theme .progress-levels small { font: 800 12px/1.25 Inter, 'Segoe UI', sans-serif; text-transform: uppercase; letter-spacing: .07em; }
+.reading-theme .progress-levels strong { margin: 6px 0 4px; color: #071b45; font: 900 clamp(22px,3vw,38px)/.95 Inter, 'Segoe UI', sans-serif; letter-spacing: -.055em; }
 .reading-theme .family-reading { margin: 14px 0 24px; padding: 14px 16px; border: 3px solid #071b45; background: #fffdf7; box-shadow: 5px 5px 0 #071b45; }
 .reading-theme .reader-switch { display: flex; flex-wrap: wrap; gap: 8px; }
 .reading-theme .reader-switch button { min-height: 40px; padding: 7px 14px; border: 2px solid #071b45; background: #fffdf7; color: #071b45; font: 800 14px/1 Inter, 'Segoe UI', sans-serif; cursor: pointer; }
@@ -188,6 +196,8 @@
 .reading-theme .reading-stats span { color: #071b45; font-weight: 750; }
 .nav-challenge-count { display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; margin-left: 3px; padding: 0 4px; border-radius: 50%; background: #1cffe3; color: #00236c; font-size: 10px; }
 @media(max-width:600px) {
+  .reading-theme .progress-levels { grid-template-columns: 1fr; }
+  .reading-theme .progress-levels article { min-height: 88px; }
   .reading-theme .tower-mission { padding: 18px; }
   .reading-theme .add-book-primary { padding: 12px 17px; font-size: 14px; }
   .reading-theme .tower-art { height: 215px; }

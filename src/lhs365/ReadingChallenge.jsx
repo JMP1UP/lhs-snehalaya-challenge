@@ -11,6 +11,7 @@ import {
 } from "./reading.mjs";
 import BookTower from "./BookTower";
 import { searchBooks } from "./catalogue.mjs";
+import { formatHeight, PAGE_HEIGHT_MM } from "./tower.mjs";
 
 function initialShelf() {
   try {
@@ -103,7 +104,7 @@ function BookCard({ book, onUpdate }) {
   );
 }
 
-export default function ReadingChallenge({ repository }) {
+export default function ReadingChallenge({ repository, community=null }) {
   const [initial] = useState(() => repository ? {books:repository.books,error:""} : initialShelf());
   const [saving,setSaving] = useState(false);
   const addRequest = useRef(null);
@@ -131,6 +132,7 @@ export default function ReadingChallenge({ repository }) {
   const visibleBooks = repository ? books.filter(book=>reader==="me"?!book.familyReaderId:book.familyReaderId===reader) : books;
   const stats = readingStats(visibleBooks);
   const familyStats = readingStats(books.filter(book=>book.familyReaderId));
+  const personalStats = readingStats(books.filter(book=>!book.familyReaderId));
   const activeBooks = visibleBooks.filter((book) => book.current < book.total);
   const readerName=reader==="me"?"You":family?.readers?.find(item=>item.id===reader)?.name||"Family";
   const finishedSummary = useRef(null);
@@ -197,13 +199,21 @@ export default function ReadingChallenge({ repository }) {
         <h1>Read. Stack. <em>Reach higher.</em></h1>
       </section>
       {!repository && <div className="preview-note">Preview · Fictional data stays in this tab</div>}
+      {repository&&<section className="progress-overview" aria-labelledby="progress-overview-title">
+        <span className="eyebrow" id="progress-overview-title">WHERE WE ARE NOW</span>
+        <div className="progress-levels">
+          <article><span>You</span><strong>{personalStats.pages.toLocaleString()} pages</strong><small>{personalStats.finished.toLocaleString()} books</small></article>
+          {family&&<article><span>Your family</span><strong>{familyStats.pages.toLocaleString()} pages</strong><small>{familyStats.finished.toLocaleString()} books</small></article>}
+          <article className="school-progress"><span>Whole school</span>{community?<><strong>{formatHeight(community.pages*PAGE_HEIGHT_MM)} high</strong><small>{community.pages.toLocaleString()} pages · {community.finished.toLocaleString()} books</small></>:<><strong>Building…</strong><small>Community tower</small></>}</article>
+        </div>
+      </section>}
       {repository&&<section className="family-reading" aria-label="Choose reader">
         <div className="reader-switch">
           <button type="button" aria-pressed={reader==="me"} onClick={()=>setReader("me")}>Me</button>
           {family?.readers?.map(person=><button type="button" key={person.id} aria-pressed={reader===person.id} onClick={()=>setReader(person.id)}>{person.name}</button>)}
           <button type="button" className="family-add" onClick={()=>{setFamilyOpen(value=>!value);setError("");}}>+ {family?"Family member":"Family"}</button>
         </div>
-        {family&&<p><strong>{familyStats.finished.toLocaleString()} family books</strong> · {familyStats.pages.toLocaleString()} pages <span>Sibling code: <code>{family.joinCode}</code></span></p>}
+        {family&&<p><span>Sibling code: <code>{family.joinCode}</code></span></p>}
         {familyOpen&&!family&&<div className="family-setup"><button type="button" className="button primary" disabled={saving} onClick={async()=>{setSaving(true);setError("");try{applyFamily(await repository.createFamily());}catch(err){setError(err.message);}finally{setSaving(false);}}}>Create our family</button><form onSubmit={async event=>{event.preventDefault();setSaving(true);setError("");try{applyFamily(await repository.joinFamily(familyInput));}catch(err){setError(err.message);}finally{setSaving(false);}}}><label htmlFor="family-code">Join a sibling’s family</label><div className="input-action"><input id="family-code" value={familyInput} maxLength="12" required onChange={event=>setFamilyInput(event.target.value)} placeholder="Family code"/><button className="button secondary" disabled={saving}>Join</button></div></form>{error&&<p role="alert">{error}</p>}</div>}
         {familyOpen&&family&&<form className="family-setup" onSubmit={async event=>{event.preventDefault();setSaving(true);setError("");try{const next=await repository.addFamilyReader(familyInput);applyFamily(next);setReader(next.readers.at(-1).id);}catch(err){setError(err.message);}finally{setSaving(false);}}}><label htmlFor="family-name">Family member’s name</label><div className="input-action"><input id="family-name" value={familyInput} maxLength="50" required onChange={event=>setFamilyInput(event.target.value)} placeholder="e.g. Mum"/><button className="button primary" disabled={saving}>Add</button></div>{error&&<p role="alert">{error}</p>}</form>}
       </section>}
@@ -332,7 +342,7 @@ export default function ReadingChallenge({ repository }) {
                     const fingerprint = JSON.stringify(finishedDraft);
                     if (addRequest.current?.fingerprint !== fingerprint) addRequest.current = {fingerprint,id:crypto.randomUUID()};
                     const book = repository
-                      ? await repository.add(finishedDraft,addRequest.current.id,reader==="me"?null:reader)
+                      ? await repository.add(finishedDraft,addRequest.current.id,reader==="me"?null:reader,stats.pages===0)
                       : finishBook(base,localDate());
                     addRequest.current = null;
                     save(

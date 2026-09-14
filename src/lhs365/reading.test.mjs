@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
+  advanceCommunity,
   createBook,
   persistBooks,
   STORAGE_KEY,
@@ -35,6 +36,13 @@ test("finishing counts remaining pages once and rejects a repeated submission", 
   );
   assert.deepEqual(readingStats([book]), { pages: 78, finished: 1, days: 2 });
   assert.throws(() => updateBook(book, 120, "2026-09-10"));
+});
+
+test("a new reader updates the live community snapshot immediately", () => {
+  const book=updateBook(createBook({title:"Finished",author:"",total:240,start:0},"community-book"),240,"2026-09-14");
+  assert.deepEqual(advanceCommunity({pages:1000,participants:4,finished:3},book,true),{pages:1240,participants:5,finished:4});
+  assert.deepEqual(advanceCommunity({pages:1000,participants:4,finished:3},book,false),{pages:1240,participants:4,finished:4});
+  assert.equal(advanceCommunity(null,book,true),null);
 });
 
 test("multiple books on the same date count as one reading day", () => {

@@ -1,5 +1,11 @@
 # Changelog — LHS Snehalaya Challenge
 
+## Where we are now — 14 September 2026
+
+- Made the homepage community update explicitly read “Where we are now · Whole school”.
+- Added the same live hierarchy after sign-in: personal pages/books, optional family pages/books, then the whole-school tower height, pages and completed books.
+- Applied successful book logs to the displayed community snapshot immediately, while the privacy-safe shared endpoint remains the source on load.
+
 ## Finished-book, family and Veracross flow — 14 September 2026
 
 - Simplified logging so a newly added book is finished by default and its full page count is credited immediately; legacy unfinished records remain updateable.

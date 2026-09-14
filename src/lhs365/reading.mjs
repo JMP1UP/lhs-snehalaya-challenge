@@ -71,6 +71,16 @@ export function readingStats(books) {
   };
 }
 
+export function advanceCommunity(summary, book, firstContribution = false) {
+  if (!summary) return summary;
+  const pages = book.current - book.start;
+  return {
+    pages: summary.pages + pages,
+    participants: summary.participants + (firstContribution && pages > 0 ? 1 : 0),
+    finished: summary.finished + (book.current === book.total && pages > 0 ? 1 : 0),
+  };
+}
+
 export function restoreBooks(raw) {
   if (!raw) return [];
   const books = JSON.parse(raw);
