@@ -2,6 +2,8 @@
 
 ## Where we are now — 14 September 2026
 
+- Added optional unfinished-book logging with estimated milestones or exact page tracking; finished books remain the default. Subsequent personal and shared-family updates credit only additional pages.
+
 - Corrected the Veracross roster mapping to include every record returned by the current-students endpoint, preserve complete tutor-group labels and retain blank tutor assignments under Unassigned.
 - Made the homepage community update explicitly read “Where we are now · Whole school”.
 - Added the same live hierarchy after sign-in: personal pages/books, optional family pages/books, then the whole-school tower height, pages and completed books.

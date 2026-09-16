@@ -871,6 +871,23 @@
   display: block;
   margin-top: 6px;
 }
+
+.lhs365 .manual-book select, .lhs365 .progress-form select {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  margin: 6px 0 12px;
+  padding: 10px;
+  border: 2px solid #071b45;
+  border-radius: 3px;
+  background: white;
+  color: #071b45;
+  font: inherit;
+}
+.lhs365 .manual-book select:focus-visible, .lhs365 .progress-form select:focus-visible {
+  outline: 3px solid #ffd447;
+  outline-offset: 2px;
+}
 .form-columns {
   display: grid;
   grid-template-columns: 1fr 1fr;

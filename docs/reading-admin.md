@@ -4,6 +4,8 @@ Owner: John Partridge. 10 September 2026.
 
 ## Current status
 
+Books default to Finished it. Still reading supports approximate 10%, 25%, 50% and 75% milestones or exact pages. Estimates are labelled on book cards. Later personal and shared-family updates credit only additional pages.
+
 The public role preview at `#/admin` uses 40 fictional readers. Its teacher view contains aggregate school/form-group figures only; its administrator view demonstrates rankings, participation checks, filters, CSV export and additive roster imports. No live pupil data is bundled or imported. The shared reading API and Microsoft sign-in flow are implemented but default OFF. This is an external design-preview release, not a live pupil rollout.
 
 Admin access is intended for j.partridge@leicesterhigh.co.uk and a.mcmurray@leicesterhigh.co.uk, stored only in the server environment allowlist. A complete roster has not been supplied. Non-contributors cannot be inferred from login history.

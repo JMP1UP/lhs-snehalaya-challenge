@@ -60,6 +60,15 @@ export function finishBook(book, date) {
   return updateBook(book, book.total, date);
 }
 
+export function progressPage(total, choice, page = "") {
+  const pages = wholeNumber(total, 1);
+  if (choice === "all") return pages;
+  if (choice === "exact") return wholeNumber(page, 1, pages);
+  if (!["10", "25", "50", "75"].includes(choice)) throw new Error("Choose your reading progress.");
+  if (pages < 2) throw new Error("Use an exact page number for this book.");
+  return Math.max(1, Math.min(pages - 1, Math.round(pages * Number(choice) / 100)));
+}
+
 export function readingStats(books) {
   return {
     pages: books.reduce((sum, book) => sum + book.current - book.start, 0),

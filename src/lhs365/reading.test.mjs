@@ -2,6 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   advanceCommunity,
+  progressPage,
   createBook,
   persistBooks,
   STORAGE_KEY,
@@ -10,6 +11,19 @@ import {
   updateBook,
   wholeNumber,
 } from "./reading.mjs";
+
+test("quick progress estimates round to valid pages and exact pages remain available",()=>{
+  assert.equal(progressPage(321,"all"),321);
+  assert.equal(progressPage(321,"10"),32);
+  assert.equal(progressPage(321,"25"),80);
+  assert.equal(progressPage(321,"50"),161);
+  assert.equal(progressPage(321,"75"),241);
+  assert.equal(progressPage(321,"exact","123"),123);
+  assert.equal(progressPage(2,"75"),1);
+  assert.throws(()=>progressPage(1,"50"));
+  assert.throws(()=>progressPage(321,"exact","322"));
+  assert.throws(()=>progressPage(321,"unknown"));
+});
 
 const newBook = (overrides = {}) =>
   createBook(

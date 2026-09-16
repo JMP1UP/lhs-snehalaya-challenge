@@ -132,7 +132,7 @@ function Report({data,onRefresh,onSave,onVeracross,demo=false}) {
       <label htmlFor="reader-search">Find a reader</label><input id="reader-search" value={search} onChange={e=>setSearch(e.target.value)} type="search"/>
       {notStarted.length ? <div className="admin-table-scroll"><table><thead><tr><th scope="col">Reader</th><th scope="col">Role</th><th scope="col">House</th><th scope="col">Year group</th><th scope="col">Form group</th></tr></thead><tbody>{notStarted.map(person=><tr key={person.id}><th scope="row">{person.name}</th><td>{person.kind}</td><td>{person.house}</td><td>{person.yearGroup}</td><td>{person.formGroup||"—"}</td></tr>)}</tbody></table></div> : <p>{search ? "No matching readers." : "Everyone in this selection has contributed. Brilliant!"}</p>}
     </section>
-    <details className="admin-footnote"><summary>How totals work</summary><p>Logging a finished book credits its full page count. Older unfinished records count only new pages. Rankings use active roster members and current filters; ties are alphabetical.</p></details>
+    <details className="admin-footnote"><summary>How totals work</summary><p>Finished books credit their full page count. Unfinished books credit pages reached, including labelled estimates; later updates count only new pages. Rankings use active roster members and current filters; ties are alphabetical.</p></details>
     </>}
   </div>;
 }

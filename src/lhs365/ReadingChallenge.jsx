@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import {
   createBook,
-  finishBook,
   localDate,
   persistBooks,
+  progressPage,
   readingStats,
   restoreBooks,
   STORAGE_KEY,
@@ -30,6 +30,7 @@ function initialShelf() {
 
 function BookCard({ book, onUpdate }) {
   const [page, setPage] = useState("");
+  const [choice,setChoice] = useState("exact");
   const [saving,setSaving] = useState(false);
   const [error, setError] = useState("");
   const finished = book.current === book.total;
@@ -51,7 +52,7 @@ function BookCard({ book, onUpdate }) {
         />
         <div className="book-meta">
           <span>
-            Page {book.current} of {book.total}
+            {book.estimated ? "Approx. page" : "Page"} {book.current} of {book.total}
           </span>
           <span>{book.current - book.start} pages contributed</span>
         </div>
@@ -63,17 +64,19 @@ function BookCard({ book, onUpdate }) {
               try {
                 if (saving) return;
                 setSaving(true);
-                await onUpdate(page);
+                await onUpdate(progressPage(book.total,choice,page),!["all","exact"].includes(choice));
                 setPage("");
+                setChoice("exact");
                 setError("");
               } catch (err) {
                 setError(err.message);
               } finally { setSaving(false); }
             }}
           >
-            <label htmlFor={`page-${book.id}`}>I’ve reached page</label>
+            <ProgressChoice id={`progress-${book.id}`} choice={choice} onChange={setChoice} total={book.total} current={book.current}/>
+            {choice === "exact" && <label htmlFor={`page-${book.id}`}>I’ve reached page</label>}
             <div className="input-action">
-              <input
+              {choice === "exact" && <input
                 id={`page-${book.id}`}
                 disabled={saving}
                 type="number"
@@ -84,7 +87,7 @@ function BookCard({ book, onUpdate }) {
                 value={page}
                 onChange={(event) => setPage(event.target.value)}
                 aria-describedby={error ? `error-${book.id}` : undefined}
-              />
+              />}
               <button className="button primary" type="submit" disabled={saving}>
                 Save pages
               </button>
@@ -102,6 +105,14 @@ function BookCard({ book, onUpdate }) {
       </div>
     </article>
   );
+}
+
+function ProgressChoice({id,choice,onChange,total,current=0,includeFinished=true}) {
+  return <label htmlFor={id}>Reading progress<select id={id} value={choice} onChange={event=>onChange(event.target.value)}>
+    {includeFinished && <option value="all">Finished it</option>}
+    {[['10','Just started — about 10%'],['25','About a quarter — 25%'],['50','Halfway — 50%'],['75','Nearly finished — about 75%']].map(([value,label])=><option key={value} value={value} disabled={Number(total)>0 && (Number(total)<2 || Math.max(1,Math.min(Number(total)-1,Math.round(Number(total)*Number(value)/100)))<=current)}>{label}</option>)}
+    <option value="exact">Enter page number</option>
+  </select></label>;
 }
 
 export default function ReadingChallenge({ repository, community=null }) {
@@ -126,6 +137,9 @@ export default function ReadingChallenge({ repository, community=null }) {
     total: "",
     start: "0",
   });
+  const [stillReading,setStillReading]=useState(false);
+  const [progressChoice,setProgressChoice]=useState("50");
+  const [initialPage,setInitialPage]=useState("");
   const [error, setError] = useState("");
   const searchId = useRef(0);
   const addButton = useRef(null);
@@ -337,20 +351,23 @@ export default function ReadingChallenge({ repository, community=null }) {
                   event.preventDefault();
                   try {
                     if (saving) return;
+                    const page=progressPage(draft.total,stillReading?progressChoice:"all",initialPage);
+                    const estimated=stillReading && !["all","exact"].includes(progressChoice);
                     const base = createBook({...draft,start:"0"});
                     setSaving(true);
-                    const finishedDraft = {...draft,start:"0"};
+                    const finishedDraft = {...draft,start:"0",completed:page===base.total,page,estimated};
                     const fingerprint = JSON.stringify(finishedDraft);
                     if (addRequest.current?.fingerprint !== fingerprint) addRequest.current = {fingerprint,id:crypto.randomUUID()};
                     const book = repository
                       ? await repository.add(finishedDraft,addRequest.current.id,reader==="me"?null:reader,stats.pages===0)
-                      : finishBook(base,localDate());
+                      : {...updateBook(base,page,localDate()),estimated};
                     addRequest.current = null;
                     save(
                       [...currentBooks.current.filter(item => item.id !== book.id), book],
                       `Logged ${book.title}.`,
                     );
                     setDraft({ title: "", author: "", total: "", start: "0" });
+                    setStillReading(false);setProgressChoice("50");setInitialPage("");
                     setQuery("");
                     setResults([]);
                     setSearchMessage("");
@@ -399,12 +416,14 @@ export default function ReadingChallenge({ repository, community=null }) {
                     }
                   />
                 </label>
+                <label htmlFor="book-status">Book status<select id="book-status" value={stillReading?"reading":"finished"} onChange={event=>setStillReading(event.target.value==="reading")}><option value="finished">Finished it</option><option value="reading">Still reading</option></select></label>
+                {stillReading && <><ProgressChoice id="book-progress" choice={progressChoice} onChange={setProgressChoice} total={draft.total} includeFinished={false}/>{progressChoice==="exact" && <label htmlFor="book-page">I’ve reached page<input id="book-page" type="number" min="1" max={draft.total||20000} step="1" required value={initialPage} onChange={event=>setInitialPage(event.target.value)}/></label>}{!["all","exact"].includes(progressChoice)&&<small>Estimated pages</small>}</>}
                 {error && (
                   <p className="form-error" role="alert">
                     {error}
                   </p>
                 )}
-                <button className="button primary" disabled={saving}>{saving ? "Saving…" : "Log finished book"}</button>
+                <button className="button primary" disabled={saving}>{saving ? "Saving…" : stillReading ? "Log reading" : "Log finished book"}</button>
               </form>
               </fieldset>
             </section>
@@ -420,8 +439,8 @@ export default function ReadingChallenge({ repository, community=null }) {
               <BookCard
                 key={book.id}
                 book={book}
-                onUpdate={async (page) => {
-                  const next = repository ? await repository.update(book.id,page) : updateBook(book,page,localDate());
+                onUpdate={async (page,estimated) => {
+                  const next = repository ? await repository.update(book.id,page,estimated) : {...updateBook(book,page,localDate()),estimated:page===book.total?false:estimated};
                   const completed = next.current === next.total;
                   save(
                     currentBooks.current.map((item) => (item.id === next.id ? next : item)),

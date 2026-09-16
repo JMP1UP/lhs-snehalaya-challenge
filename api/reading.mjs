@@ -127,17 +127,19 @@ export function createHandler(getServices = services) { return async function ha
     if (body.action === "add") {
       if (typeof body.title !== "string" || typeof body.author !== "string" || typeof body.id !== "string" || !/^[a-f0-9-]{36}$/.test(body.id)) fail("Enter valid book details.");
       const base = createBook({title:body.title,author:body.author,total:body.total,start:body.completed === false ? (body.start ?? "0") : "0"}, body.id);
-      const book = body.completed === false ? base : finishBook(base,londonDate());
+      const initial=body.completed === false ? (body.page===undefined?base:updateBook(base,body.page,londonDate())) : finishBook(base,londonDate());
+      const book={...initial,estimated:initial.current<initial.total && body.estimated===true};
       const bookRef = campaign.collection("books").doc(book.id);
       const memberRef = campaign.collection("members").doc(identity.key);
       let familyOwner=null;
       if(body.familyReaderId!==undefined){if(typeof body.familyReaderId!=="string")fail("Choose a valid family reader.");const household=await findHousehold(campaign,identity.key),reader=household?.readers?.find(item=>item.id===body.familyReaderId);if(!household||!reader)fail("Family reader not found.",404);familyOwner={ownerKey:`family:${household.id}:${reader.id}`,householdId:household.id,familyReaderId:reader.id};}
-      const storedBook={...book,ownerKey:familyOwner?.ownerKey||identity.key,...(familyOwner||{})};
+      const storedBook={...book,initialPage:book.current,initialEstimated:book.estimated,ownerKey:familyOwner?.ownerKey||identity.key,...(familyOwner||{})};
       const saved = await db.runTransaction(async tx => {
         const existing = await tx.get(bookRef);
         if (existing.exists) {
           const prior = existing.data();
           if (prior.ownerKey !== (familyOwner?.ownerKey||identity.key) || ["title","author","total","start"].some(key => prior[key] !== book[key])) fail("This book request has changed. Refresh your bookshelf.",409);
+          if(prior.initialPage!==undefined && (prior.initialPage!==book.current || prior.initialEstimated!==book.estimated))fail("This book request has changed. Refresh your bookshelf.",409);
           return prior;
         }
         const member = await tx.get(memberRef);
@@ -154,10 +156,12 @@ export function createHandler(getServices = services) { return async function ha
       const ref = campaign.collection("books").doc(body.id);
       const updated = await db.runTransaction(async tx => {
         const doc = await tx.get(ref);
-        if (!doc.exists || doc.data().ownerKey !== identity.key) fail("Book not found.",404);
+        if (!doc.exists) fail("Book not found.",404);
+        if(doc.data().ownerKey !== identity.key){const household=await findHousehold(campaign,identity.key);if(!household || doc.data().householdId!==household.id || !household.readers.some(reader=>reader.id===doc.data().familyReaderId))fail("Book not found.",404);}
         const book = doc.data(); restoreBooks(JSON.stringify([book]));
         if (String(body.page) === String(book.current)) return book;
-        const next = updateBook(book, body.page, londonDate());
+        const updatedBook = updateBook(book, body.page, londonDate());
+        const next={...updatedBook,estimated:updatedBook.current<updatedBook.total && body.estimated===true};
         tx.set(ref,next); return next;
       });
       return res.status(200).json(updated);

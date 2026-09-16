@@ -105,6 +105,17 @@ test('new books are finished by default and credit the whole book',async()=>{
  const summary=await f.call(null,'summary',{});
  assert.deepEqual(summary.data,{pages:321,participants:1,finished:1});
 });
+test('partial books credit initial reading and subsequent deltas exactly once',async()=>{
+ const f=fixture();const draft={action:'add',id:'ffffffff-ffff-ffff-ffff-ffffffffffff',title:'Still reading',author:'',total:200,completed:false,page:50,estimated:true};
+ const added=await f.call(draft);assert.equal(added.code,201);assert.equal(added.data.current,50);assert.equal(added.data.estimated,true);
+ assert.equal((await f.call(draft)).data.logs.length,1);
+ assert.equal((await f.call({...draft,page:100})).code,409);
+ const halfway=await f.call({action:'progress',id:draft.id,page:100,estimated:true});assert.equal(halfway.data.logs[1].pages,50);
+ assert.equal((await f.call({action:'progress',id:draft.id,page:100,estimated:true})).data.logs.length,2);
+ const finished=await f.call({action:'progress',id:draft.id,page:200});assert.equal(finished.data.estimated,false);assert.equal(finished.data.logs[2].pages,100);
+ assert.deepEqual((await f.call(null,'summary',{})).data,{pages:200,participants:1,finished:1});
+ assert.equal((await f.call({...draft,id:'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',page:201})).code,400);
+});
 test('siblings share one private family bookshelf and can log for the same reader',async()=>{
  const first=fixture();
  const created=await first.call({action:'family-create'});assert.equal(created.code,201);assert.match(created.data.joinCode,/^[A-F0-9]{10}$/);
@@ -116,4 +127,8 @@ test('siblings share one private family bookshelf and can log for the same reade
  const sibling=fixture({identity:siblingIdentity,storedRecords:first.records});
  const joined=await sibling.call({action:'family-join',code:created.data.joinCode});assert.equal(joined.code,200);assert.equal(joined.data.readers[0].name,'Mum');assert.equal(joined.data.books[0].title,'Shared story');
  const shelf=await sibling.call();assert.equal(shelf.data.family.books.length,1);assert.deepEqual(shelf.data.books,[]);
+ const partial=await first.call({action:'add',id:'11111111-1111-1111-1111-111111111111',title:'Family in progress',author:'',total:100,completed:false,page:25,estimated:true,familyReaderId:reader.id});assert.equal(partial.code,201);
+ assert.equal((await sibling.call({action:'progress',id:partial.data.id,page:50,estimated:true})).data.current,50);
+ const outsider=fixture({identity:{...token,uid:'outsider',email:'outsider@leicesterhigh.co.uk'},storedRecords:first.records});assert.equal((await outsider.call({action:'progress',id:partial.data.id,page:100})).code,404);
+ assert.equal((await sibling.call({action:'progress',id:partial.data.id,page:100})).data.logs.reduce((sum,log)=>sum+log.pages,0),100);
 });
