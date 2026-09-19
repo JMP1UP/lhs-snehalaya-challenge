@@ -10,7 +10,7 @@ function fixture({admin=false,identity=token,revoked=false,rosterPerson=person,v
  let bookReads=0;
  const ref=path=>({path,collection:name=>ref(`${path}/${name}`),doc:name=>ref(`${path}/${name}`),get:async()=>({exists:records.has(path),data:()=>structuredClone(records.get(path))}),limit:()=>query(path),where:(field,op,value)=>query(path,field,op,value)});
  const query=(path,field,op,value)=>({limit(){return this;},async get(){bookReads++;const docs=[...records].filter(([key,data])=>key.startsWith(path+'/') && (!field || (op==='array-contains'?data[field]?.includes(value):data[field]===value))).map(([key,data])=>({id:key.split('/').at(-1),data:()=>structuredClone(data)}));return {docs,size:docs.length};}});
- const db={collection:name=>ref(name),runTransaction:async fn=>{const writes=[];const result=await fn({get:r=>r.get(),set:(r,v)=>writes.push([r.path,v]),create:(r,v)=>{assert.ok(!records.has(r.path));writes.push([r.path,v]);}});for(const [key,value]of writes)records.set(key,structuredClone(value));return result;}};
+ const db={collection:name=>ref(name),runTransaction:async fn=>{const writes=[],deletes=[];const result=await fn({get:r=>r.get(),set:(r,v)=>writes.push([r.path,v]),create:(r,v)=>{assert.ok(!records.has(r.path));writes.push([r.path,v]);},delete:r=>deletes.push(r.path)});for(const key of deletes)records.delete(key);for(const [key,value]of writes)records.set(key,structuredClone(value));return result;}};
  const handler=createHandler(()=>({db,admins:admin?[identity.email.toLowerCase()]:[],veracrossRoster,auth:{verifyIdToken:async(raw,check)=>{assert.equal(check,true);if(revoked)throw new Error('revoked');return identity;}}}));
  async function call(body,resource='me',headers={authorization:'Bearer fixture','content-type':'application/json'}){const res={headers:{},setHeader(k,v){this.headers[k]=v;},status(code){this.code=code;return this;},json(data){this.data=data;return this;}};await handler({method:body?'POST':'GET',headers,query:{resource},body},res);return res;}
  return {call,records,reads:()=>bookReads};
@@ -105,6 +105,11 @@ test('new books are finished by default and credit the whole book',async()=>{
  const summary=await f.call(null,'summary',{});
  assert.deepEqual(summary.data,{pages:321,participants:1,finished:1});
 });
+test('owners can remove books, totals reverse and other accounts cannot remove them',async()=>{
+ const f=fixture();const id='22222222-2222-2222-2222-222222222222';await f.call({action:'add',id,title:'Remove me',author:'',total:120});
+ const outsider=fixture({identity:{...token,uid:'other',email:'other@leicesterhigh.co.uk'},storedRecords:f.records});assert.equal((await outsider.call({action:'remove',id})).code,404);
+ const removed=await f.call({action:'remove',id});assert.equal(removed.code,200);assert.equal(removed.data.title,'Remove me');assert.deepEqual((await f.call(null,'summary',{})).data,{pages:0,participants:0,finished:0});assert.equal((await f.call({action:'remove',id})).code,404);
+});
 test('partial books credit initial reading and subsequent deltas exactly once',async()=>{
  const f=fixture();const draft={action:'add',id:'ffffffff-ffff-ffff-ffff-ffffffffffff',title:'Still reading',author:'',total:200,completed:false,page:50,estimated:true};
  const added=await f.call(draft);assert.equal(added.code,201);assert.equal(added.data.current,50);assert.equal(added.data.estimated,true);
@@ -131,4 +136,5 @@ test('siblings share one private family bookshelf and can log for the same reade
  assert.equal((await sibling.call({action:'progress',id:partial.data.id,page:50,estimated:true})).data.current,50);
  const outsider=fixture({identity:{...token,uid:'outsider',email:'outsider@leicesterhigh.co.uk'},storedRecords:first.records});assert.equal((await outsider.call({action:'progress',id:partial.data.id,page:100})).code,404);
  assert.equal((await sibling.call({action:'progress',id:partial.data.id,page:100})).data.logs.reduce((sum,log)=>sum+log.pages,0),100);
+ assert.equal((await sibling.call({action:'remove',id:partial.data.id})).code,200);assert.equal((await first.call()).data.family.books.some(book=>book.id===partial.data.id),false);
 });

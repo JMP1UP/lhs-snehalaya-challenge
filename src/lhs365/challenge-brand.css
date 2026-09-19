@@ -151,12 +151,17 @@
 .reading-theme .reader-switch button { min-height: 40px; padding: 7px 14px; border: 2px solid #071b45; background: #fffdf7; color: #071b45; font: 800 14px/1 Inter, 'Segoe UI', sans-serif; cursor: pointer; }
 .reading-theme .reader-switch button[aria-pressed="true"] { background: #ffd447; box-shadow: 3px 3px 0 #071b45; }
 .reading-theme .reader-switch .family-add { margin-left: auto; background: #52bddf; }
+.reading-theme .reader-switch .family-invite { background: #ffd447; }
 .reading-theme .family-reading > p { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 12px 0 0; }
 .reading-theme .family-reading code { padding: 2px 6px; background: #071b45; color: #fff; font-weight: 900; letter-spacing: .12em; }
 .reading-theme .family-setup { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; margin-top: 14px; padding-top: 14px; border-top: 2px dotted #071b4555; }
 .reading-theme .family-setup form, .reading-theme form.family-setup { flex: 1 1 300px; }
 .reading-theme .family-setup label { display: block; margin-bottom: 5px; font-weight: 800; }
 .reading-theme .family-setup [role="alert"] { flex-basis: 100%; margin: 0; }
+.reading-theme .family-choice > article, .reading-theme .family-choice > form { flex: 1 1 260px; min-height: 170px; padding: 16px; border: 2px solid #071b45; background: white; }
+.reading-theme .family-choice h3, .reading-theme .family-invite-panel h3 { margin: 0 0 6px; }
+.reading-theme .family-choice p, .reading-theme .family-invite-panel p { margin: 5px 0 12px; }
+.reading-theme .family-invite-panel { justify-content: space-between; }
 .reading-theme .reading-layout { padding: 16px 0 12px; }
 .reading-theme .reading-layout > section { padding: 22px; border: 3px solid #071b45; border-radius: 11px; background: white; box-shadow: 7px 7px 0 #071b45; }
 .reading-theme .reading-workspace-empty .reading-layout > section { position: relative; overflow: hidden; min-height: 190px; background: #fffdf7; color: #071b45; }
@@ -168,6 +173,9 @@
 .reading-theme .landmark-illustration { position:absolute;right:24px;bottom:19px;z-index:1;width:auto;height:82%;overflow:visible;filter:drop-shadow(6px 6px 0 #38c6e8); }
 .reading-theme .landmark-illustration.giraffe { right:16px;height:88%;filter:drop-shadow(6px 6px 0 #fffdf7); }
 .reading-theme .landmark-illustration.big-ben { right:28px;height:86%;filter:drop-shadow(6px 6px 0 #ffd447); }
+.reading-theme .landmark-illustration.bus { right:10px;bottom:17px;width:48%;height:auto;filter:drop-shadow(6px 6px 0 #38c6e8); }
+.reading-theme .landmark-illustration.tree { right:16px;height:91%;filter:drop-shadow(6px 6px 0 #ffd447); }
+.reading-theme .landmark-illustration.eiffel { right:25px;height:91%;filter:drop-shadow(6px 6px 0 #e83d52); }
 .reading-theme .tower-flag { right: 14px; top: 10px; z-index: 2; padding: 5px 7px; border: 2px solid #071b45; background: #ffd447; color: #071b45; font-weight: 900; transform: rotate(2deg); }
 .reading-theme .tower-art.giraffe .tower-flag { left:14px;right:auto;transform:rotate(-2deg); }
 .reading-theme .tower-ground { height: 5px; background: #071b45; }
@@ -189,6 +197,14 @@
 .reading-theme .tower-remaining { margin-top: 8px; color: #071b45; font-weight: 800; }
 .reading-theme .tower-rules { color: #46536b; }
 .reading-theme .tower-rules a { color: #071b45; font-weight: 800; }
+.reading-theme .tower-comparison, .reading-theme .tower-stack-count { margin: 6px 0 0; color: #071b45; font-weight: 800; }
+.reading-theme .tower-stack-count { padding: 7px 9px; border-left: 5px solid #e83d52; background: #fff8e8; }
+.reading-theme .tower-targets { display:flex; flex-wrap:wrap; gap:6px; }
+.reading-theme .remove-book { display:block; margin-top:12px; color:#8b1734; }
+.reading-theme .remove-confirm { margin-top:12px; padding:12px; border:2px solid #e83d52; background:#fff0ef; }
+.reading-theme .remove-confirm p { margin:0 0 9px; font-weight:800; }
+.reading-theme .remove-confirm .button { margin-right:8px; }
+.reading-theme .button.danger { background:#e83d52; color:white; }
 .reading-theme .reading-stats { gap: 8px; border: 0; }
 .reading-theme .reading-stats > div { padding: 13px 10px; border: 3px solid #071b45; border-radius: 6px; background: white; text-align: center; box-shadow: 4px 4px 0 #071b45; }
 .reading-theme .reading-stats > div:first-child { padding-left: 10px; border: 3px solid #071b45; background: #38c6e8; }

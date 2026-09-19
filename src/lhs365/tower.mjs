@@ -2,9 +2,19 @@
 export const PAGE_HEIGHT_MM = 0.05;
 export const landmarks = [
   { id: "door", name: "a doorway", metres: 2, label: "Doorway", note: "Illustrative 2 m doorway" },
+  { id: "bus", name: "a double-decker bus", metres: 4.4, label: "Double-decker", note: "Representative 4.4 m bus" },
   { id: "giraffe", name: "a giraffe", metres: 5, label: "Giraffe", note: "Representative adult height" },
+  { id: "tree", name: "a mature oak tree", metres: 20, label: "Oak tree", note: "Illustrative mature tree height" },
   { id: "big-ben", name: "Big Ben’s tower", metres: 96, label: "Big Ben", note: "Elizabeth Tower, rounded to 96 m" },
+  { id: "eiffel", name: "the Eiffel Tower", metres: 330, label: "Eiffel Tower", note: "Current height including antenna" },
 ];
+export function nextLandmark(pages) {
+  const millimetres=towerProgress(pages).millimetres;
+  return landmarks.find(item=>item.metres*1000>millimetres) || landmarks.at(-1);
+}
+export function visibleBookStack(books) {
+  return books.slice(-8);
+}
 export function towerProgress(pages, landmark = landmarks[0]) {
   if (!Number.isSafeInteger(pages) || pages < 0) throw new Error("Invalid page total");
   const target = Math.round(landmark.metres * 1000 / PAGE_HEIGHT_MM);

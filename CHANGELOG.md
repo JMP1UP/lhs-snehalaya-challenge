@@ -2,6 +2,8 @@
 
 ## Where we are now — 14 September 2026
 
+- Added deliberate book removal, clearer start/join/invite family flows, six graduated landmark comparisons, an explicit total tower height and a bounded latest-eight graphic that remains clear at 200 books.
+
 - Added optional unfinished-book logging with estimated milestones or exact page tracking; finished books remain the default. Subsequent personal and shared-family updates credit only additional pages.
 
 - Corrected the Veracross roster mapping to include every record returned by the current-students endpoint, preserve complete tutor-group labels and retain blank tutor assignments under Unassigned.

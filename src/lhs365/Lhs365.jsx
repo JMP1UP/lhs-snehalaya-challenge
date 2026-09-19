@@ -9,7 +9,7 @@ import "./challenge-brand.css";
 
 
 function currentRoute() {
-  return window.location.hash.slice(1) || "/";
+  return (window.location.hash.slice(1).split("?")[0] || "/");
 }
 
 function Home() {

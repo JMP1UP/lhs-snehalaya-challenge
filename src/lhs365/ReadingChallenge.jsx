@@ -28,11 +28,12 @@ function initialShelf() {
   }
 }
 
-function BookCard({ book, onUpdate }) {
+function BookCard({ book, onUpdate, onRemove }) {
   const [page, setPage] = useState("");
   const [choice,setChoice] = useState("exact");
   const [saving,setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [confirmRemove,setConfirmRemove]=useState(false);
   const finished = book.current === book.total;
   return (
     <article className="reading-book">
@@ -102,6 +103,8 @@ function BookCard({ book, onUpdate }) {
         {finished && (
           <p className="completion">✓ Finished</p>
         )}
+        {onRemove && (!confirmRemove ? <button type="button" className="text-link remove-book" onClick={()=>setConfirmRemove(true)}>Remove book</button> : <div className="remove-confirm" role="group" aria-label={`Remove ${book.title}`}><p>Remove this book and subtract its pages?</p><button type="button" className="button secondary" onClick={()=>setConfirmRemove(false)}>Keep it</button><button type="button" className="button danger" disabled={saving} onClick={async()=>{try{setSaving(true);await onRemove();}catch(err){setError(err.message);setConfirmRemove(false);}finally{setSaving(false);}}}>Remove book</button></div>)}
+        {error && finished && <p className="form-error" role="alert">{error}</p>}
       </div>
     </article>
   );
@@ -122,8 +125,10 @@ export default function ReadingChallenge({ repository, community=null }) {
   const [books, setBooks] = useState(initial.books);
   const [family,setFamily]=useState(repository?.family||null);
   const [reader,setReader]=useState("me");
-  const [familyOpen,setFamilyOpen]=useState(false);
-  const [familyInput,setFamilyInput]=useState("");
+  const [familyOpen,setFamilyOpen]=useState(Boolean(repository && new URLSearchParams(window.location.hash.split("?")[1]||"").get("family")));
+  const inviteCode=repository ? new URLSearchParams(window.location.hash.split("?")[1]||"").get("family")||"" : "";
+  const [familyInput,setFamilyInput]=useState(inviteCode);
+  const [inviteOpen,setInviteOpen]=useState(Boolean(inviteCode));
   const currentBooks = useRef(initial.books);
   const [notice, setNotice] = useState(initial.error);
   const [adding, setAdding] = useState(initial.books.length === 0);
@@ -170,6 +175,15 @@ export default function ReadingChallenge({ repository, community=null }) {
     const personal=currentBooks.current.filter(book=>!book.householdId);
     const merged=[...personal,...(next.books||[])];
     currentBooks.current=merged;setBooks(merged);setFamily(next);setFamilyOpen(false);setFamilyInput("");
+  }
+
+  async function shareFamilyInvite() {
+    const url=`${window.location.origin}${window.location.pathname}#/reading?family=${family.joinCode}`;
+    const text=`Join our LHS 365 family reading group. Sign in with your Leicester High account.`;
+    try {
+      if(navigator.share)await navigator.share({title:"Join our LHS 365 family",text,url});
+      else {await navigator.clipboard.writeText(`${text}\n${url}`);setNotice("Family invite copied.");}
+    } catch(err) {if(err?.name!=="AbortError")setError("The invite could not be shared. Copy the code instead.");}
   }
 
   async function search(event) {
@@ -226,10 +240,11 @@ export default function ReadingChallenge({ repository, community=null }) {
         <div className="reader-switch">
           <button type="button" aria-pressed={reader==="me"} onClick={()=>setReader("me")}>Me</button>
           {family?.readers?.map(person=><button type="button" key={person.id} aria-pressed={reader===person.id} onClick={()=>setReader(person.id)}>{person.name}</button>)}
-          <button type="button" className="family-add" onClick={()=>{setFamilyOpen(value=>!value);setError("");}}>+ {family?"Family member":"Family"}</button>
+          <button type="button" className="family-add" onClick={()=>{setFamilyOpen(value=>!value);setInviteOpen(false);setError("");}}>+ {family?"Reader":"Set up family"}</button>
+          {family&&<button type="button" className="family-invite" onClick={()=>{setInviteOpen(value=>!value);setFamilyOpen(false);setError("");}}>Invite sibling</button>}
         </div>
-        {family&&<p><span>Sibling code: <code>{family.joinCode}</code></span></p>}
-        {familyOpen&&!family&&<div className="family-setup"><button type="button" className="button primary" disabled={saving} onClick={async()=>{setSaving(true);setError("");try{applyFamily(await repository.createFamily());}catch(err){setError(err.message);}finally{setSaving(false);}}}>Create our family</button><form onSubmit={async event=>{event.preventDefault();setSaving(true);setError("");try{applyFamily(await repository.joinFamily(familyInput));}catch(err){setError(err.message);}finally{setSaving(false);}}}><label htmlFor="family-code">Join a sibling’s family</label><div className="input-action"><input id="family-code" value={familyInput} maxLength="12" required onChange={event=>setFamilyInput(event.target.value)} placeholder="Family code"/><button className="button secondary" disabled={saving}>Join</button></div></form>{error&&<p role="alert">{error}</p>}</div>}
+        {familyOpen&&!family&&<div className="family-setup family-choice"><article><h3>Start a family group</h3><p>Create one shared space, then invite school siblings to join it.</p><button type="button" className="button primary" disabled={saving} onClick={async()=>{setSaving(true);setError("");try{applyFamily(await repository.createFamily());setInviteOpen(true);}catch(err){setError(err.message);}finally{setSaving(false);}}}>Start our family</button></article><form onSubmit={async event=>{event.preventDefault();setSaving(true);setError("");try{applyFamily(await repository.joinFamily(familyInput));setInviteOpen(false);window.history.replaceState(null,"",`${window.location.pathname}#/reading`);}catch(err){setError(err.message);}finally{setSaving(false);}}}><h3>Join your family</h3><p>Use the invite link or code from a school sibling.</p><label htmlFor="family-code">Invite code</label><div className="input-action"><input id="family-code" value={familyInput} maxLength="12" required onChange={event=>setFamilyInput(event.target.value)} placeholder="10-character code"/><button className="button secondary" disabled={saving}>Join family</button></div></form>{error&&<p role="alert">{error}</p>}</div>}
+        {family&&inviteOpen&&<div className="family-setup family-invite-panel"><div><h3>Invite a school sibling</h3><p>Send the invite. They sign in with their own Leicester High account and join this same family.</p><p>Invite code: <code>{family.joinCode}</code></p></div><button type="button" className="button primary" onClick={shareFamilyInvite}>Share or copy invite</button>{error&&<p role="alert">{error}</p>}</div>}
         {familyOpen&&family&&<form className="family-setup" onSubmit={async event=>{event.preventDefault();setSaving(true);setError("");try{const next=await repository.addFamilyReader(familyInput);applyFamily(next);setReader(next.readers.at(-1).id);}catch(err){setError(err.message);}finally{setSaving(false);}}}><label htmlFor="family-name">Family member’s name</label><div className="input-action"><input id="family-name" value={familyInput} maxLength="50" required onChange={event=>setFamilyInput(event.target.value)} placeholder="e.g. Mum"/><button className="button primary" disabled={saving}>Add</button></div>{error&&<p role="alert">{error}</p>}</form>}
       </section>}
       <div className={`reading-workspace ${activeBooks.length ? "" : "reading-workspace-empty"}`}>
@@ -450,6 +465,7 @@ export default function ReadingChallenge({ repository, community=null }) {
                   );
                   if (completed) focusFinished.current = true;
                 }}
+                onRemove={async()=>{const removed=repository?await repository.remove(book.id,stats.pages===book.current-book.start):book;save(currentBooks.current.filter(item=>item.id!==book.id),`Removed ${book.title}.`);return removed;}}
               />
             ))}
           </div>
@@ -457,7 +473,7 @@ export default function ReadingChallenge({ repository, community=null }) {
             <details className="finished-books">
               <summary ref={finishedSummary}>Finished books ({visibleBooks.filter((book) => book.current === book.total).length})</summary>
               {visibleBooks.filter((book) => book.current === book.total).map((book) => (
-                <BookCard key={book.id} book={book} />
+                <BookCard key={book.id} book={book} onRemove={async()=>{const removed=repository?await repository.remove(book.id,stats.pages===book.current-book.start):book;save(currentBooks.current.filter(item=>item.id!==book.id),`Removed ${book.title}.`);return removed;}} />
               ))}
             </details>
           )}

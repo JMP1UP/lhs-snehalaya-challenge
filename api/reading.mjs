@@ -133,7 +133,7 @@ export function createHandler(getServices = services) { return async function ha
       const memberRef = campaign.collection("members").doc(identity.key);
       let familyOwner=null;
       if(body.familyReaderId!==undefined){if(typeof body.familyReaderId!=="string")fail("Choose a valid family reader.");const household=await findHousehold(campaign,identity.key),reader=household?.readers?.find(item=>item.id===body.familyReaderId);if(!household||!reader)fail("Family reader not found.",404);familyOwner={ownerKey:`family:${household.id}:${reader.id}`,householdId:household.id,familyReaderId:reader.id};}
-      const storedBook={...book,initialPage:book.current,initialEstimated:book.estimated,ownerKey:familyOwner?.ownerKey||identity.key,...(familyOwner||{})};
+      const storedBook={...book,initialPage:book.current,initialEstimated:book.estimated,ownerKey:familyOwner?.ownerKey||identity.key,createdByKey:identity.key,...(familyOwner||{})};
       const saved = await db.runTransaction(async tx => {
         const existing = await tx.get(bookRef);
         if (existing.exists) {
@@ -165,6 +165,19 @@ export function createHandler(getServices = services) { return async function ha
         tx.set(ref,next); return next;
       });
       return res.status(200).json(updated);
+    }
+    if (body.action === "remove") {
+      if (typeof body.id !== "string" || !/^[a-zA-Z0-9-]{1,80}$/.test(body.id)) fail("Invalid book.");
+      const ref=campaign.collection("books").doc(body.id),household=await findHousehold(campaign,identity.key);
+      const removed=await db.runTransaction(async tx=>{
+        const doc=await tx.get(ref);if(!doc.exists)fail("Book not found.",404);const book=doc.data();restoreBooks(JSON.stringify([book]));
+        const own=book.ownerKey===identity.key,shared=household&&book.householdId===household.id&&household.readers?.some(reader=>reader.id===book.familyReaderId);
+        if(!own&&!shared)fail("Book not found.",404);
+        const creator=book.createdByKey||(!book.householdId?book.ownerKey:null);
+        if(creator){const memberRef=campaign.collection("members").doc(creator),member=await tx.get(memberRef);if(member.exists)tx.set(memberRef,{...member.data(),bookCount:Math.max(0,(member.data().bookCount||1)-1)});}
+        tx.delete(ref);return book;
+      });
+      return res.status(200).json(removed);
     }
     fail("Unknown reading action.",400);
   } catch (error) {
