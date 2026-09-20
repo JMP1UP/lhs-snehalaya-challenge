@@ -7,19 +7,26 @@ const previewAssignment={role:"Tour Guide",time:"9:00 am",location:"Main Hall",l
 function MissionArt({role}) {
   const subject=/subject/i.test(role),tour=/tour/i.test(role);
   return <div className={`mission-art ${subject?"subject":tour?"tour":"welcome"}`} aria-hidden="true">
-    <span className="mission-burst">YOUR<br/>MISSION</span>
-    <div className="mission-character"><i/><b>{subject?"A+":tour?"↗":"★"}</b></div>
-    <span className="mission-zap">✦</span><span className="mission-pop">LET'S GO!</span>
+    <span className="mission-burst">OPENED!</span>
+    <div className="role-envelope role-envelope-revealed">
+      <div className="role-envelope-letter"><span>YOUR OPEN DAY ROLE</span><b>{role}</b><i>{subject?"A+":tour?"↗":"★"}</i></div>
+      <div className="role-envelope-paper"/><div className="role-envelope-flap"/>
+    </div>
+    <span className="mission-pop">LET'S GO!</span>
   </div>;
 }
 
 function Assignment({assignment,name,preview=false}) {
-  const [revealed,setRevealed]=useState(false),heading=useRef(null);
+  const [revealed,setRevealed]=useState(false),[opening,setOpening]=useState(false),heading=useRef(null);
   useEffect(()=>{if(revealed)heading.current?.focus();},[revealed]);
+  useEffect(()=>{if(!opening)return undefined;const timer=setTimeout(()=>setRevealed(true),650);return()=>clearTimeout(timer);},[opening]);
   if(!assignment)return <section className="mission-empty"><span className="eyebrow">OPEN DAY · YOUR ROLE</span><h1>Your mission is still being prepared.</h1><p>Check back later, or ask your form teacher if you expected to see a role.</p></section>;
   if(!revealed)return <section className="mission-sealed" aria-labelledby="mission-sealed-title">
-    <div className="sealed-card" aria-hidden="true"><span>TOP SECRET</span><b>?</b><i>LHS OPEN DAY</i></div>
-    <div><span className="eyebrow">OPEN DAY · {preview?"FICTIONAL PREVIEW":"PRIVATE BRIEFING"}</span><h1 id="mission-sealed-title">{name?`${name}, your`:"Your"} mission is ready.</h1><p>One tap. Big reveal.</p><button className="button mission-reveal-button" onClick={()=>setRevealed(true)}>Reveal my role <span aria-hidden="true">✦</span></button></div>
+    <div className={`role-envelope role-envelope-large${opening?" opening":""}`} aria-hidden="true">
+      <div className="role-envelope-letter"><span>LHS OPEN DAY</span><b>{name?`For ${name}`:"Your role"}</b><i>✦</i></div>
+      <div className="role-envelope-paper"/><div className="role-envelope-flap"/><strong>LHS</strong>
+    </div>
+    <div><span className="eyebrow">OPEN DAY · {preview?"FICTIONAL PREVIEW":"PRIVATE BRIEFING"}</span><h1 id="mission-sealed-title">{name?`${name}, your`:"Your"} role has arrived.</h1><p>Open it when you're ready.</p><button className="button mission-reveal-button" onClick={()=>setOpening(true)} disabled={opening}>{opening?"Opening…":"Open my envelope"} <span aria-hidden="true">✦</span></button></div>
   </section>;
   return <section className="mission-reveal" aria-live="polite">
     <div className="mission-confetti" aria-hidden="true"><i/><i/><i/><i/><i/><i/></div>
