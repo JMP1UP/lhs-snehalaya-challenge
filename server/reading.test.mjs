@@ -60,6 +60,16 @@ test('roster merge adds joiners without removing existing people',async()=>{
  assert.ok(report.data.people.some(item=>item.email===newcomer.email));
  assert.ok(report.data.people.some(item=>item.email===later.email));
 });
+test('Open Day assignments are returned only to their pupil and survive roster replacement',async()=>{
+ const openDay={role:'Subject Helper - English',time:'9:15 am',location:'English corridor',lead:'Ms Example',instructions:'Welcome visitors.'};
+ const f=fixture({admin:true,rosterPerson:{...person,openDay}});
+ const me=await f.call();assert.deepEqual(me.data.person.openDay,openDay);
+ assert.equal((await f.call(null,'summary',{})).data.openDay,undefined);
+ assert.equal((await f.call({action:'roster',people:[{...person,name:'Updated'}],complete:true,version:1})).code,200);
+ assert.deepEqual((await f.call(null,'admin')).data.people[0].openDay,openDay);
+ const staff=await fixture({rosterPerson:{...person,kind:'staff',yearGroup:'Staff',openDay}}).call(null,'staff');
+ assert.equal(JSON.stringify(staff.data).includes('Subject Helper'),false);
+});
 test('Veracross roster preview is admin-only, reports incomplete pupils and does not write the roster',async()=>{
  const preview={people:[{...person,id:undefined}],skipped:2,skippedPupils:[{name:'Incomplete Pupil',missing:['year group']}],sourceRevision:'r1'};
  assert.equal((await fixture({veracrossRoster:async()=>preview}).call({action:'veracross-preview'},'admin')).code,403);

@@ -1,3 +1,3 @@
-Name,Email,Role,House,Year group,Form group,Active
-Example Pupil,example.pupil@leicesterhigh.co.uk,student,Bradgate,Year 8,8A,true
-Example Teacher (staff),example.teacher@leicesterhigh.co.uk,,None,,8A,true
+Name,Email,Role,House,Year group,Form group,Active,Open Day role,Open Day time,Open Day meeting point,Open Day staff lead,Open Day instructions
+Example Pupil,example.pupil@leicesterhigh.co.uk,student,Bradgate,Year 8,8A,true,Tour Guide,9:00 am,Main Hall,Ms Example,Collect a route and welcome your family.
+Example Teacher (staff),example.teacher@leicesterhigh.co.uk,,None,,8A,true,,,,,

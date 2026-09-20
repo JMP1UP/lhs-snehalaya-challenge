@@ -3,7 +3,7 @@ import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 import { createHash, randomBytes, randomUUID } from "node:crypto";
 import { createBook, finishBook, updateBook, restoreBooks } from "../src/lhs365/reading.mjs";
-import { buildReport, mergeRoster, validateRoster } from "../src/lhs365/admin.mjs";
+import { buildReport, mergeRoster, replaceRoster, validateRoster } from "../src/lhs365/admin.mjs";
 import { CAMPAIGN, emailKey, authorisedIdentity, requireAdmin, requireMember } from "../server/reading-policy.mjs";
 import { fetchVeracrossRoster } from "../server/veracross.mjs";
 
@@ -118,7 +118,7 @@ export function createHandler(getServices = services) { return async function ha
         const version = latest.data()?.version || 0;
         if (body.version !== version) fail("The roster changed. Refresh before importing again.",409);
         const current=latest.data()?.people||[];
-        const people=body.action==="roster-merge"?mergeRoster(current,incoming):incoming;
+        const people=body.action==="roster-merge"?mergeRoster(current,incoming):replaceRoster(current,incoming);
         const complete=body.action==="roster-merge"?(latest.data()?.complete===true):body.complete;
         tx.set(rosterRef,{people,complete,version:version+1,updatedAt:new Date().toISOString()});
       });

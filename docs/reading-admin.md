@@ -45,6 +45,8 @@ A new book is treated as finished and its whole page count is credited on the se
 
 Veracross is preview-first. “Check Veracross roster” reads the current-students endpoint plus staff and presents the mapped count; the administrator must then choose the existing additive “Add or update people” action. The connector deliberately follows the current-students endpoint rather than hard-coded enrolment-status IDs, matching the established Inclusion integration. Missing identity, school-email or recognised year records are skipped and reported by name and missing field in the private admin preview. Blank tutor fields are retained as Unassigned. Students without a recognised Veracross house are imported as `None` so form-group participation can still be managed.
 
+Open Day missions use five optional roster columns: `Open Day role`, `Open Day time`, `Open Day meeting point`, `Open Day staff lead` and `Open Day instructions`. Import them through the private administrator roster manager. Omitted assignment columns preserve a pupil's current mission during both additive and complete roster refreshes; use `CLEAR` in the role column to remove one deliberately. Pupils see only their own assignment after school Microsoft sign-in. Staff aggregate and public endpoints do not expose these fields.
+
 Family groups are private to linked school accounts. The first pupil creates a group and shares its 10-character code directly with a sibling; the sibling joins the same record. Either account can add a minimal display label such as “Mum” and log books for that reader. Treat the code as private household information. There is no public household search and no parent contact data.
 
 ## One pilot checklist

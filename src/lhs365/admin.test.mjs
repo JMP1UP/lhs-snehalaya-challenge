@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {buildReport,validateRoster,reportCsv,mergeRoster,parseRosterUpload} from './admin.mjs';
+import {buildReport,validateRoster,reportCsv,mergeRoster,replaceRoster,parseRosterUpload} from './admin.mjs';
 import {adminDemo} from './admin-demo.mjs';
 import {createBook,updateBook} from './reading.mjs';
 test('rankings separate roles, cap at ten and reconcile pages and houses',()=>{
@@ -57,6 +57,15 @@ test('CSV roster imports form groups and recognises the staff name marker',()=>{
  const rows=parseRosterUpload('Name,Email,House,Year group,Form group\nExample Pupil,pupil@leicesterhigh.co.uk,Bradgate,Year 8,8A\nJamie Example (staff),teacher@leicesterhigh.co.uk,None,,8A');
  assert.deepEqual(rows.map(row=>[row.name,row.kind,row.formGroup]),[['Example Pupil','student','8A'],['Jamie Example','staff','8A']]);
  assert.throws(()=>parseRosterUpload('Name,Email\nPupil,pupil@leicesterhigh.co.uk'),/roster row/i);
+});
+test('Open Day assignments import safely and ordinary roster updates preserve them',()=>{
+ const assigned=parseRosterUpload('Name,Email,House,Year group,Form group,Open Day role,Open Day time,Open Day meeting point,Open Day staff lead,Open Day instructions\nExample Pupil,pupil@leicesterhigh.co.uk,Bradgate,Year 8,8A,Tour Guide,9:00 am,Main Hall,Ms Example,Collect a route');
+ assert.deepEqual(assigned[0].openDay,{role:'Tour Guide',time:'9:00 am',location:'Main Hall',lead:'Ms Example',instructions:'Collect a route'});
+ const current=[{id:'pupil',...assigned[0]}],ordinary=[{id:'pupil',...validateRoster([{email:'pupil@leicesterhigh.co.uk',name:'Updated Pupil',kind:'student',house:'Bradgate',yearGroup:'Year 8',formGroup:'8B'}])[0]}];
+ assert.equal(mergeRoster(current,ordinary)[0].openDay.role,'Tour Guide');
+ assert.equal(replaceRoster(current,ordinary)[0].openDay.role,'Tour Guide');
+ assert.equal(validateRoster([{...assigned[0],openDayRole:'CLEAR',openDay:undefined}])[0].openDay,null);
+ assert.throws(()=>validateRoster([{...assigned[0],openDay:{role:'x'.repeat(101)}}]),/Open Day role/);
 });
 test('CSV escapes quotes, line breaks and spreadsheet formulas',()=>{
  const csv=reportCsv([{name:'=HYPERLINK("x")',kind:'staff',house:'None'},{name:'Line\nbreak'}]);

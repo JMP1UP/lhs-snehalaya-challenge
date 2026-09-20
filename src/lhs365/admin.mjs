@@ -1,5 +1,6 @@
 import { readingStats, restoreBooks } from "./reading.mjs";
 export const HOUSE_NAMES = ["Beaumanor", "Bradgate", "Charnwood"];
+const assignmentValue=(value,max,label)=>{const text=typeof value==="string"?value.trim():"";if(text.length>max)throw new Error(`${label} must be ${max} characters or fewer.`);return text;};
 export function validateRoster(rows) {
   if (!Array.isArray(rows) || rows.length > 1000) throw new Error("Use a roster of up to 1,000 people.");
   const seen = new Set();
@@ -19,8 +20,19 @@ export function validateRoster(rows) {
     if(kind==="student" && (!formGroup || formGroup.length>40))fail();
     if(kind==="staff" && formGroup.length>40)fail();
     if (row.active !== undefined && typeof row.active !== "boolean") fail();
+    const assignmentSource=row.openDay&&typeof row.openDay==="object"?row.openDay:null;
+    const rawRole=assignmentSource?.role ?? row.openDayRole;
+    let openDay;
+    if(typeof rawRole==="string"&&/^(?:clear|none)$/i.test(rawRole.trim()))openDay=null;
+    else if(typeof rawRole==="string"&&rawRole.trim())openDay={
+      role:assignmentValue(rawRole,100,"Open Day role"),
+      time:assignmentValue(assignmentSource?.time??row.openDayTime,80,"Open Day time"),
+      location:assignmentValue(assignmentSource?.location??row.openDayLocation,120,"Open Day meeting point"),
+      lead:assignmentValue(assignmentSource?.lead??row.openDayLead,100,"Open Day staff lead"),
+      instructions:assignmentValue(assignmentSource?.instructions??row.openDayInstructions,500,"Open Day instructions"),
+    };
     seen.add(email);
-    return { email, name, kind, house, yearGroup: kind === "staff" ? "Staff" : row.yearGroup, formGroup, active: row.active !== false };
+    return { email, name, kind, house, yearGroup: kind === "staff" ? "Staff" : row.yearGroup, formGroup, active: row.active !== false, ...(openDay!==undefined?{openDay}:{}) };
   });
 }
 const clean = value => String(value ?? "").trim();
@@ -52,6 +64,9 @@ export function parseRosterUpload(text) {
     const aliases={
       name:["name","full name"],email:["email","email address","school email"],kind:["kind","role","user type"],
       house:["house"],yearGroup:["year group","yeargroup","year"],formGroup:["form group","formgroup","form","tutor group"],active:["active"],
+      openDayRole:["open day role","openday role","open day assignment"],openDayTime:["open day time","openday time","time"],
+      openDayLocation:["open day meeting point","open day location","meeting point","location"],openDayLead:["open day staff lead","staff lead","lead"],
+      openDayInstructions:["open day instructions","instructions","what to do"],
     };
     const column=key=>headers.findIndex(header=>aliases[key].includes(header));
     if(column("name")<0||column("email")<0)throw new Error("Include Name and Email headings in the roster file.");
@@ -69,6 +84,13 @@ export function mergeRoster(existing,incoming) {
   const merged=existing.map(person=>updates.has(person.id)?{...person,...updates.get(person.id)}:person);
   const known=new Set(existing.map(person=>person.id));
   return [...merged,...incoming.filter(person=>!known.has(person.id))];
+}
+export function replaceRoster(existing,incoming) {
+  const current=new Map(existing.map(person=>[person.id||person.email,person]));
+  return incoming.map(person=>{
+    const prior=current.get(person.id||person.email);
+    return person.openDay===undefined&&prior?.openDay!==undefined?{...person,openDay:prior.openDay}:person;
+  });
 }
 const order = (a, b) => b.pages - a.pages || a.name.localeCompare(b.name) || a.id.localeCompare(b.id);
 export function buildReport(roster, books, filters = {}) {

@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { schoolClient } from "./reading-client.mjs";
-function SchoolLoginArt() {
-  return <div className="school-login-art" aria-hidden="true"><span>ONE SCHOOL</span><i>TURN THE PAGE</i><i>READ TOGETHER</i><i>REACH HIGHER</i><b>✦</b></div>;
+function SchoolLoginArt({openDay=false}) {
+  return <div className={`school-login-art${openDay?" open-day-login-art":""}`} aria-hidden="true"><span>{openDay?"YOUR MISSION":"ONE SCHOOL"}</span><i>{openDay?"OPEN DAY AWAITS":"TURN THE PAGE"}</i><i>{openDay?"READY · SET · REVEAL":"READ TOGETHER"}</i><i>{openDay?"YOU'VE GOT THIS":"REACH HIGHER"}</i><b>✦</b></div>;
 }
 export default function SchoolAccess({ children, admin = false, staff = false, area = "reading" }) {
+  const openDay=area==="open-day";
   const [client,setClient] = useState(null);
   const [account,setAccount] = useState(null);
   const [error,setError] = useState("");
@@ -44,20 +45,21 @@ export default function SchoolAccess({ children, admin = false, staff = false, a
       <span>{account.me.person?.name ? `Signed in as ${account.me.person.name}` : "Signed in with Microsoft"}</span>
       <nav className="school-view-links" aria-label="School reading views">
         {area!=="reading" && <a href="#/reading">My reading</a>}
+        {area!=="open-day" && <a href="#/open-day">My Open Day role</a>}
         {(account.me.isAdmin||account.me.canViewForms) && area!=="teacher" && <a href="#/teacher">Teacher dashboard</a>}
         {account.me.isAdmin && area!=="admin" && <a href="#/admin">Admin dashboard</a>}
       </nav>
       {account && <button className="text-link" onClick={async () => {setAccount(null);try {await client.signOut();} catch {setError("Sign-out failed. Close this tab to end this session.");}}}>Sign out</button>}
     </div>}
     {error && <p className="school-access-error" role="alert">{error} <button onClick={()=>{setBusy(true);setRetry(n=>n+1);}}>Try again</button></p>}
-    {busy ? <section className="school-login-card school-login-loading" role="status"><div className="school-login-copy"><span className="eyebrow">LHS 365 · SCHOOL ACCESS</span><h1>Opening reading…</h1></div><SchoolLoginArt /></section> : allowed ? children(account) : <section className="school-login-card">
+    {busy ? <section className="school-login-card school-login-loading" role="status"><div className="school-login-copy"><span className="eyebrow">LHS 365 · SCHOOL ACCESS</span><h1>{openDay?"Finding your mission…":"Opening reading…"}</h1></div><SchoolLoginArt openDay={openDay}/></section> : allowed ? children(account) : <section className="school-login-card">
       <div className="school-login-copy">
         <span className="eyebrow">LHS 365 · SCHOOL ACCESS</span>
-        <h1>{account ? (staff?"Staff access required":"Admin access required") : "Ready to read?"}</h1>
+        <h1>{account ? (staff?"Staff access required":"Admin access required") : openDay?"Ready for your mission?":"Ready to read?"}</h1>
         <p>{account ? (staff?"This area is for staff identified in the school roster.":"This area is for the authorised reading administrators.") : "Use your Leicester High Microsoft account."}</p>
         {!account && client && <button className="button primary school-login-button" onClick={signIn}>Continue with Microsoft <span aria-hidden="true">➜</span></button>}
       </div>
-      <SchoolLoginArt />
+      <SchoolLoginArt openDay={openDay}/>
     </section>}
   </>;
 }

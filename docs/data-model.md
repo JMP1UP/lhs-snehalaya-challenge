@@ -28,3 +28,5 @@ Firebase supplies persistence, but no guaranteed retention, export, deletion, or
 ## Reading admin — 10 September 2026
 
 The `readingCampaigns/read-for-snehalaya-2026` namespace holds a versioned `settings/roster` document, `members/{emailHash}` counters, `books/{requestUUID}`, private `households/{uuid}`, `familyMemberships/{emailHash}` and hashed `familyCodes/{sha256}` lookups. Personal book ownership is derived from verified identity. Family books carry `householdId`, `familyReaderId` and the verified creator key; the API checks personal ownership or current household membership before removal and decrements the creator's quota counter. A household stores up to eight linked school-account hashes and twelve minimal named readers. No parent email, date of birth or contact data is collected. Add requests remain idempotent by UUID and payload.
+
+An active roster person may also have a private `openDay` object containing role, time, location, staff lead and a short instruction string. These bounded strings are returned to that verified school identity and to the administrator roster report only. They are excluded from public and teacher aggregate responses.
