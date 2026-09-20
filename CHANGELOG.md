@@ -2,7 +2,7 @@
 
 ## Where we are now — 14 September 2026
 
-- Added a private Open Day mission reveal: students sign in to see only their own role, time, meeting point, staff lead and concise briefing. Optional assignment columns use the existing administrator roster import and survive routine roster refreshes.
+- Added a private Open Day mission reveal with its own visitor-badge, lanyard and school-map visual language: students sign in to see only their own role, time, meeting point, staff lead and concise briefing. Optional assignment columns use the existing administrator roster import and survive routine roster refreshes.
 
 - Added deliberate book removal, clearer start/join/invite family flows, six graduated landmark comparisons, an explicit total tower height and a bounded latest-eight graphic that remains clear at 200 books.
 

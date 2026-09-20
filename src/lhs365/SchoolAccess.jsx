@@ -1,7 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { schoolClient } from "./reading-client.mjs";
 function SchoolLoginArt({openDay=false}) {
-  return <div className={`school-login-art${openDay?" open-day-login-art":""}`} aria-hidden="true"><span>{openDay?"YOUR MISSION":"ONE SCHOOL"}</span><i>{openDay?"OPEN DAY AWAITS":"TURN THE PAGE"}</i><i>{openDay?"READY · SET · REVEAL":"READ TOGETHER"}</i><i>{openDay?"YOU'VE GOT THIS":"REACH HIGHER"}</i><b>✦</b></div>;
+  if(openDay)return <div className="open-day-access-art" aria-hidden="true">
+    <svg className="open-day-lanyard" viewBox="0 0 300 210"><path d="M55 0c0 98 42 126 95 184C203 126 245 98 245 0"/><path d="M72 0c0 86 39 112 78 157 39-45 78-71 78-157"/></svg>
+    <div className="open-day-badge"><span>LHS OPEN DAY</span><strong>CREW</strong><small>YOUR ROLE AWAITS</small><i>★</i></div>
+    <div className="open-day-map"><span>START</span><b>● · · · ➜</b><i>YOU<br/>ARE<br/>HERE</i></div>
+    <div className="open-day-welcome">WELCOME!</div><div className="open-day-direction">CHECK IN <b>➜</b></div><span className="open-day-spark">✦</span>
+  </div>;
+  return <div className="school-login-art" aria-hidden="true"><span>ONE SCHOOL</span><i>TURN THE PAGE</i><i>READ TOGETHER</i><i>REACH HIGHER</i><b>✦</b></div>;
 }
 export default function SchoolAccess({ children, admin = false, staff = false, area = "reading" }) {
   const openDay=area==="open-day";
