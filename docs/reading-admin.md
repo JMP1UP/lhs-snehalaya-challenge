@@ -47,6 +47,8 @@ Veracross is preview-first. “Check Veracross roster” reads the current-stude
 
 Open Day missions use five optional roster columns: `Open Day role`, `Open Day time`, `Open Day meeting point`, `Open Day staff lead` and `Open Day instructions`. Import them through the private administrator roster manager. Omitted assignment columns preserve a pupil's current mission during both additive and complete roster refreshes; use `CLEAR` in the role column to remove one deliberately. Pupils see only their own assignment after school Microsoft sign-in. Staff aggregate and public endpoints do not expose these fields.
 
+The Open Day matrix import presents either Drama or Music as `Subject Helper - Drama & Music`, with `Old Drama Studio` as the meeting point. It retains the source subject's staff lead and briefing. Individual role changes belong in the private matrix and must be applied through the preview-first admin import; the matrix itself must not be committed.
+
 Family groups are private to linked school accounts. The first pupil creates a group and shares its 10-character code directly with a sibling; the sibling joins the same record. Either account can add a minimal display label such as “Mum” and log books for that reader. Treat the code as private household information. There is no public household search and no parent contact data.
 
 ## One pilot checklist

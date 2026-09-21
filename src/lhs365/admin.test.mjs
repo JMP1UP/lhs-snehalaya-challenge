@@ -101,6 +101,23 @@ test('Open Day matrix supports personal notes and reports roster pupils omitted 
  assert.deepEqual(result.people[0].openDay,{role:'A note for you',time:'',location:'',lead:'',instructions:'Thank you for supporting our school.'});
  assert.match(result.issues.find(issue=>issue.name==='Bob Example').issue,/Not included/);
 });
+test('Drama and Music share a role and meeting point while PE stays separate',()=>{
+ const matrix=[
+  ['Full Name','Year Group','Reg Group','Drama','Music','PE','','Subject','Lead Member of Staff','Where to go on Saturday','What you will be doing'],
+  ['Example, Alice','Year 8','8A','Y','','','','Subject','Lead Member of Staff','Where to go on Saturday','What you will be doing'],
+  ['Example, Bob','Year 9','9A','','Y','','','Drama','Mrs Rose','Old Drama Room','Help with Drama.'],
+  ['Example, Jeeya','Year 10','10A','','','Y','','Music','Miss Proctor','Old Drama Room','Help with Music.'],
+  ['','','','','','','','PE','Mrs PE','Gym','Help with PE.'],
+ ].map(row=>row.join('\t')).join('\n');
+ const roster=['Alice Example','Bob Example','Jeeya Example'].map((name,index)=>({id:`p${index}`,name,email:`p${index}@leicesterhigh.co.uk`,kind:'student',house:'Bradgate',yearGroup:`Year ${index+8}`,formGroup:`${index+8}A`,active:true}));
+ const result=parseOpenDayMatrix(matrix,roster);
+ assert.equal(result.issues.length,0);
+ assert.deepEqual(result.people.map(person=>person.openDay),[
+  {role:'Subject Helper - Drama & Music',time:'',location:'Old Drama Studio',lead:'Mrs Rose',instructions:'Help with Drama.'},
+  {role:'Subject Helper - Drama & Music',time:'',location:'Old Drama Studio',lead:'Miss Proctor',instructions:'Help with Music.'},
+  {role:'Subject Helper - PE',time:'',location:'Gym',lead:'Mrs PE',instructions:'Help with PE.'},
+ ]);
+});
 test('CSV escapes quotes, line breaks and spreadsheet formulas',()=>{
  const csv=reportCsv([{name:'=HYPERLINK("x")',kind:'staff',house:'None'},{name:'Line\nbreak'}]);
  assert.ok(csv.includes('"\'=HYPERLINK(""x"")"'));assert.ok(csv.includes('"Line\nbreak"'));

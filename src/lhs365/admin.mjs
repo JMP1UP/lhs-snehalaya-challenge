@@ -87,7 +87,7 @@ const comparableName=value=>{
   const ordered=parts.length>1?`${parts.slice(1).join(" ")} ${parts[0]}`:text;
   return ordered.toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
 };
-const assignmentRole=role=>role==="Tour Guide"?role:role==="Support"?"Support Helper":`Subject Helper - ${role}`;
+const assignmentRole=role=>role==="Tour Guide"?role:role==="Support"?"Support Helper":`Subject Helper - ${["Drama","Music"].includes(role)?"Drama & Music":role}`;
 export function parseOpenDayMatrix(text,roster) {
   const source=clean(text);
   if(!source)throw new Error("Paste the Open Day table or choose a file first.");
@@ -137,7 +137,7 @@ export function parseOpenDayMatrix(text,roster) {
     const role=roles[0],details=lookup.get(role.toLowerCase());
     if(!details){issues.push({name:sourceName,issue:`No staff, location and blurb found for ${role}.`});continue;}
     used.add(key);
-    people.push({...person,openDay:{role:assignmentRole(role),time:"",location:details.location,lead:details.lead,instructions:details.instructions}});
+    people.push({...person,openDay:{role:assignmentRole(role),time:"",location:["Drama","Music"].includes(role)?"Old Drama Studio":details.location,lead:details.lead,instructions:details.instructions}});
   }
   for(const person of roster){
     if(person.kind!=="student"||person.active===false||!/^Year (?:[7-9]|1[0-3])$/.test(clean(person.yearGroup)))continue;
