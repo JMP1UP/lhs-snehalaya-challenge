@@ -429,6 +429,8 @@
 .community-update strong {font-weight:950;}
 .lhs365 .challenge-cta {border:3px solid var(--comic-ink);border-radius:4px;background:var(--comic-red);color:#fff;box-shadow:6px 6px 0 var(--comic-ink);font-weight:950;}
 .lhs365 .challenge-cta:hover {background:#cf2d43;box-shadow:8px 8px 0 var(--comic-ink);}
+.lhs365 .challenge-cta--soon {cursor:default;}
+.lhs365 .challenge-cta--soon:hover {background:var(--comic-red);box-shadow:6px 6px 0 var(--comic-ink);transform:none;}
 .home-book-art {
   min-height:410px;
   border-left:3px solid var(--comic-ink);
@@ -452,6 +454,9 @@
 .home-live-stack i:nth-child(2n) {width:92%;margin-left:5%;background:var(--comic-yellow);color:var(--comic-ink);transform:rotate(1deg);}
 .home-live-stack i:nth-child(3n) {width:96%;background:var(--comic-ink);}
 .home-live-stack .empty-live-book {border-style:dashed;background:#fffdf799;color:var(--comic-ink);box-shadow:none;}
+.reading-feature--teaser .home-live-stack {right:38px;bottom:58px;}
+.reading-feature--teaser .home-live-stack i:nth-child(2n) {width:88%;}
+.reading-feature--teaser .home-live-stack i:nth-child(3n) {width:94%;}
 .next-landmark {position:absolute;left:30px;bottom:13px;font:950 9px/1 Inter,'Segoe UI',sans-serif;letter-spacing:.11em;}
 .past-adventure {margin-top:30px;border:3px solid var(--comic-ink);border-radius:10px;background:#fffdf7;box-shadow:9px 9px 0 var(--comic-red);}
 .past-adventure h2 {font-size:clamp(30px,3.3vw,42px);font-weight:950;letter-spacing:-.055em;}

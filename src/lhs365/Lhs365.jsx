@@ -4,7 +4,6 @@ import AdminDashboard from "./AdminDashboard";
 import { liveReading } from "./reading-client.mjs";
 import StepsArchive from "./StepsArchive";
 import OpenDayMission from "./OpenDayMission";
-import { formatHeight, PAGE_HEIGHT_MM } from "./tower.mjs";
 import "./lhs365.css";
 import "./challenge-brand.css";
 
@@ -15,25 +14,6 @@ function currentRoute() {
 
 function Home() {
   const aboutDialog = useRef(null);
-  const [community,setCommunity] = useState(null);
-  useEffect(() => {
-    if (!liveReading) return undefined;
-    let active=true;
-    fetch("/api/reading?resource=summary",{cache:"no-store",signal:AbortSignal.timeout(10000)})
-      .then(response => response.ok ? response.json() : Promise.reject())
-      .then(summary => {
-        if (active && [summary.pages,summary.participants,summary.finished].every(Number.isSafeInteger)) setCommunity(summary);
-      })
-      .catch(() => {});
-    return () => {active=false;};
-  },[]);
-  const currentUpdate = community
-    ? community.pages > 0
-      ? {title:`${community.pages.toLocaleString("en-GB")} pages stacked`,detail:`${formatHeight(community.pages * PAGE_HEIGHT_MM)} high · ${community.participants.toLocaleString("en-GB")} ${community.participants===1?"reader":"readers"} · ${community.finished.toLocaleString("en-GB")} ${community.finished===1?"book":"books"} finished`}
-      : {title:"The first page starts the tower",detail:"Sign in and help build it."}
-    : {title:liveReading ? "Reading is under way" : "Preparing for launch",detail:liveReading ? "Sign in to add your pages." : "Preview only · No shared height is published yet."};
-  const visibleBookCount=Math.min(4,community?.finished||0);
-  const towerHeight=community ? formatHeight(community.pages*PAGE_HEIGHT_MM) : "";
 
   return (
     <div className="challenge-home">
@@ -58,27 +38,22 @@ function Home() {
           <button className="dialog-done" value="close">Got it</button>
         </form>
       </dialog>
-      <section className="reading-feature" aria-labelledby="reading-feature-title">
+      <section className="reading-feature reading-feature--teaser" aria-labelledby="reading-feature-title">
         <div className="reading-feature-copy">
-          <span className="challenge-badge">📚 CURRENT PROJECT · AUTUMN 2026</span>
-          <h2 id="reading-feature-title">Read. Stack.<br /><em>Reach higher.</em><br />Together.</h2>
-          <p>Every page adds to one whole-school book tower.</p>
-          <div className="community-update" aria-label="Current project update">
-            <span>WHERE WE ARE NOW · WHOLE SCHOOL</span>
-            <strong>{currentUpdate.title}</strong>
-            <p>{currentUpdate.detail}</p>
-          </div>
-          <a className="challenge-cta" href="#/reading">Log your reading <span aria-hidden="true">➜</span></a>
+          <span className="challenge-badge">AUTUMN 2026 · NEARLY HERE</span>
+          <h2 id="reading-feature-title">A new chapter<br /><em>is about to begin.</em></h2>
+          <p>Our next whole-school challenge is almost ready.</p>
+          <span className="challenge-cta challenge-cta--soon">Autumn Challenge - Coming Soon!</span>
         </div>
-        <div className="home-book-art" role="img" aria-label={community ? `The whole-school book tower is ${towerHeight} high from ${community.finished} finished ${community.finished===1?"book":"books"}.` : "The whole-school book tower is ready for its first book."}>
-          <span className="book-art-sticker">{community?.pages>0?<>{towerHeight}<br />HIGH SO FAR</>:<>HOW HIGH<br />CAN WE GO?</>}</span>
+        <div className="home-book-art" role="img" aria-label="A playful stack of books hints at the next Autumn Challenge.">
+          <span className="book-art-sticker">COMING<br />SOON</span>
           <span className="art-twinkle">✦</span>
-          <span className="tower-now-label">OUR TOWER NOW</span>
-          <div className="home-doorway"><strong>2 m</strong><span>DOORWAY</span></div>
+          <span className="tower-now-label">WHAT COULD IT BE?</span>
           <div className="home-live-stack" aria-hidden="true">
-            {visibleBookCount>0?Array.from({length:visibleBookCount},(_,index)=><i key={index}>{index===visibleBookCount-1?`${community.finished.toLocaleString("en-GB")} ${community.finished===1?"BOOK":"BOOKS"} · ${community.pages.toLocaleString("en-GB")} PAGES`:"READ · STACK · REPEAT"}</i>):<i className="empty-live-book">FIRST BOOK GOES HERE</i>}
+            <i>TURN THE PAGE</i>
+            <i>A NEW ADVENTURE</i>
+            <i>A STORY IS TAKING SHAPE</i>
           </div>
-          <span className="next-landmark">NEXT: DOORWAY · 2 M</span>
           <div className="book-art-ground" />
         </div>
       </section>
