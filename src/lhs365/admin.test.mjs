@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {buildReport,validateRoster,reportCsv,mergeRoster,replaceRoster,parseRosterUpload} from './admin.mjs';
+import {buildReport,validateRoster,reportCsv,mergeRoster,replaceRoster,parseOpenDayMatrix,parseRosterUpload} from './admin.mjs';
 import {adminDemo} from './admin-demo.mjs';
 import {createBook,updateBook} from './reading.mjs';
 test('rankings separate roles, cap at ten and reconcile pages and houses',()=>{
@@ -66,6 +66,40 @@ test('Open Day assignments import safely and ordinary roster updates preserve th
  assert.equal(replaceRoster(current,ordinary)[0].openDay.role,'Tour Guide');
  assert.equal(validateRoster([{...assigned[0],openDayRole:'CLEAR',openDay:undefined}])[0].openDay,null);
  assert.throws(()=>validateRoster([{...assigned[0],openDay:{role:'x'.repeat(101)}}]),/Open Day role/);
+});
+test('Open Day matrix creates individual messages and isolates ambiguous rows',()=>{
+ const matrix=[
+  ['Full Name','Year Group','Reg Group','Tour Guide','Geography / Business Studies','','Subject','Lead Member of Staff','Where to go on Saturday','What you will be doing'],
+  ['Example, Alice','Year 8','8A','Y','','','Subject','Lead Member of Staff','Where to go on Saturday','What you will be doing'],
+  ['Example, Bob','Year 9','9A','','Y','','Tour Guide','Mrs Guide','Student Foyer','Welcome and guide visitors.'],
+  ['Example, Cara','Year 10','10A','Y','Y','','Geography','Mrs Geo','Room 4','Showcase Geography.'],
+  ['Example, Dana','Year 11','11A','',''],
+  ['Missing, Pupil','Year 7','7A','Y',''],
+ ].map(row=>row.join('\t')).join('\n');
+ const roster=['Alice Example','Bob Example','Cara Example','Dana Example'].map((name,index)=>({id:`p${index}`,name,email:`p${index}@leicesterhigh.co.uk`,kind:'student',house:'Bradgate',yearGroup:`Year ${index+8}`,formGroup:`${index+8}A`,active:true}));
+ const result=parseOpenDayMatrix(matrix,roster);
+ assert.equal(result.total,5);assert.equal(result.people.length,2);assert.equal(result.issues.length,3);
+ assert.deepEqual(result.people.map(person=>person.openDay),[
+  {role:'Tour Guide',time:'',location:'Student Foyer',lead:'Mrs Guide',instructions:'Welcome and guide visitors.'},
+  {role:'Subject Helper - Geography',time:'',location:'Room 4',lead:'Mrs Geo',instructions:'Showcase Geography.'},
+ ]);
+ assert.match(result.issues.find(issue=>issue.name==='Example, Cara').issue,/More than one role/);
+ assert.match(result.issues.find(issue=>issue.name==='Example, Dana').issue,/No role/);
+ assert.match(result.issues.find(issue=>issue.name==='Missing, Pupil').issue,/not found/i);
+});
+test('Open Day matrix supports personal notes and reports roster pupils omitted from the table',()=>{
+ const matrix=[
+  ['Full Name','Year Group','Reg Group','Tour Guide','Personal message','','Subject','Lead Member of Staff','Where to go on Saturday','What you will be doing'],
+  ['Example, Alice','Year 8','8A','','Thank you for supporting our school.','','Subject','Lead Member of Staff','Where to go on Saturday','What you will be doing'],
+  ['','','','','','','Tour Guide','Mrs Guide','Student Foyer','Welcome and guide visitors.'],
+ ].map(row=>row.join('\t')).join('\n');
+ const roster=[
+  {id:'alice',name:'Alice Example',email:'alice@leicesterhigh.co.uk',kind:'student',house:'Bradgate',yearGroup:'Year 8',formGroup:'8A',active:true},
+  {id:'bob',name:'Bob Example',email:'bob@leicesterhigh.co.uk',kind:'student',house:'Bradgate',yearGroup:'Year 9',formGroup:'9A',active:true},
+ ];
+ const result=parseOpenDayMatrix(matrix,roster);
+ assert.deepEqual(result.people[0].openDay,{role:'A note for you',time:'',location:'',lead:'',instructions:'Thank you for supporting our school.'});
+ assert.match(result.issues.find(issue=>issue.name==='Bob Example').issue,/Not included/);
 });
 test('CSV escapes quotes, line breaks and spreadsheet formulas',()=>{
  const csv=reportCsv([{name:'=HYPERLINK("x")',kind:'staff',house:'None'},{name:'Line\nbreak'}]);

@@ -2,6 +2,8 @@
 
 ## Where we are now — 14 September 2026
 
+- Added an administrator-only Open Day matrix import. It turns each pupil's marked role into a private message with the matching staff lead, location and blurb, treats Geography / Business Studies as Geography, spots omitted Year 7–13 pupils, supports personal notes for known non-attenders, and stops ambiguous or unmatched rows for review.
+
 - Added a private Open Day mission reveal built around a playful sealed envelope that opens before showing the role: students sign in to see only their own role, time, meeting point, staff lead and concise briefing. Optional assignment columns use the existing administrator roster import and survive routine roster refreshes.
 
 - Added deliberate book removal, clearer start/join/invite family flows, six graduated landmark comparisons, an explicit total tower height and a bounded latest-eight graphic that remains clear at 200 books.

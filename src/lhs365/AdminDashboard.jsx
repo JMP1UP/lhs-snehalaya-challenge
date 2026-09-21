@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { adminDemo } from "./admin-demo.mjs";
-import { buildReport, HOUSE_NAMES, parseRosterUpload, replaceRoster, reportCsv, validateRoster } from "./admin.mjs";
+import { buildReport, HOUSE_NAMES, parseOpenDayMatrix, parseRosterUpload, replaceRoster, reportCsv, validateRoster } from "./admin.mjs";
 import { liveReading } from "./reading-client.mjs";
 import { checkParticipation, parseParticipationList } from "./participation.mjs";
 import SchoolAccess from "./SchoolAccess";
@@ -29,6 +29,25 @@ function download(rows) {
 function Ranking({title,rows}) {
   return <section className="admin-card"><h2>{title}</h2>{rows.length ? <div className="admin-table-scroll"><table><thead><tr><th scope="col">Rank</th><th scope="col">Reader</th><th scope="col">Pages</th><th scope="col">Finished</th></tr></thead><tbody>{rows.map((person,index)=><tr key={person.id}><td>{index+1}</td><th scope="row">{person.name}<small>{person.house}{person.kind === "student" ? ` · ${person.yearGroup}` : ""}</small></th><td>{number(person.pages)}</td><td>{person.finished}</td></tr>)}</tbody></table></div> : <p>No pages logged yet.</p>}</section>;
 }
+function OpenDayMatrixImport({roster,onSave}) {
+  const [raw,setRaw]=useState(""),[draft,setDraft]=useState(null),[error,setError]=useState(""),[busy,setBusy]=useState(false);
+  const inspect=text=>{setError("");try{setDraft(parseOpenDayMatrix(text,roster));}catch(err){setDraft(null);setError(err.message);}};
+  const load=async event=>{setDraft(null);setError("");const file=event.target.files?.[0];if(!file)return;try{if(file.size>500000)throw new Error("Use a file smaller than 500 KB.");const text=await file.text();setRaw(text);inspect(text);}catch(err){setError(err.message);}};
+  return <details className="open-day-matrix-import">
+    <summary>Import Open Day role matrix</summary>
+    <p>Paste the table with pupil role marks and the subject details table. Geography / Business Studies is treated as Geography. Use a <strong>Personal message</strong> column for a pupil who needs a note instead of a role.</p>
+    <label htmlFor="open-day-matrix-file">Upload CSV, TSV or text</label><input id="open-day-matrix-file" type="file" accept=".csv,.tsv,.txt,text/csv,text/tab-separated-values,text/plain" disabled={busy} onChange={load}/>
+    <label htmlFor="open-day-matrix-paste">Or paste the table</label><textarea id="open-day-matrix-paste" value={raw} onChange={event=>setRaw(event.target.value)} placeholder={'Full Name\tYear Group\tReg Group\tTour Guide\tArt\tComputing…'}/>
+    <button type="button" className="button secondary" disabled={busy} onClick={()=>inspect(raw)}>Check Open Day roles</button>
+    {draft&&<div className="open-day-matrix-review">
+      <p><strong>{draft.people.length} individual messages ready</strong> · {draft.issues.length} need checking · {draft.total} pupil rows read</p>
+      {draft.people.length>0&&<details><summary>Review generated messages</summary><div className="admin-table-scroll"><table><thead><tr><th scope="col">Pupil</th><th scope="col">Role</th><th scope="col">Lead</th><th scope="col">Location</th><th scope="col">Blurb</th></tr></thead><tbody>{draft.people.map(person=><tr key={person.id||person.email}><th scope="row">{person.name}</th><td>{person.openDay.role}</td><td>{person.openDay.lead}</td><td>{person.openDay.location}</td><td>{person.openDay.instructions}</td></tr>)}</tbody></table></div></details>}
+      {draft.issues.length>0&&<details className="veracross-issues" open><summary>{draft.issues.length} row{draft.issues.length===1?"":"s"} need checking</summary><div className="admin-table-scroll"><table><thead><tr><th scope="col">Pupil</th><th scope="col">Issue</th></tr></thead><tbody>{draft.issues.map((issue,index)=><tr key={`${issue.name}-${index}`}><th scope="row">{issue.name}</th><td>{issue.issue}</td></tr>)}</tbody></table></div></details>}
+      <button type="button" className="button primary" disabled={busy||!draft.people.length} onClick={async()=>{setBusy(true);setError("");try{await onSave(draft.people,{replace:false});setDraft(null);setRaw("");}catch(err){setError(err.message);}finally{setBusy(false);}}}>{busy?"Saving…":"Apply Open Day roles"}</button>
+    </div>}
+    {error&&<p role="alert">{error}</p>}
+  </details>;
+}
 function RosterImport({data,onSave,onVeracross,open=false}) {
   const [raw,setRaw]=useState(""),[draft,setDraft]=useState(null),[complete,setComplete]=useState(false),[error,setError]=useState(""),[busy,setBusy]=useState(false),[copied,setCopied]=useState(false),[sourceNote,setSourceNote]=useState(""),[skippedPupils,setSkippedPupils]=useState([]);
   const inspect=text=>{setError("");try{setDraft(parseRosterUpload(text));}catch(err){setDraft(null);setError(err.message);}};
@@ -36,6 +55,7 @@ function RosterImport({data,onSave,onVeracross,open=false}) {
     <p><strong>Add or update is the safe default.</strong> A later upload adds new joiners and updates matching school emails without removing anyone else.</p>
     <p>Open Day assignments are optional. Include <strong>Open Day role, time, meeting point, staff lead</strong> and <strong>instructions</strong>; omitted assignment columns preserve existing missions. Use <strong>CLEAR</strong> as the role to remove one.</p>
     {onVeracross&&<><button type="button" className="button primary" disabled={busy} onClick={async()=>{setBusy(true);setError("");setSourceNote("");setSkippedPupils([]);try{const preview=await onVeracross();setDraft(preview.people);setSkippedPupils(preview.skippedPupils||[]);setSourceNote(`${preview.people.length} school accounts found${preview.skipped?` · ${preview.skipped} incomplete records skipped`:""}. Check the totals, then add or update.`);}catch(err){setError(err.message);}finally{setBusy(false);}}}>{busy?"Checking…":"Check Veracross roster"}</button>{sourceNote&&<p role="status">{sourceNote}</p>}{skippedPupils.length>0&&<details className="veracross-issues"><summary>{skippedPupils.length} pupil record{skippedPupils.length===1?"":"s"} need correcting in Veracross</summary><div className="admin-table-scroll"><table><thead><tr><th scope="col">Pupil</th><th scope="col">Missing</th></tr></thead><tbody>{skippedPupils.map((pupil,index)=><tr key={`${pupil.name}-${index}`}><th scope="row">{pupil.name}</th><td>{pupil.missing.join(", ")}</td></tr>)}</tbody></table></div></details>}</>}
+    <OpenDayMatrixImport roster={sourceNote&&draft?draft:data.people} onSave={onSave}/>
     <details className="ai-list-prompt"><summary>Prompt to arrange roster data with AI</summary><p>Use only an AI service approved for school personal data.</p><textarea aria-label="Roster AI prompt" readOnly value={AI_ROSTER_PROMPT}/><button type="button" className="button secondary" onClick={async()=>{try{await navigator.clipboard.writeText(AI_ROSTER_PROMPT);setCopied(true);}catch{setCopied(false);}}}>{copied?"Prompt copied":"Copy prompt"}</button></details>
     <label htmlFor="roster-file">Upload JSON, CSV or TSV</label><input id="roster-file" type="file" accept=".json,.csv,.tsv,.txt,application/json,text/csv,text/tab-separated-values,text/plain" disabled={busy} onChange={async event=>{
       setDraft(null);setComplete(false);setError("");const file=event.target.files?.[0];if(!file)return;

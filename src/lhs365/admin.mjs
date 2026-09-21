@@ -79,6 +79,73 @@ export function parseRosterUpload(text) {
   }
   return validateRoster(values);
 }
+const matrixRoleName=value=>/^geography(?:\s*\/.*)?$/i.test(clean(value))?"Geography":clean(value);
+const matrixMarker=value=>/^(?:y|yes|x|1|true)$/i.test(clean(value));
+const comparableName=value=>{
+  const text=clean(value).normalize("NFKD").replace(/[\u0300-\u036f]/g,"");
+  const parts=text.split(",").map(part=>part.trim()).filter(Boolean);
+  const ordered=parts.length>1?`${parts.slice(1).join(" ")} ${parts[0]}`:text;
+  return ordered.toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
+};
+const assignmentRole=role=>role==="Tour Guide"?role:role==="Support"?"Support Helper":`Subject Helper - ${role}`;
+export function parseOpenDayMatrix(text,roster) {
+  const source=clean(text);
+  if(!source)throw new Error("Paste the Open Day table or choose a file first.");
+  if(!Array.isArray(roster))throw new Error("Load the current school roster before checking Open Day roles.");
+  const delimiter=source.includes("\t")?"\t":source.includes(",")?",":";";
+  const rows=delimitedRows(source,delimiter);
+  const headers=rows.shift()||[];
+  const nameColumn=headers.findIndex(value=>/^(?:full )?name$/i.test(clean(value)));
+  const yearColumn=headers.findIndex(value=>/^year group$/i.test(clean(value)));
+  const formColumn=headers.findIndex(value=>/^(?:reg|form|tutor) group$/i.test(clean(value)));
+  const personalMessageColumn=headers.findIndex(value=>/^personal message$/i.test(clean(value)));
+  if(nameColumn<0||yearColumn<0||formColumn<0)throw new Error("Include Full Name, Year Group and Reg Group headings.");
+  const lookupHeading=rows.find(row=>row.some(value=>/^subject$/i.test(clean(value)))&&row.some(value=>/^lead member of staff$/i.test(clean(value))));
+  const lookupColumn=lookupHeading?.findIndex(value=>/^subject$/i.test(clean(value)))??-1;
+  if(lookupColumn<0)throw new Error("Include the Subject, Lead Member of Staff, Where to go on Saturday and What you will be doing table.");
+  const roleColumns=headers.map((value,index)=>({index,role:matrixRoleName(value)})).filter(item=>item.index>formColumn&&item.index<lookupColumn&&item.index!==personalMessageColumn&&item.role);
+  if(!roleColumns.length)throw new Error("No Open Day role columns were found.");
+  const lookup=new Map();
+  for(const row of rows){
+    const role=matrixRoleName(row[lookupColumn]);
+    if(!role||/^subject$/i.test(role))continue;
+    const details={lead:clean(row[lookupColumn+1]),location:clean(row[lookupColumn+2]),instructions:clean(row[lookupColumn+3])};
+    if(details.lead&&details.location&&details.instructions)lookup.set(role.toLowerCase(),details);
+  }
+  const rosterByName=new Map();
+  for(const person of roster){const key=comparableName(person.name);const matches=rosterByName.get(key)||[];matches.push(person);rosterByName.set(key,matches);}
+  const people=[],issues=[],used=new Set(),seen=new Set();
+  const pupilRows=rows.filter(row=>clean(row[nameColumn])&&clean(row[yearColumn])&&clean(row[formColumn]));
+  for(const row of pupilRows){
+    const sourceName=clean(row[nameColumn]);
+    const roles=roleColumns.filter(item=>matrixMarker(row[item.index])).map(item=>item.role);
+    const matches=rosterByName.get(comparableName(sourceName))||[];
+    if(matches.length===0){issues.push({name:sourceName,issue:"Not found on the current school roster."});continue;}
+    if(matches.length>1){issues.push({name:sourceName,issue:"Name matches more than one person on the roster."});continue;}
+    const person=matches[0],key=person.id||person.email;
+    seen.add(key);
+    if(used.has(key)){issues.push({name:sourceName,issue:"This pupil appears more than once in the table."});continue;}
+    const personalMessage=personalMessageColumn<0?"":clean(row[personalMessageColumn]);
+    if(personalMessage&&roles.length){issues.push({name:sourceName,issue:"Choose either a role or a personal message, not both."});continue;}
+    if(personalMessage){
+      used.add(key);
+      people.push({...person,openDay:{role:"A note for you",time:"",location:"",lead:"",instructions:personalMessage}});
+      continue;
+    }
+    if(roles.length===0){issues.push({name:sourceName,issue:"No role marked."});continue;}
+    if(roles.length>1){issues.push({name:sourceName,issue:`More than one role marked: ${roles.join(", ")}.`});continue;}
+    const role=roles[0],details=lookup.get(role.toLowerCase());
+    if(!details){issues.push({name:sourceName,issue:`No staff, location and blurb found for ${role}.`});continue;}
+    used.add(key);
+    people.push({...person,openDay:{role:assignmentRole(role),time:"",location:details.location,lead:details.lead,instructions:details.instructions}});
+  }
+  for(const person of roster){
+    if(person.kind!=="student"||person.active===false||!/^Year (?:[7-9]|1[0-3])$/.test(clean(person.yearGroup)))continue;
+    const key=person.id||person.email;
+    if(!seen.has(key))issues.push({name:person.name,issue:`Not included in the Open Day table (${person.yearGroup}${person.formGroup?` · ${person.formGroup}`:""}).`});
+  }
+  return {people,issues,total:pupilRows.length};
+}
 export function mergeRoster(existing,incoming) {
   const updates=new Map(incoming.map(person=>[person.id,person]));
   const merged=existing.map(person=>updates.has(person.id)?{...person,...updates.get(person.id)}:person);
