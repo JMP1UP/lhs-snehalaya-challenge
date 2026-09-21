@@ -113,12 +113,6 @@ export default function Lhs365() {
           <a href="#/" aria-current={route === "/" || route === "/challenges" ? "page" : undefined}>
             Challenges <span className="nav-challenge-count" aria-label="2 challenges">2</span>
           </a>
-          <a
-            href="#/reading"
-            aria-current={route === "/reading" ? "page" : undefined}
-          >
-            Log reading
-          </a>
           <a href="#/open-day" aria-current={route === "/open-day" ? "page" : undefined}>Open Day</a>
         </nav>
         <span className="school-context">A little every day. <span aria-hidden="true">✦</span></span>

@@ -16,12 +16,14 @@ function MissionArt({role}) {
   </div>;
 }
 
-function Assignment({assignment,name,preview=false}) {
+function Assignment({assignment,name,preview=false,isStaff=false}) {
   const [revealed,setRevealed]=useState(false),[opening,setOpening]=useState(false),heading=useRef(null);
   const personalNote=assignment?.role==="A note for you";
   useEffect(()=>{if(revealed)heading.current?.focus();},[revealed]);
   useEffect(()=>{if(!opening)return undefined;const timer=setTimeout(()=>setRevealed(true),650);return()=>clearTimeout(timer);},[opening]);
-  if(!assignment)return <section className="mission-empty"><span className="eyebrow">OPEN DAY · YOUR ROLE</span><h1>Your mission is still being prepared.</h1><p>Check back later, or ask your form teacher if you expected to see a role.</p></section>;
+  if(!assignment)return isStaff
+    ? <section className="mission-empty"><span className="eyebrow">OPEN DAY · THANK YOU</span><h1>Thank you for supporting Open Day.</h1><p>Thank you for helping new families get to know us—and for helping our current students enjoy their day.</p></section>
+    : <section className="mission-empty"><span className="eyebrow">OPEN DAY · YOUR ROLE</span><h1>Your mission is still being prepared.</h1><p>Check back later, or ask your form teacher if you expected to see a role.</p></section>;
   if(!revealed)return <section className="mission-sealed" aria-labelledby="mission-sealed-title">
     <div className={`role-envelope role-envelope-large${opening?" opening":""}`} aria-hidden="true">
       <div className="role-envelope-letter"><span>LHS OPEN DAY</span><b>{name?`For ${name}`:"Your role"}</b><i>✦</i></div>
@@ -48,5 +50,5 @@ function Assignment({assignment,name,preview=false}) {
 
 export default function OpenDayMission(){
   if(!liveReading)return <Assignment assignment={previewAssignment} name="Alex" preview/>;
-  return <SchoolAccess area="open-day">{({user,me})=><Assignment key={user.uid} assignment={me.person?.openDay||null} name={me.person?.name||""}/>}</SchoolAccess>;
+  return <SchoolAccess area="open-day">{({user,me})=><Assignment key={user.uid} assignment={me.person?.openDay||null} name={me.person?.name||""} isStaff={me.person?.kind==="staff"}/>}</SchoolAccess>;
 }
