@@ -3,7 +3,7 @@ import ReadingAccess from "./ReadingAccess";
 import AdminDashboard from "./AdminDashboard";
 import { liveReading } from "./reading-client.mjs";
 import StepsArchive from "./StepsArchive";
-import OpenDayMission from "./OpenDayMission";
+import OpenDayThanks from "./OpenDayThanks";
 import "./lhs365.css";
 import "./challenge-brand.css";
 
@@ -89,7 +89,7 @@ export default function Lhs365() {
     return () => window.removeEventListener("hashchange", navigate);
   }, []);
   useEffect(() => {
-    document.title = `${route === "/admin" ? "Reading admin" : route === "/teacher" ? "Teacher reading dashboard" : route === "/open-day" ? "My Open Day mission" : route === "/reading" ? "Read for Snehalaya" : route === "/steps" ? "Steps to Snehalaya" : "Learning beyond school"} | 25Thirty 365 · Leicester High School`;
+    document.title = `${route === "/admin" ? "Reading admin" : route === "/teacher" ? "Teacher reading dashboard" : route === "/open-day" ? "Thank you for Open Day" : route === "/reading" ? "Read for Snehalaya" : route === "/steps" ? "Steps to Snehalaya" : "Learning beyond school"} | 25Thirty 365 · Leicester High School`;
   }, [route]);
   return (
     <div className={`lhs365 ${route === "/reading" || route === "/admin" ? "reading-theme" : "adventure-theme"}`}>
@@ -113,12 +113,12 @@ export default function Lhs365() {
           <a href="#/" aria-current={route === "/" || route === "/challenges" ? "page" : undefined}>
             Challenges <span className="nav-challenge-count" aria-label="2 challenges">2</span>
           </a>
-          <a href="#/open-day" aria-current={route === "/open-day" ? "page" : undefined}>Open Day</a>
+          <a href="#/open-day" aria-current={route === "/open-day" ? "page" : undefined}>Open Day thank-you</a>
         </nav>
         <span className="school-context">A little every day. <span aria-hidden="true">✦</span></span>
       </header>
       <main id="main-content" ref={main} tabIndex={-1}>
-        {route === "/steps" ? <StepsArchive /> : route === "/admin" ? <AdminDashboard /> : route === "/teacher" ? <AdminDashboard view="teacher" /> : route === "/open-day" ? <OpenDayMission /> : route === "/reading" ? <ReadingAccess /> : <Home />}
+        {route === "/steps" ? <StepsArchive /> : route === "/admin" ? <AdminDashboard /> : route === "/teacher" ? <AdminDashboard view="teacher" /> : route === "/open-day" ? <OpenDayThanks /> : route === "/reading" ? <ReadingAccess /> : <Home />}
       </main>
       <footer className="site-footer">
         <p>Leicester High School · LHS 365</p>

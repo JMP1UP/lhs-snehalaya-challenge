@@ -12,6 +12,10 @@ Updated: 14 September 2026. Owner: John Partridge. Classification: controlled in
 
 The LHS 365 programme home is the default route, with the graphic reading theme at #/reading. Desktop and 390px mobile checks confirm the one-step finished-book flow; three successive books produced three spines, 982 pages and three completions. Hosted lint, 48 tests and production build passed.
 
+## Open Day closeout — 27 September 2026
+
+`#/open-day` now shows a public thank-you to the students rather than prompting for sign-in and a role reveal. The navigation and page title reflect the post-event state. Role assignments remain in the private roster; no roster data is changed or exposed by the thank-you page. Desktop and 390px phone layouts were checked locally; reading lint, 58 tests and the production build passed.
+
 ## Completed checks
 
 - New frontend lint, 33 reading/catalogue/tower/admin/API tests and Vite build pass locally and on Vercel.

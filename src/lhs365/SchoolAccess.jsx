@@ -52,7 +52,7 @@ export default function SchoolAccess({ children, admin = false, staff = false, a
       <span>{account.me.person?.name ? `Signed in as ${account.me.person.name}` : "Signed in with Microsoft"}</span>
       <nav className="school-view-links" aria-label="School reading views">
         {area!=="reading" && <a href="#/reading">My reading</a>}
-        {area!=="open-day" && <a href="#/open-day">My Open Day role</a>}
+        {area!=="open-day" && <a href="#/open-day">Open Day thank-you</a>}
         {(account.me.isAdmin||account.me.canViewForms) && area!=="teacher" && <a href="#/teacher">Teacher dashboard</a>}
         {account.me.isAdmin && area!=="admin" && <a href="#/admin">Admin dashboard</a>}
       </nav>
