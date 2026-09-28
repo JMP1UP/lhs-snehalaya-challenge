@@ -448,6 +448,8 @@
 .lhs365 .challenge-cta:hover {background:#cf2d43;box-shadow:8px 8px 0 var(--comic-ink);}
 .lhs365 .challenge-cta--soon {cursor:default;}
 .lhs365 .challenge-cta--soon:hover {background:var(--comic-red);box-shadow:6px 6px 0 var(--comic-ink);transform:none;}
+.staff-pilot-link {display:inline-flex;align-items:center;gap:12px;margin-top:20px;color:var(--comic-ink);font-weight:900;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px;}
+.staff-pilot-link:hover {color:var(--comic-red);}
 .home-book-art {
   min-height:410px;
   border-left:3px solid var(--comic-ink);

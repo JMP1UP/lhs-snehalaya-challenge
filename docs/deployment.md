@@ -1,12 +1,12 @@
 # 25Thirty 365 — controlled school pilot
 
-Updated: 14 September 2026. Owner: John Partridge. Classification: controlled internal school pilot.
+Updated: 28 September 2026. Owner: John Partridge. Classification: controlled internal school pilot.
 
 ## Current publication
 
 - Public address: `https://365.25thirty.school` (Vercel fallback: `https://25thirty-365.vercel.app`).
 - Host: separate Vercel project `25thirty-365` (`prj_YXRk7mn2TC6sPgv5iPYx1pTEsyJq`).
-- Release source: production branch `master`; app commit `86df97a`. Vercel publishes the current build at the custom address above.
+- Release source: production branch `master`. Vercel publishes the current build at the custom address above.
 - Suite: `https://25thirty.school/#365`, with a working preview link.
 - Custom address: `365.25thirty.school`, live with HTTPS.
 
@@ -15,6 +15,10 @@ The LHS 365 programme home is the default route, with the graphic reading theme 
 ## Open Day closeout — 27 September 2026
 
 `#/open-day` now shows a public thank-you to the students rather than prompting for sign-in and a role reveal. The navigation and page title reflect the post-event state. Role assignments remain in the private roster; no roster data is changed or exposed by the thank-you page. Desktop and 390px phone layouts were checked locally; reading lint, 58 tests and the production build passed.
+
+## Staff book pilot — 28 September 2026
+
+The homepage keeps the Autumn pupil challenge marked coming soon and offers a separate staff-testing link to `#/reading`. The API defaults to staff-only personal reading and family actions: an active rostered staff account or a reading admin is required after school Microsoft authentication. The current roster has 70 active staff records. An unauthorised pupil or unrostered account cannot use the bookshelf by guessing the route. Public aggregate totals and private teacher/admin reports retain their existing access rules. `READING_ACCESS_MODE=all` is reserved for a deliberate later pupil launch; it is not configured in production. No database migration or roster change is needed. Local reading lint, 59 tests and build passed.
 
 ## Completed checks
 
@@ -40,7 +44,7 @@ The record is DNS-only. Cloudflare authoritative DNS and `1.1.1.1` returned the 
 
 ## Rollback and future changes
 
-Immediate rollback: deployment `dpl_3ZeeSuc9kfSjQTRkDRWifib4X8Q1` (`25thirty-365-45bvphigg-john-s-projects7.vercel.app`); the original steps site remains the historical fallback. To withdraw this pilot, remove its suite link and unpublish/disable only the new Vercel project. Do not deploy the root Firebase configuration: `.firebaserc` still names the original steps project.
+Immediate staff-pilot rollback: the previous production deployment `dpl_BwwtFTW2XMcSRdaoQYhH7kLSkKYt` (`25thirty-365-m5rfoxlo8-john-s-projects7.vercel.app`); the original steps site remains the historical fallback. To withdraw this pilot, remove its suite link and unpublish/disable only the new Vercel project. Do not deploy the root Firebase configuration: `.firebaserc` still names the original steps project.
 
 Future Vercel deployments use `vercel.json` to run reading lint, tests and build. Keep `.vercel` and `.env.local` ignored. The shared reading API and Microsoft login are enabled for a controlled school pilot. The roster is an auditing and grouping tool rather than a sign-in gate; see reading-admin.md for the remaining operational checks.
 

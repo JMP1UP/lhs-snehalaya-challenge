@@ -4,7 +4,7 @@ import { getFirestore } from "firebase-admin/firestore";
 import { createHash, randomBytes, randomUUID } from "node:crypto";
 import { createBook, finishBook, updateBook, restoreBooks } from "../src/lhs365/reading.mjs";
 import { buildReport, mergeRoster, replaceRoster, validateRoster } from "../src/lhs365/admin.mjs";
-import { CAMPAIGN, emailKey, authorisedIdentity, requireAdmin, requireMember } from "../server/reading-policy.mjs";
+import { CAMPAIGN, emailKey, authorisedIdentity, requireAdmin, requireMember, requireReadingAccess } from "../server/reading-policy.mjs";
 import { fetchVeracrossRoster } from "../server/veracross.mjs";
 
 function fail(message, status = 400) { const e = new Error(message); e.status = status; throw e; }
@@ -16,7 +16,7 @@ function services() {
   const credentials = JSON.parse(process.env.READING_FIREBASE_SERVICE_ACCOUNT);
   if (credentials.project_id !== projectId) fail("School reading setup is incomplete.", 503);
   const app = getApps().find(app => app.name === "reading-server") || initializeApp({credential:cert(credentials),projectId}, "reading-server");
-  return { auth:getAuth(app), db:getFirestore(app), admins };
+  return { auth:getAuth(app), db:getFirestore(app), admins, accessMode:process.env.READING_ACCESS_MODE === "all" ? "all" : "staff" };
 }
 function londonDate() { return new Intl.DateTimeFormat("en-CA", {timeZone:"Europe/London",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date()); }
 const familyCode=()=>randomBytes(5).toString("hex").toUpperCase();
@@ -29,7 +29,7 @@ export function createHandler(getServices = services) { return async function ha
   res.setHeader("X-Content-Type-Options", "nosniff");
   try {
     if (!["GET", "POST"].includes(req.method)) { res.setHeader("Allow", "GET, POST"); fail("Method not allowed.", 405); }
-    const {auth,db,admins,veracrossRoster=fetchVeracrossRoster} = getServices();
+    const {auth,db,admins,accessMode="staff",veracrossRoster=fetchVeracrossRoster} = getServices();
     const resource = req.query.resource || "me";
     const campaign = db.collection("readingCampaigns").doc(CAMPAIGN);
     if (req.method === "GET" && resource === "summary") {
@@ -68,6 +68,7 @@ export function createHandler(getServices = services) { return async function ha
       return res.status(200).json({formGroup:person?.formGroup||"",complete:roster.complete===true,studentSummary:report.studentSummary,formGroups:report.formGroups,updatedAt:new Date().toISOString()});
     }
     if (req.method === "GET" && resource === "me") {
+      requireReadingAccess(identity,roster.people,accessMode);
       const person = roster.people.find(p => p.id === identity.key && p.active !== false) || null;
       const memberRef=campaign.collection("members").doc(identity.key);
       const now=new Date().toISOString();
@@ -84,6 +85,7 @@ export function createHandler(getServices = services) { return async function ha
     if (!req.headers["content-type"]?.startsWith("application/json")) fail("Use JSON for this request.",415);
     if (JSON.stringify(req.body || {}).length > 500000) fail("The upload is too large.",413);
     const body = typeof req.body === "object" && req.body ? req.body : {};
+    if (!["veracross-preview","roster","roster-merge"].includes(body.action)) requireReadingAccess(identity,roster.people,accessMode);
     if (body.action === "veracross-preview") {
       requireAdmin(identity);
       const preview=await veracrossRoster();

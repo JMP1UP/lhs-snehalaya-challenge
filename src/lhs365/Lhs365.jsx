@@ -44,6 +44,7 @@ function Home() {
           <h2 id="reading-feature-title">A new chapter<br /><em>is about to begin.</em></h2>
           <p>Our next whole-school challenge is almost ready.</p>
           <span className="challenge-cta challenge-cta--soon">Autumn Challenge - Coming Soon!</span>
+          <a className="staff-pilot-link" href="#/reading">Staff: try the book challenge <span aria-hidden="true">➜</span></a>
         </div>
         <div className="home-book-art" role="img" aria-label="A playful stack of books hints at the next Autumn Challenge.">
           <span className="book-art-sticker">COMING<br />SOON</span>

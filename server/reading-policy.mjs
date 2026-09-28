@@ -16,3 +16,12 @@ export function requireMember(identity, people) {
   if (!person) { const error = new Error("Your account is not on the active reading roster. Please contact an administrator."); error.status = 403; throw error; }
   return person;
 }
+export function requireReadingAccess(identity, people, mode = "staff") {
+  if (mode === "all" || identity.isAdmin) return;
+  const person = people.find(p => p.id === identity.key && p.active !== false);
+  if (person?.kind !== "staff") {
+    const error = new Error("The book challenge is open to staff testers only for now.");
+    error.status = 403;
+    throw error;
+  }
+}

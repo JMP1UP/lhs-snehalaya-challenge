@@ -1,17 +1,17 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {authorisedIdentity,emailKey,requireMember} from './reading-policy.mjs';
+import {authorisedIdentity,emailKey,requireMember,requireReadingAccess} from './reading-policy.mjs';
 import {createHandler} from '../api/reading.mjs';
 const email='fictional@leicesterhigh.co.uk';
 const token={uid:'uid',email,email_verified:true,firebase:{sign_in_provider:'microsoft.com'}};
 const person={id:emailKey(email),email,name:'Fictional',kind:'student',house:'Bradgate',yearGroup:'Year 8',formGroup:'8A',active:true};
-function fixture({admin=false,identity=token,revoked=false,rosterPerson=person,veracrossRoster,storedRecords}={}) {
+function fixture({admin=false,identity=token,revoked=false,rosterPerson=person,veracrossRoster,storedRecords,accessMode='all'}={}) {
  const records=storedRecords||new Map([['readingCampaigns/read-for-snehalaya-2026/settings/roster',{people:[rosterPerson],complete:true,version:1}]]);
  let bookReads=0;
  const ref=path=>({path,collection:name=>ref(`${path}/${name}`),doc:name=>ref(`${path}/${name}`),get:async()=>({exists:records.has(path),data:()=>structuredClone(records.get(path))}),limit:()=>query(path),where:(field,op,value)=>query(path,field,op,value)});
  const query=(path,field,op,value)=>({limit(){return this;},async get(){bookReads++;const docs=[...records].filter(([key,data])=>key.startsWith(path+'/') && (!field || (op==='array-contains'?data[field]?.includes(value):data[field]===value))).map(([key,data])=>({id:key.split('/').at(-1),data:()=>structuredClone(data)}));return {docs,size:docs.length};}});
  const db={collection:name=>ref(name),runTransaction:async fn=>{const writes=[],deletes=[];const result=await fn({get:r=>r.get(),set:(r,v)=>writes.push([r.path,v]),create:(r,v)=>{assert.ok(!records.has(r.path));writes.push([r.path,v]);},delete:r=>deletes.push(r.path)});for(const key of deletes)records.delete(key);for(const [key,value]of writes)records.set(key,structuredClone(value));return result;}};
- const handler=createHandler(()=>({db,admins:admin?[identity.email.toLowerCase()]:[],veracrossRoster,auth:{verifyIdToken:async(raw,check)=>{assert.equal(check,true);if(revoked)throw new Error('revoked');return identity;}}}));
+ const handler=createHandler(()=>({db,admins:admin?[identity.email.toLowerCase()]:[],accessMode,veracrossRoster,auth:{verifyIdToken:async(raw,check)=>{assert.equal(check,true);if(revoked)throw new Error('revoked');return identity;}}}));
  async function call(body,resource='me',headers={authorization:'Bearer fixture','content-type':'application/json'}){const res={headers:{},setHeader(k,v){this.headers[k]=v;},status(code){this.code=code;return this;},json(data){this.data=data;return this;}};await handler({method:body?'POST':'GET',headers,query:{resource},body},res);return res;}
  return {call,records,reads:()=>bookReads};
 }
@@ -21,6 +21,27 @@ test('identity requires school Microsoft login, never display names',()=>{
  assert.equal(authorisedIdentity({...token,name:'Admin (staff)'},[]).isAdmin,false);
  assert.equal(authorisedIdentity(token,[email]).isAdmin,true);
  assert.throws(()=>requireMember(authorisedIdentity(token,[]),[{...person,active:false}]),{status:403});
+ assert.throws(()=>requireReadingAccess(authorisedIdentity({...token,name:'Fictional (staff)'},[]),[],"staff"),{status:403});
+});
+test('staff pilot allows rostered staff and admins but denies pupil books and family actions',async()=>{
+ const staff={...person,kind:'staff',yearGroup:'Staff'};
+ const staffPilot=fixture({rosterPerson:staff,accessMode:'staff'});
+ assert.equal((await staffPilot.call()).code,200);
+ assert.equal((await staffPilot.call({action:'add',id:'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',title:'Staff test',author:'',total:40})).code,201);
+ const pupilPilot=fixture({accessMode:'staff'});
+ assert.equal((await pupilPilot.call()).code,403);
+ assert.equal((await pupilPilot.call({action:'add',id:'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',title:'Pupil test',author:'',total:40})).code,403);
+ assert.equal((await pupilPilot.call({action:'family-create'})).code,403);
+ assert.equal((await pupilPilot.call({action:'progress',id:'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',page:20})).code,403);
+ assert.equal((await pupilPilot.call({action:'remove',id:'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb'})).code,403);
+ assert.equal(pupilPilot.records.size,1);
+ assert.equal((await pupilPilot.call(null,'summary',{})).code,200);
+ assert.equal((await pupilPilot.call(null,'staff')).code,403);
+ const unrosteredStaff=fixture({identity:{...token,email:'new-staff@leicesterhigh.co.uk',name:'New Staff (staff)'},accessMode:'staff'});
+ assert.equal((await unrosteredStaff.call()).code,403);
+ assert.equal((await fixture({rosterPerson:{...staff,active:false},accessMode:'staff'}).call()).code,403);
+ const adminPilot=fixture({admin:true,accessMode:'staff'});
+ assert.equal((await adminPilot.call()).code,200);
 });
 test('API defaults closed before touching credentials',async()=>{
  const prior=process.env.READING_LIVE_ENABLED;delete process.env.READING_LIVE_ENABLED;
