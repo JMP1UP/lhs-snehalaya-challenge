@@ -1,5 +1,9 @@
 # Architecture
 
+## At Our Table integration — October 2026
+
+LHS 365 is the programme home for At Our Table. The LHS 365 homepage and navigation link to the live cookbook, and the cookbook links back to LHS 365. The applications remain separate deployments and security boundaries: LHS 365 continues to use its existing Firebase-backed school access, while At Our Table retains its Entra/Postgres recipe workflow and can support approved Snehalaya contributors without school accounts. No account, session or recipe data is passed through the cross-product links.
+
 ## Catalogue fallback — 10 September 2026
 
 Google Books returned HTTP 429 quota exhaustion for Dune. Added Open Library search fallback on provider failure with bounded timeout/results and sanitised metadata. Open Library work-level median page counts are explicitly approximate and editable, never claimed as edition-specific. Search privacy copy names both providers. Browser verified live Dune/Frank Herbert result and selection prefilling 607 with the estimate warning; 22 tests, reading lint and build pass. Manual fallback and stale-search protection remain intact.

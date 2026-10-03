@@ -2,6 +2,12 @@
 
 > **by 25Thirty**
 
+## October 2026 — At Our Table joins LHS 365
+
+At Our Table is presented on the LHS 365 home screen as a current community project. Its feature uses the cookbook's warmer plum, blush and food-photography language inside the bold LHS 365 frame, so it feels distinct while clearly belonging to the same programme. The large image and primary action both lead straight into the cookbook. Persistent links in both products make the relationship visible without requiring explanatory copy.
+
+The family-table image is an AI-generated illustrative scene, not a photograph of school members or an event. Its source and prompt are recorded in [at-our-table-image.md](at-our-table-image.md).
+
 ## September 2026 — LHS 365 and challenge themes
 
 The programme home is LHS 365. The reading challenge has its own **Pages Become Places** graphic-novel system: school-navy ink provides structure, warm paper is the canvas, signal red marks primary actions, sky blue communicates progress and yellow is reserved for captions. Thick outlines, flat landmark illustrations and hard print-style shadows replace both the earlier quiet library treatment and the later neon wireframe experiment. The logging flow and privacy boundaries in the [reading design brief](reading-design-brief.md) remain unchanged.

@@ -38,6 +38,21 @@ function Home() {
           <button className="dialog-done" value="close">Got it</button>
         </form>
       </dialog>
+      <section className="cookbook-feature" aria-labelledby="cookbook-feature-title">
+        <div className="cookbook-feature-copy">
+          <span className="cookbook-kicker">NEW COMMUNITY PROJECT · LHS + SNEHALAYA</span>
+          <h2 id="cookbook-feature-title">At Our <span>Table</span></h2>
+          <p>Family favourites, treasured recipes and something good to share.</p>
+          <a className="cookbook-cta" href="https://at-our-table-kappa.vercel.app">
+            Open the cookbook <span aria-hidden="true">➜</span>
+          </a>
+          <small>Free to explore · £10 donations support Snehalaya’s new kitchen and bakery</small>
+        </div>
+        <a className="cookbook-feature-image" href="https://at-our-table-kappa.vercel.app" aria-label="Open At Our Table community cookbook">
+          <img src="/at-our-table-family.webp" alt="An illustrative gathering of people preparing and sharing food at a table" />
+          <span>Many cultures.<br />One community.</span>
+        </a>
+      </section>
       <section className="reading-feature reading-feature--teaser" aria-labelledby="reading-feature-title">
         <div className="reading-feature-copy">
           <span className="challenge-badge">AUTUMN 2026 · NEARLY HERE</span>
@@ -115,6 +130,7 @@ export default function Lhs365() {
             Challenges <span className="nav-challenge-count" aria-label="2 challenges">2</span>
           </a>
           <a href="#/open-day" aria-current={route === "/open-day" ? "page" : undefined}>Open Day thank-you</a>
+          <a href="https://at-our-table-kappa.vercel.app">At Our Table <span aria-hidden="true">↗</span></a>
         </nav>
         <span className="school-context">A little every day. <span aria-hidden="true">✦</span></span>
       </header>
