@@ -2,7 +2,7 @@
 
 ## At Our Table integration — October 2026
 
-LHS 365 is the programme home for At Our Table. The LHS 365 homepage and navigation link to the live cookbook, and the cookbook links back to LHS 365. The applications remain separate deployments and security boundaries: LHS 365 continues to use its existing Firebase-backed school access, while At Our Table retains its Entra/Postgres recipe workflow and can support approved Snehalaya contributors without school accounts. No account, session or recipe data is passed through the cross-product links.
+LHS 365 is the programme home for At Our Table. The LHS 365 homepage and navigation link to `https://table.365.25thirty.school`, and the cookbook links back to LHS 365. The shared `365.25thirty.school` address presents one coherent system while the applications remain separate deployments and security boundaries: LHS 365 continues to use its existing Firebase-backed school access, while At Our Table retains its Entra/Postgres recipe workflow and can support approved Snehalaya contributors without school accounts. No account, session or recipe data is passed through the cross-product links.
 
 ## Catalogue fallback — 10 September 2026
 

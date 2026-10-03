@@ -46,4 +46,4 @@ Reading admin authorisation uses a server environment allowlist, not a display-n
 
 # 3 October 2026 — At Our Table is an LHS 365 community project
 
-At Our Table now sits within the LHS 365 experience as a prominent community project. A homepage feature and persistent navigation lead to the cookbook, while the cookbook links back to LHS 365. The products keep separate deployments, authentication and data stores because school-only challenge access and external Snehalaya contribution have different access requirements.
+At Our Table now sits within the LHS 365 experience as a prominent community project at `table.365.25thirty.school`. A homepage feature and persistent navigation lead to the cookbook, while the cookbook links back to LHS 365. The shared address presents one system to visitors. The products keep separate deployments, authentication and data stores because school-only challenge access and external Snehalaya contribution have different access requirements.
