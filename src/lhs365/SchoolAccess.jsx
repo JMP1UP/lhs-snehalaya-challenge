@@ -63,8 +63,8 @@ export default function SchoolAccess({ children, admin = false, staff = false, a
     {busy ? <section className="school-login-card school-login-loading" role="status"><div className="school-login-copy"><span className="eyebrow">LHS 365 · SCHOOL ACCESS</span><h1>{openDay?"Finding your mission…":"Opening reading…"}</h1></div><SchoolLoginArt openDay={openDay}/></section> : allowed ? children(account) : <section className="school-login-card">
       <div className="school-login-copy">
         <span className="eyebrow">LHS 365 · SCHOOL ACCESS</span>
-        <h1>{account ? (staff?"Staff access required":"Admin access required") : pilotDenied?"Staff preview only":openDay?"Ready for your mission?":area==="reading"?"Try the book challenge":"Ready to read?"}</h1>
-        <p>{account ? (staff?"This area is for staff identified in the school roster.":"This area is for the authorised reading administrators.") : pilotDenied?"The challenge opens to pupils later. Staff testers can select their school account below.":area==="reading"?"Staff testers: use your Leicester High Microsoft account.":"Use your Leicester High Microsoft account."}</p>
+        <h1>{account ? (staff?"Staff access required":"Admin access required") : pilotDenied?"Staff preview only":openDay?"Ready for your mission?":area==="reading"?"Join the book challenge":"Ready to read?"}</h1>
+        <p>{account ? (staff?"This area is for staff identified in the school roster.":"This area is for the authorised reading administrators.") : pilotDenied?"The challenge opens to pupils later. Staff testers can select their school account below.":"Use your Leicester High Microsoft account."}</p>
         {!account && client && <button className="button primary school-login-button" onClick={signIn}>{pilotDenied?"Use a staff account":"Continue with Microsoft"} <span aria-hidden="true">➜</span></button>}
       </div>
       <SchoolLoginArt openDay={openDay}/>

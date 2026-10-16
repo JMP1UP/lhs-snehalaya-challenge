@@ -1,6 +1,6 @@
-# 25Thirty 365 — controlled school pilot
+# 25Thirty 365 — school-wide book launch
 
-Updated: 28 September 2026. Owner: John Partridge. Classification: controlled internal school pilot.
+Updated: 16 October 2026. Owner: John Partridge. Classification: production release to verified school accounts.
 
 ## Current publication
 
@@ -11,6 +11,12 @@ Updated: 28 September 2026. Owner: John Partridge. Classification: controlled in
 - Custom address: `365.25thirty.school`, live with HTTPS.
 
 The LHS 365 programme home is the default route, with the graphic reading theme at #/reading. Desktop and 390px mobile checks confirm the one-step finished-book flow; three successive books produced three spines, 982 pages and three completions. Hosted lint, 48 tests and production build passed.
+
+## Book launch — 16 October 2026
+
+The homepage's coming-soon badge and staff-testing link are replaced by a single student-and-staff book-challenge link in the hero and main navigation. The school-account sign-in copy is general. The API retains its fail-closed `staff` default; production must explicitly set `READING_ACCESS_MODE=all` and redeploy so verified Leicester High pupils and staff can log reading. Teacher and admin reports remain separately permissioned. Do not announce launch until a real pupil account can sign in, add a fictional test book, remove it, and the admin report reconciles the change.
+
+The live Veracross preview on 16 October returned 267 usable accounts (195 pupils, 72 staff) and 31 skipped records, including 29 pupil records with missing school email or recognised year. The additive admin update raised the roster from 262 to 271 records without deleting anyone or changing the community reading total. Four prior records are absent from the current usable source and remain in the roster pending human reconciliation; additive sync is not proof that all active records are current. The 29 pupil records need school-data review; they are not an access gate in `all` mode. No complete replacement was performed. Recheck source counts and form-group participation after corrections.
 
 ## Open Day closeout — 27 September 2026
 

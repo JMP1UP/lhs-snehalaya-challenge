@@ -43,6 +43,17 @@ test('staff pilot allows rostered staff and admins but denies pupil books and fa
  const adminPilot=fixture({admin:true,accessMode:'staff'});
  assert.equal((await adminPilot.call()).code,200);
 });
+test('school-wide launch allows verified pupils and unrostered school accounts, without exposing staff reports',async()=>{
+ const pupil=fixture({accessMode:'all'});
+ assert.equal((await pupil.call()).code,200);
+ assert.equal((await pupil.call({action:'add',id:'eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee',title:'Pupil book',author:'',total:40})).code,201);
+ const unrostered=fixture({identity:{...token,email:'new-pupil@leicesterhigh.co.uk'},accessMode:'all'});
+ assert.equal((await unrostered.call()).code,200);
+ assert.equal((await unrostered.call({action:'add',id:'ffffffff-ffff-ffff-ffff-ffffffffffff',title:'New pupil book',author:'',total:50})).code,201);
+ assert.equal((await unrostered.call(null,'staff')).code,403);
+ assert.equal((await unrostered.call(null,'admin')).code,403);
+ assert.equal((await fixture({identity:{...token,email:'outside@example.com'},accessMode:'all'}).call()).code,403);
+});
 test('API defaults closed before touching credentials',async()=>{
  const prior=process.env.READING_LIVE_ENABLED;delete process.env.READING_LIVE_ENABLED;
  try {const res={setHeader(){},status(code){this.code=code;return this;},json(data){this.data=data;}};await createHandler()({method:'GET',headers:{},query:{}},res);assert.equal(res.code,503);}finally{if(prior!==undefined)process.env.READING_LIVE_ENABLED=prior;}

@@ -1,6 +1,6 @@
 # 25Thirty 365
 
-Current live status (28 September 2026): the book challenge is open for a controlled staff pilot at [365.25thirty.school](https://365.25thirty.school/). The public homepage still says the pupil challenge is coming soon. Staff testers can use its link to sign in; the server permits active rostered staff and reading admins only. The older design-preview notes below describe earlier stages of the project.
+Current release plan (16 October 2026): open the book challenge to students and staff at [365.25thirty.school](https://365.25thirty.school/). The homepage and navigation link directly to reading. Production must be deployed with `READING_ACCESS_MODE=all` before announcing the launch; otherwise the existing staff-only server gate remains in force. See [deployment guidance](docs/deployment.md) for verification and known roster gaps. The older design-preview notes below describe earlier stages of the project.
 
 ## Bright challenge home — 10 September 2026
 

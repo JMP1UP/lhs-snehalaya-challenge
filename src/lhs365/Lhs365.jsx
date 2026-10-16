@@ -53,22 +53,21 @@ function Home() {
           <span>Many cultures.<br />One community.</span>
         </a>
       </section>
-      <section className="reading-feature reading-feature--teaser" aria-labelledby="reading-feature-title">
+      <section className="reading-feature reading-feature--open" aria-labelledby="reading-feature-title">
         <div className="reading-feature-copy">
-          <span className="challenge-badge">AUTUMN 2026 · NEARLY HERE</span>
-          <h2 id="reading-feature-title">A new chapter<br /><em>is about to begin.</em></h2>
-          <p>Our next whole-school challenge is almost ready.</p>
-          <span className="challenge-cta challenge-cta--soon">Autumn Challenge - Coming Soon!</span>
-          <a className="staff-pilot-link" href="#/reading">Staff: try the book challenge <span aria-hidden="true">➜</span></a>
+          <span className="challenge-badge">AUTUMN 2026 · NOW OPEN</span>
+          <h2 id="reading-feature-title">Read. Stack.<br /><em>Reach higher.</em></h2>
+          <p>Every finished book adds to our whole-school tower.</p>
+          <a className="challenge-cta" href="#/reading">Start the book challenge <span aria-hidden="true">➜</span></a>
         </div>
-        <div className="home-book-art" role="img" aria-label="A playful stack of books hints at the next Autumn Challenge.">
-          <span className="book-art-sticker">COMING<br />SOON</span>
+        <div className="home-book-art" role="img" aria-label="A playful stack of books celebrates the open reading challenge.">
+          <span className="book-art-sticker">LET'S<br />READ</span>
           <span className="art-twinkle">✦</span>
-          <span className="tower-now-label">WHAT COULD IT BE?</span>
+          <span className="tower-now-label">HOW HIGH CAN WE GO?</span>
           <div className="home-live-stack" aria-hidden="true">
-            <i>TURN THE PAGE</i>
-            <i>A NEW ADVENTURE</i>
-            <i>A STORY IS TAKING SHAPE</i>
+            <i>EVERY PAGE COUNTS</i>
+            <i>ONE MORE CHAPTER</i>
+            <i>READ TOGETHER</i>
           </div>
           <div className="book-art-ground" />
         </div>
@@ -129,6 +128,7 @@ export default function Lhs365() {
           <a href="#/" aria-current={route === "/" || route === "/challenges" ? "page" : undefined}>
             Challenges <span className="nav-challenge-count" aria-label="2 challenges">2</span>
           </a>
+          <a href="#/reading" aria-current={route === "/reading" ? "page" : undefined}>Book challenge</a>
           <a href="#/open-day" aria-current={route === "/open-day" ? "page" : undefined}>Open Day thank-you</a>
           <a href="https://table.365.25thirty.school">At Our Table <span aria-hidden="true">↗</span></a>
         </nav>
