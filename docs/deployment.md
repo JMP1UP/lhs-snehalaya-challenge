@@ -79,3 +79,12 @@ Final gate deployment `dpl_CKSa85mThnbRvTCpuAABJSbzepFK` adds the anonymous aggr
 Production deployment `dpl_3ZeeSuc9kfSjQTRkDRWifib4X8Q1` makes finished-book logging the default, keeps every registered title visible in the tower, and adds private shared family readers linked by a sibling code. Family activity contributes to the whole-community total without entering roster-error lists or exposing names publicly. The administrator now has a preview-first Veracross roster control; client ID, route and scopes are configured in Vercel, while the client secret remains to be supplied before the connector can be live-verified. All 48 tests, whole-project lint and production build passed locally and in Vercel. The live signed-out entrance rendered correctly; real signed-in family and roster-provider checks remain operational actions.
 
 Production deployment `dpl_HwrSCCh4o6WZfoyMoviXjD92Hti8` adds one consistent “Where we are now” hierarchy: personal, optional family and whole-school totals after sign-in, plus the same whole-school language on the homepage. The live homepage reconciled to 607 pages, 3 cm, one participating reader and one finished book. All 49 tests, lint and production build passed locally and in Vercel.
+
+
+## Sign-in diagnostics — 10 November 2026
+
+Production presentation/error-handling correction: the sign-in screen now maps Firebase failure codes to actionable messages and shows only allowlisted error identifiers and numeric AADSTS references. Raw provider messages, account details and credentials are never displayed. Try again now starts sign-in when the client is ready, instead of only reloading the session watcher. Authentication providers and access rules are unchanged.
+
+Read-only live checks confirmed that 365.25thirty.school is in Firebase authorised domains and its sign-in popup reaches Microsoft. John reports failure after choosing his account; the completed school-account exchange remains unverified. The diagnostic update is not proof of a repaired Microsoft connection. Next step: retry with the school account and use the displayed reference to isolate the provider failure.
+
+Validation: 62 tests, full ESLint and production build passed before publication; tests cover useful error guidance, standard provider references and exclusion of private error data.

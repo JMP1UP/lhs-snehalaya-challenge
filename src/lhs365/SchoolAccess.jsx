@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { signInErrorMessage } from "./sign-in-error.mjs";
 import { schoolClient } from "./reading-client.mjs";
 function SchoolLoginArt({openDay=false}) {
   if(openDay)return <div className="open-day-access-art" aria-hidden="true">
@@ -39,7 +40,7 @@ export default function SchoolAccess({ children, admin = false, staff = false, a
   },[retry]);
   async function signIn() {
     setBusy(true);setError("");
-    try {await client.signIn();} catch {setError("Sign-in did not finish. Please try again.");}
+    try {await client.signIn();} catch (err) {setError(signInErrorMessage(err));}
     finally {setBusy(false);}
   }
   const allowed=account && (!admin || account.me.isAdmin) && (!staff || account.me.isAdmin || account.me.canViewForms);
@@ -59,7 +60,7 @@ export default function SchoolAccess({ children, admin = false, staff = false, a
       </nav>
       {account && <button className="text-link" onClick={async () => {setAccount(null);try {await client.signOut();} catch {setError("Sign-out failed. Close this tab to end this session.");}}}>Sign out</button>}
     </div>}
-    {error && <p className="school-access-error" role="alert">{error} <button onClick={()=>{setBusy(true);setRetry(n=>n+1);}}>Try again</button></p>}
+    {error && <p className="school-access-error" role="alert">{error} <button onClick={()=>{if(client&&!account){void signIn();}else{setBusy(true);setRetry(n=>n+1);}}}>Try again</button></p>}
     {busy ? <section className="school-login-card school-login-loading" role="status"><div className="school-login-copy"><span className="eyebrow">LHS 365 · SCHOOL ACCESS</span><h1>{openDay?"Finding your mission…":"Opening reading…"}</h1></div><SchoolLoginArt openDay={openDay}/></section> : allowed ? children(account) : <section className="school-login-card">
       <div className="school-login-copy">
         <span className="eyebrow">LHS 365 · SCHOOL ACCESS</span>
